@@ -19,7 +19,7 @@ class CreateCurrencyRatesTable extends Migration
             $table->date('date');
             $table->float('rate')->comment('KZT=1');
 
-            $table->unsignedBigInteger('currency_id');
+            $table->unsignedInteger('currency_id');
 
             $table->timestamps();
             $table->softDeletes();

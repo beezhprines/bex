@@ -16,7 +16,7 @@ class CreateMarketersTable extends Migration
         Schema::create('marketers', function (Blueprint $table) {
             $table->id();
 
-            $table->unsignedBigInteger('user_id')->nullable();
+            $table->unsignedInteger('user_id')->nullable();
 
             $table->timestamps();
             $table->softDeletes();

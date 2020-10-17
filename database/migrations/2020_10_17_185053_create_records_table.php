@@ -22,7 +22,7 @@ class CreateRecordsTable extends Migration
             $table->string('comment')->nullable();
             $table->boolean('attendance');
 
-            $table->unsignedBigInteger('master_id')->nullable();
+            $table->unsignedInteger('master_id')->nullable();
 
             $table->timestamps();
             $table->softDeletes();

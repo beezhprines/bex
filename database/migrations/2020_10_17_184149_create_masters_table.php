@@ -22,8 +22,8 @@ class CreateMastersTable extends Migration
             $table->date('schedule_till')->nullable();
             $table->unsignedSmallInteger('seance_length')->nullable();
 
-            $table->unsignedBigInteger('team_id')->nullable();
-            $table->unsignedBigInteger('user_id')->nullable();
+            $table->unsignedInteger('team_id')->nullable();
+            $table->unsignedInteger('user_id')->nullable();
 
             $table->timestamps();
             $table->softDeletes();

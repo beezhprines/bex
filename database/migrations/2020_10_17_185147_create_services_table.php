@@ -22,7 +22,7 @@ class CreateServicesTable extends Migration
             $table->unsignedInteger('comission')->nullable();
             $table->boolean('conversion')->nullable();
 
-            $table->unsignedBigInteger('master_id')->nullable();
+            $table->unsignedInteger('master_id')->nullable();
 
             $table->timestamps();
             $table->softDeletes();

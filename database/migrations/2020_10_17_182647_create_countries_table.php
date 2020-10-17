@@ -18,7 +18,7 @@ class CreateCountriesTable extends Migration
 
             $table->string('title');
             $table->string('code')->unique();
-            $table->unsignedBigInteger('currency_id');
+            $table->unsignedInteger('currency_id');
 
             $table->timestamps();
             $table->softDeletes();

@@ -18,7 +18,7 @@ class CreateManagersTable extends Migration
 
             $table->unsignedFloat('premium_rate')->nullable()->default(1);
 
-            $table->unsignedBigInteger('user_id')->nullable();
+            $table->unsignedInteger('user_id')->nullable();
 
             $table->timestamps();
             $table->softDeletes();

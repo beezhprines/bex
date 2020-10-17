@@ -21,7 +21,7 @@ class CreateNotesTable extends Migration
             $table->string('message');
             $table->text('description')->nullable();
             $table->string('model')->nullable();
-            $table->unsignedBigInteger('model_id')->nullable();
+            $table->unsignedInteger('model_id')->nullable();
 
             $table->timestamps();
 

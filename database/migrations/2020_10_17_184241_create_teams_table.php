@@ -19,8 +19,8 @@ class CreateTeamsTable extends Migration
             $table->string('title');
             $table->unsignedFloat('premium_rate')->nullable()->default(1);
 
-            $table->unsignedBigInteger('operator_id')->nullable();
-            $table->unsignedBigInteger('city_id')->nullable();
+            $table->unsignedInteger('operator_id')->nullable();
+            $table->unsignedInteger('city_id')->nullable();
 
             $table->timestamps();
             $table->softDeletes();

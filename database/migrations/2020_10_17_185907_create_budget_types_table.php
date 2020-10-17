@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateCitiesTable extends Migration
+class CreateBudgetTypesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,18 +13,18 @@ class CreateCitiesTable extends Migration
      */
     public function up()
     {
-        Schema::create('cities', function (Blueprint $table) {
+        Schema::create('budget_types', function (Blueprint $table) {
             $table->id();
 
             $table->string('title');
             $table->string('code')->unique();
-            $table->unsignedInteger('country_id');
+            $table->boolean('income')->default(true)->comment('income with +, outcome with -');
 
             $table->timestamps();
             $table->softDeletes();
 
             $table->index('code');
-            $table->index('country_id');
+            $table->index('company_id');
         });
     }
 
@@ -35,6 +35,6 @@ class CreateCitiesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('cities');
+        Schema::dropIfExists('budget_types');
     }
 }

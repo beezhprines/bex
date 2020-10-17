@@ -16,8 +16,8 @@ class CreateRecordServiceTable extends Migration
         Schema::create('record_service', function (Blueprint $table) {
             $table->id();
 
-            $table->unsignedBigInteger('record_id');
-            $table->unsignedBigInteger('service_id');
+            $table->unsignedInteger('record_id');
+            $table->unsignedInteger('service_id');
 
             $table->unsignedFloat('comission')->nullable()->comment('in KZT');
             $table->unsignedFloat('profit')->nullable()->comment('in KZT');
