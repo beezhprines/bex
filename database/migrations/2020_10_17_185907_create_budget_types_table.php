@@ -24,7 +24,6 @@ class CreateBudgetTypesTable extends Migration
             $table->softDeletes();
 
             $table->index('code');
-            $table->index('company_id');
         });
     }
 

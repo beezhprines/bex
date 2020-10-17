@@ -16,6 +16,7 @@ class CreateOperatorsTable extends Migration
         Schema::create('operators', function (Blueprint $table) {
             $table->id();
 
+            $table->string('name')->nullable();
             $table->unsignedInteger('user_id')->nullable();
 
             $table->timestamps();

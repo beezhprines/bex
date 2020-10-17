@@ -11,7 +11,7 @@ class Marketer extends Model
     use HasFactory, SoftDeletes, ModelBase;
 
     protected $fillable = [
-        'user_id'
+        'user_id', 'name'
     ];
 
     public function user()

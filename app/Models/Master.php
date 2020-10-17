@@ -11,7 +11,7 @@ class Master extends Model
     use HasFactory, SoftDeletes, ModelBase;
 
     protected $fillable = [
-        'origin_id', 'specialization', 'avatar', 'schedule_till', 'user_id', 'team_id', 'deleted_at'
+        'origin_id', 'specialization', 'avatar', 'schedule_till', 'user_id', 'team_id', 'deleted_at', 'name'
     ];
 
     public function user()

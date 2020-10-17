@@ -11,7 +11,7 @@ class Manager extends Model
     use HasFactory, SoftDeletes, ModelBase;
 
     protected $fillable = [
-        'premium_rate', 'user_id'
+        'premium_rate', 'user_id', 'name'
     ];
 
     public function user()

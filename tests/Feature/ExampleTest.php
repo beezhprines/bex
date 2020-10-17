@@ -7,15 +7,10 @@ use Tests\TestCase;
 
 class ExampleTest extends TestCase
 {
-    /**
-     * A basic test example.
-     *
-     * @return void
-     */
-    public function testBasicTest()
+    public function setUp(): void
     {
-        $response = $this->get('/');
+        parent::setUp();
 
-        $response->assertStatus(200);
+        $this->markTestSkipped('ExampleTest skipped');
     }
 }

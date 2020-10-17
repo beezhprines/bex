@@ -17,6 +17,7 @@ class CreateMastersTable extends Migration
             $table->id();
 
             $table->string('origin_id')->nullable();
+            $table->string('name')->nullable();
             $table->string('specialization')->nullable();
             $table->string('avatar')->nullable();
             $table->date('schedule_till')->nullable();

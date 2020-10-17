@@ -16,6 +16,7 @@ class CreateManagersTable extends Migration
         Schema::create('managers', function (Blueprint $table) {
             $table->id();
 
+            $table->string('name')->nullable();
             $table->unsignedFloat('premium_rate')->nullable()->default(1);
 
             $table->unsignedInteger('user_id')->nullable();

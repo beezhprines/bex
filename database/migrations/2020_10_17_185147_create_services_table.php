@@ -21,6 +21,7 @@ class CreateServicesTable extends Migration
             $table->unsignedInteger('price')->nullable();
             $table->unsignedInteger('comission')->nullable();
             $table->boolean('conversion')->nullable();
+            $table->smallInteger('seance_length')->nullable();
 
             $table->unsignedInteger('master_id')->nullable();
 
