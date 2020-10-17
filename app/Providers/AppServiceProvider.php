@@ -2,8 +2,11 @@
 
 namespace App\Providers;
 
+use App\Services\CurrencyRateService;
+use App\Services\GitService;
 use App\Services\RestoreService;
 use App\Services\WeekService;
+use App\Services\YClientsService;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -15,8 +18,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->singleton(WeekService::class);
-        $this->app->singleton(RestoreService::class);
+        $this->registerServices();
     }
 
     /**
@@ -27,5 +29,14 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         //
+    }
+
+    private function registerServices()
+    {
+        $this->app->singleton(WeekService::class);
+        $this->app->singleton(RestoreService::class);
+        $this->app->singleton(CurrencyRateService::class);
+        $this->app->singleton(YClientsService::class);
+        $this->app->singleton(GitService::class);
     }
 }
