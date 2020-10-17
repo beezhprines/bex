@@ -237,6 +237,14 @@ return [
             'url'  => '/',
             'topnav' => true
         ],
+
+        // master pages
+        [
+            'text' => 'Статистика',
+            'route'  => route('masters.statistics'),
+            'icon' => 'fa fa-list-alt',
+            'can'  => ['is-master']
+        ]
     ],
 
     /*

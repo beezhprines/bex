@@ -82,4 +82,9 @@ class MasterController extends Controller
     {
         //
     }
+
+    public function statistics()
+    {
+        return view("masters.statistics");
+    }
 }
