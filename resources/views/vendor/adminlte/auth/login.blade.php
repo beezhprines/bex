@@ -83,5 +83,4 @@
 <div class="text-center">
     <small class="text-muted"><i class="fa fa-code-branch"></i> {{version()}}</small>
 </div>
-</div>
 @stop
