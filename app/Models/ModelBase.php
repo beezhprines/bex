@@ -8,4 +8,9 @@ trait ModelBase
     {
         return static::withTrashed()->firstWhere('code', $code);
     }
+
+    public static function findByOriginId(int $originId)
+    {
+        return static::withTrashed()->firstWhere('origin_id', $originId);
+    }
 }

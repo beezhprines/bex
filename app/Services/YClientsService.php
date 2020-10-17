@@ -59,32 +59,26 @@ class YClientsService
 
     public function getStaff()
     {
-        $staff = $this->http->get("{$this->baseURL}/staff/{$this->companyId}/")
+        return $this->http->get("{$this->baseURL}/staff/{$this->companyId}/")
             ->throw()
             ->json();
-
-        return $staff;
     }
 
     public function findStaff(int $origin_id)
     {
-        $staff = $this->http->get("{$this->baseURL}/staff/{$this->companyId}/{$origin_id}")
+        return $this->http->get("{$this->baseURL}/staff/{$this->companyId}/{$origin_id}")
             ->throw()
             ->json();
-
-        return $staff;
     }
 
     public function createStaff(array $data)
     {
-        $staff = $this->http->post("{$this->baseURL}/staff/{$this->companyId}/", [
+        return $this->http->post("{$this->baseURL}/staff/{$this->companyId}/", [
             "name" => $data['name'],
             "specialization" => $data['specialization'],
         ])
             ->throw()
             ->json();
-
-        return $staff;
     }
 
     public function getRecords(string $date)
@@ -123,11 +117,9 @@ class YClientsService
     {
         $queryParams = !empty($staff_id) ? ['staff_id' => $staff_id] : null;
 
-        $services = $this->http->get("{$this->baseURL}/services/{$this->companyId}", $queryParams)
+        return $this->http->get("{$this->baseURL}/services/{$this->companyId}", $queryParams)
             ->throw()
             ->json();
-
-        return $services;
     }
 
     public function createService(array $data)
@@ -149,45 +141,37 @@ class YClientsService
             ]
         ];
 
-        $service = $this->http->post("{$this->baseURL}/services/{$this->companyId}/", $body)
+        return $this->http->post("{$this->baseURL}/services/{$this->companyId}/", $body)
             ->throw()
             ->json();
-
-        return $service;
     }
 
     public function getTransactions(int $recordId, int $visitId)
     {
-        $transactions = $this->http->get("{$this->baseURL}/timetable/transactions/{$this->companyId}", [
+        return $this->http->get("{$this->baseURL}/timetable/transactions/{$this->companyId}", [
             'record_id' => $recordId,
             'visit_id' => $visitId
         ])
             ->throw()
             ->json();
-
-        return $transactions;
     }
 
     public function getServiceCategory(int $staff_id = null)
     {
         $queryParams = !empty($staff_id) ? ['staff_id' => $staff_id] : null;
 
-        $serviceCategories = $this->http->get("{$this->baseURL}/service_categories/{$this->companyId}", $queryParams)
+        return $this->http->get("{$this->baseURL}/service_categories/{$this->companyId}", $queryParams)
             ->throw()
             ->json();
-
-        return $serviceCategories;
     }
 
     public function createServiceCategory(array $data)
     {
-        $service = $this->http->post("{$this->baseURL}/service_categories/{$this->companyId}/", [
+        return $this->http->post("{$this->baseURL}/service_categories/{$this->companyId}/", [
             "title" => $data['title'],
             "staff" => [$data['staff_id']]
         ])
             ->throw()
             ->json();
-
-        return $service;
     }
 }

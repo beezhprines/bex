@@ -10,6 +10,7 @@ use App\Models\Currency;
 use App\Models\CurrencyRate;
 use App\Models\Manager;
 use App\Models\Marketer;
+use App\Models\Master;
 use App\Models\Operator;
 use App\Models\Role;
 use App\Models\Service;
@@ -51,9 +52,26 @@ class RestoreService
             return !empty($table["name"]) && $table["name"] == "employees";
         })->first()["data"]) ?? null;
 
+        $this->restoreMasters($employees);
         $this->restoreManagers($employees);
         $this->restoreMarketers($employees);
         $this->restoreOperators($employees);
+    }
+
+    private function restoreMasters($employees)
+    {
+        $items = collect($this->collection->filter(function ($table) {
+            return !empty($table["name"]) && $table["name"] == "masters";
+        })->first()["data"]) ?? null;
+
+        Master::truncate();
+
+        foreach ($items as $item) {
+            $employee = $employees->where("id", $item["employee_id"])->first();
+            $item["user_id"] = $employee["user_id"] ?? null;
+            $item["name"] = $employee["name"] ?? null;
+            Master::create($item);
+        }
     }
 
     private function restoreOperators($employees)
