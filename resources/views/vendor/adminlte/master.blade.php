@@ -42,6 +42,16 @@
     {{-- Body Content --}}
     @yield('body')
 
+    <div id="loader" style="display: none;">
+        <span><i class="fa fa-spinner fa-spin"></i></span>
+    </div>
+
+    <div id="up-button" class="rounded-circle bg-secondary" style="display: none;">
+        <span><i class="fa fa-chevron-up"></i></span>
+    </div>
+
+    <input type="hidden" id="calendar-value" name="calendar-value" value="{{ week()->start() }}:{{ week()->end() }}">
+
     {{-- Base Scripts --}}
     <script src="{{ asset('vendor/jquery/jquery.min.js') }}"></script>
     <script src="{{ asset('vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>

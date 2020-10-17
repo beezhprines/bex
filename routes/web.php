@@ -17,4 +17,7 @@ use Illuminate\Support\Facades\Route;
 
 Auth::routes();
 
-Route::get("/", [HomeController::class, "dashboard"])->name("dashboard");
+Route::middleware('auth')->group(function () {
+    Route::get("/", [HomeController::class, "dashboard"])->name("dashboard");
+    Route::post("/calendar", [HomeController::class, "calendar"])->name("calendar");
+});

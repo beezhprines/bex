@@ -1,7 +1,25 @@
 <?php
 
 use App\Models\Note;
+use App\Services\WeekService;
 use Illuminate\Support\Facades\Storage;
+
+function week()
+{
+    return resolve(WeekService::class);
+}
+
+function daterange(string $from, string $to, bool $withLast = false)
+{
+    if ($withLast) {
+        $to = date(config('app.iso_date'), strtotime($to . ' +1 day'));
+    }
+    return new DatePeriod(
+        new DateTime($from),
+        new DateInterval('P1D'),
+        new DateTime($to)
+    );
+}
 
 function version()
 {

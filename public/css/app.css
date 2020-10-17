@@ -32670,3 +32670,52 @@ a.text-muted:hover {
   color: #ffffff;
 }
 
+.calendar .datepicker-inline,
+.calendar .table-condensed {
+  width: 100%;
+}
+
+.calendar .table-condensed td.active {
+  border-radius: 0;
+}
+
+#loader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 9999;
+  background-color: rgba(255, 255, 255, 0.7);
+}
+
+#loader > span {
+  font-size: 2rem;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+}
+
+#up-button {
+  position: fixed;
+  right: 2rem;
+  bottom: 3rem;
+  z-index: 999;
+  padding: 10px 12px;
+  opacity: 0.5;
+  cursor: pointer;
+}
+
+#up-button:hover {
+  opacity: 1;
+}
+
+.nav-sidebar > .nav-item .nav-icon.fa,
+.nav-sidebar > .nav-item .nav-icon.fas,
+.nav-sidebar > .nav-item .nav-icon.far,
+.nav-sidebar > .nav-item .nav-icon.fab,
+.nav-sidebar > .nav-item .nav-icon.glyphicon,
+.nav-sidebar > .nav-item .nav-icon.ion {
+  font-size: 0.8rem;
+}
+

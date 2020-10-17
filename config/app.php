@@ -2,6 +2,10 @@
 
 return [
 
+    'iso_date' => 'Y-m-d',
+    'view_date' => 'd.m.Y',
+    'iso_datetime' => 'Y-m-d H:i:s',
+    'view_datetime' => 'H:i d.m.Y',
     'note_sence' => env('NOTE_SENCE', 'LOW'),
 
     /*
