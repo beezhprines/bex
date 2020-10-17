@@ -126,8 +126,8 @@ return [
     'classes_content_wrapper' => '',
     'classes_content_header' => '',
     'classes_content' => '',
-    'classes_sidebar' => 'sidebar-dark-primary elevation-4',
-    'classes_sidebar_nav' => '',
+    'classes_sidebar' => 'sidebar-dark-primary',
+    'classes_sidebar_nav' => 'nav-legacy',
     'classes_topnav' => 'navbar-white navbar-light',
     'classes_topnav_nav' => 'navbar-expand',
     'classes_topnav_container' => 'container',
@@ -144,11 +144,11 @@ return [
     |
     */
 
-    'sidebar_mini' => true,
+    'sidebar_mini' => false,
     'sidebar_collapse' => false,
     'sidebar_collapse_auto_size' => false,
     'sidebar_collapse_remember' => false,
-    'sidebar_collapse_remember_no_transition' => true,
+    'sidebar_collapse_remember_no_transition' => false,
     'sidebar_scrollbar_theme' => 'os-theme-light',
     'sidebar_scrollbar_auto_hide' => 'l',
     'sidebar_nav_accordion' => true,
@@ -237,6 +237,14 @@ return [
             'url'  => '/',
             'topnav' => true
         ],
+
+        // master pages
+        [
+            'text' => 'Статистика',
+            'route'  => 'masters.statistics',
+            'icon' => 'fa fa-list-alt',
+#            'can'  => ['is-master']
+        ]
     ],
 
     /*

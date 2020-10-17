@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\MasterController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -20,4 +21,8 @@ Auth::routes();
 Route::middleware('auth')->group(function () {
     Route::get("/", [HomeController::class, "dashboard"])->name("dashboard");
     Route::post("/calendar", [HomeController::class, "calendar"])->name("calendar");
+
+    Route::prefix("masters")->name("masters.")->group(function () {
+        Route::get("statistics", [MasterController::class, "statistics"])->name("statistics");
+    });
 });
