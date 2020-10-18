@@ -4,7 +4,9 @@ namespace App\Providers;
 
 use App\Services\CurrencyRateService;
 use App\Services\GitService;
+use App\Services\LoadService;
 use App\Services\RestoreService;
+use App\Services\SeedService;
 use App\Services\WeekService;
 use App\Services\YClientsService;
 use Illuminate\Support\ServiceProvider;
@@ -38,5 +40,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(CurrencyRateService::class);
         $this->app->singleton(YClientsService::class);
         $this->app->singleton(GitService::class);
+        $this->app->singleton(LoadService::class);
+        $this->app->singleton(SeedService::class);
     }
 }

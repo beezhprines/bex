@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\BudgetType;
 use App\Models\City;
 use App\Models\Configuration;
+use App\Models\ContactType;
 use App\Models\Country;
 use App\Models\Currency;
 use App\Models\CurrencyRate;
@@ -43,6 +44,7 @@ class RestoreService
             ["tableName" => "teams", "class" => Team::class],
             ["tableName" => "budget_types", "class" => BudgetType::class],
             ["tableName" => "services", "class" => Service::class],
+            ["tableName" => "contact_types", "class" => ContactType::class],
         ];
         foreach ($models as $model) {
             $this->restoreModel($model["tableName"], $model["class"]);
