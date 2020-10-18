@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Master;
+use App\Models\Record;
 use App\Models\Service;
 
 class LoadService
@@ -15,5 +16,10 @@ class LoadService
     public function services(array $items)
     {
         Service::seed($items);
+    }
+
+    public function records(array $items, string $date)
+    {
+        Record::seed($items, $date);
     }
 }

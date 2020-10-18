@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use DateTime;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -22,5 +23,103 @@ class Record extends Model
     public function services()
     {
         return $this->belongsToMany(Service::class)->withPivot(['comission', 'profit']);
+    }
+
+    public static function seed($records, $date)
+    {
+        foreach ($records as $item) {
+            if (!in_array($item["visit_attendance"], [1, -1])) continue;
+
+            // create or update record
+            $record = self::createOrUpdate(self::peel($item));
+
+            // associate with its staff
+            if (!empty($item["staff_id"])) {
+                $master = Master::findByOriginId($item["staff_id"]);
+
+                if (!empty($master)) {
+                    $record->master()->associate($master);
+
+                    if (!empty($item["services"])) {
+
+                        foreach ($item['services'] as $serviceData) {
+                            $service = Service::findByOriginId($serviceData["id"]);
+
+                            if (!empty($service) && !empty($master->currency())) {
+                                // associate service with record and exchange comission
+
+                                $pivot = [
+                                    'comission' => CurrencyRate::exchange(
+                                        date_format(new DateTime($record->started_at), config('app.iso_date')),
+                                        $master->currency(),
+                                        $service->comission
+                                    ),
+                                    'profit' => !empty($service->price) ? CurrencyRate::exchange(
+                                        date_format(new DateTime($record->started_at), config('app.iso_date')),
+                                        $master->currency(),
+                                        $service->price - $service->comission
+                                    ) : 0
+                                ];
+
+                                if ($record->services()->where('service_id', $service->id)->exists()) {
+                                    $pivot["updated_at"] = now();
+                                    $record->services()->updateExistingPivot($service->id, $pivot);
+                                } else {
+                                    $pivot["created_at"] = now();
+                                    $record->services()->attach($service->id, $pivot);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            $record->save();
+        }
+
+        note("info", "records:seed", "Обновлены записи из апи на дату {$date}", self::class);
+    }
+
+    private static function createOrUpdate(array $data)
+    {
+        if (empty($data["origin_id"])) return null;
+
+        $record = self::findByOriginId($data["origin_id"]);
+
+        if (empty($record)) {
+            $record = self::create($data);
+        } else {
+            $record->update($data);
+            $record->refresh();
+        };
+
+        return $record;
+    }
+
+    private static function peel(array $item)
+    {
+        $data = [];
+
+        if (!empty($item['id'])) {
+            $data['origin_id'] = $item['id'];
+        }
+
+        if (!empty($item["datetime"])) {
+            $data['started_at'] = date(config('app.iso_datetime'), strtotime($item['datetime']));
+        }
+
+        if (!empty($item["seance_length"])) {
+            $data['duration'] = $item["seance_length"];
+        }
+
+        if (!empty($item["comment"])) {
+            $data['comment'] = $item["comment"];
+        }
+
+        if (!empty($item["attendance"])) {
+            $data['attendance'] = $item["attendance"] == 1;
+        }
+
+        return $data;
     }
 }

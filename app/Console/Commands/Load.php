@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Jobs\LoadMastersJob;
+use App\Jobs\LoadRecordsJob;
 use App\Jobs\LoadServicesJob;
 use Illuminate\Console\Command;
 
@@ -51,7 +52,7 @@ class Load extends Command
         if ($this->option('services')) {
             LoadServicesJob::dispatchNow();
         }
-/*
+
         if ($this->option('records')) {
             if ($this->option('startDate') && $this->option('endDate')) {
                 $from = $this->option('startDate');
@@ -59,10 +60,9 @@ class Load extends Command
 
                 foreach (daterange($from, $to, true) as $date) {
                     $date = date_format($date, config('app.iso_date'));
-                    LoadYClientsRecordsJob::dispatch($date);
+                    LoadRecordsJob::dispatchNow($date);
                 }
             }
         }
-        */
     }
 }

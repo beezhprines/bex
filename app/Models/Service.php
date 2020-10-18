@@ -48,7 +48,7 @@ class Service extends Model
             }
         }
 
-        note("info", "service:seed", "Обновлены услуги из апи", Service::class);
+        note("info", "service:seed", "Обновлены услуги из апи", self::class);
     }
 
     public static function peel(array $item)
@@ -84,10 +84,10 @@ class Service extends Model
             return null;
         }
 
-        $service = Service::findByOriginId($item["origin_id"]);
+        $service = self::findByOriginId($item["origin_id"]);
 
         if (empty($service)) {
-            $service = Service::create($item);
+            $service = self::create($item);
         } else {
             $service->update($item);
             $service->refresh();

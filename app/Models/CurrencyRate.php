@@ -18,4 +18,14 @@ class CurrencyRate extends Model
     {
         return $this->belongsTo(Currency::class);
     }
+
+    public static function exchange(string $date, Currency $currency, float $amount = null)
+    {
+        if (empty($amount)) return $amount;
+
+        return (self::firstWhere([
+            'date' => $date,
+            'currency_id' => $currency->id
+        ])->rate ?? 0) * $amount;
+    }
 }
