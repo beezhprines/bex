@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Jobs\LoadMastersJob;
+use App\Jobs\LoadServicesJob;
 use Illuminate\Console\Command;
 
 class Load extends Command
@@ -46,11 +47,11 @@ class Load extends Command
         if ($this->option('masters')) {
             LoadMastersJob::dispatchNow();
         }
-        /*
-        if ($this->option('services')) {
-            LoadYClientsServicesJob::dispatch();
-        }
 
+        if ($this->option('services')) {
+            LoadServicesJob::dispatchNow();
+        }
+/*
         if ($this->option('records')) {
             if ($this->option('startDate') && $this->option('endDate')) {
                 $from = $this->option('startDate');
