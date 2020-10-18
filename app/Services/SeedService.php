@@ -16,8 +16,8 @@ class SeedService
     public function teamOutcomes(string $startDate, string $endDate)
     {
         if (
-            $this->startDate != week()->monday($this->startDate) ||
-            $this->endDate != week()->sunday($this->endDate)
+            $startDate != week()->monday($startDate) ||
+            $endDate != week()->sunday($endDate)
         ) return;
 
         Team::seedOutcomes($startDate, $endDate);
@@ -25,6 +25,11 @@ class SeedService
 
     public function customOutcomes(string $startDate, string $endDate)
     {
+        if (
+            $startDate != week()->monday($startDate) ||
+            $endDate != week()->sunday($endDate)
+        ) return;
+
         Budget::seedCustomOutcomes($startDate, $endDate);
     }
 }

@@ -21,17 +21,17 @@ class Budget extends Model
 
     public function managers()
     {
-        return $this->belongsToMany(Manager::class, 'budget_manager');
+        return $this->belongsToMany(Manager::class)->withTimestamps();
     }
 
     public function masters()
     {
-        return $this->belongsToMany(Master::class, 'budget_master');
+        return $this->belongsToMany(Master::class)->withTimestamps();
     }
 
     public function operators()
     {
-        return $this->belongsToMany(Operator::class, 'budget_operator');
+        return $this->belongsToMany(Operator::class)->withTimestamps();
     }
 
     public function invoices()
@@ -62,5 +62,60 @@ class Budget extends Model
                 ]);
             }
         }
+    }
+
+    public static function solveComission(string $date)
+    {
+        $budgetType = BudgetType::findByCode('total:comission:income');
+
+        $amount = Record::solveComission(Record::get($date, $date)) * $budgetType->sign();
+
+        $budget = self::firstWhere([
+            'budget_type_id' => $budgetType->id,
+            'date' => $date
+        ]);
+
+        if (empty($budget)) {
+            $budget = self::create([
+                'amount' => $amount,
+                'date' => $date,
+                'budget_type_id' => $budgetType->id
+            ]);
+        } else {
+            $budget->update([
+                'amount' => $amount
+            ]);
+        }
+
+        note("info", "budget:solve:total:comission", "Подсчитана общая комиссия на дату {$date}", self::class, $budget->id);
+    }
+
+    public static function solveMastersComission(string $date)
+    {
+        $budgetType =  BudgetType::findByCode('master:comission:income');
+
+        $masters = Master::all();
+
+        foreach ($masters as $master) {
+            $amount = $master->solveComission($date, $date) * $budgetType->sign();
+
+            $budget = $master->getBudget($date, $budgetType->id);
+
+            if (empty($budget)) {
+                $budget = self::create([
+                    'amount' => $amount,
+                    'date' => $date,
+                    'budget_type_id' => $budgetType->id,
+                ]);
+
+                $budget->masters()->attach($master);
+            } else {
+                $budget->update([
+                    'amount' => $amount
+                ]);
+            }
+        }
+
+        note("info", "budget:solve:master:comission", "Подсчитана комиссия мастеров на дату {$date}", self::class);
     }
 }

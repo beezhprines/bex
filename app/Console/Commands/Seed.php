@@ -19,6 +19,7 @@ class Seed extends Command
     {--contacts : Seed contacts}
     {--team-outcomes : Seed outcome budgets for all team}
     {--custom-outcomes : Seed custom outcomes}
+    {--all : Seed all entities}
     {--startDate= : From date}
     {--endDate= : To date}';
 
@@ -59,16 +60,27 @@ class Seed extends Command
         $from = $this->option('startDate');
         $to = $this->option('endDate');
 
+        if ($this->option('all')) {
+            SeedContactsJob::dispatchNow($from, $to);
+            SeedOutcomesJob::dispatchNow($from, $to, "team");
+            SeedOutcomesJob::dispatchNow($from, $to, "custom");
+            return;
+        }
+
+
         if ($this->option('contacts')) {
             SeedContactsJob::dispatchNow($from, $to);
+            return;
         }
 
         if ($this->option('team-outcomes')) {
             SeedOutcomesJob::dispatchNow($from, $to, "team");
+            return;
         }
 
         if ($this->option('custom-outcomes')) {
             SeedOutcomesJob::dispatchNow($from, $to, "custom");
+            return;
         }
     }
 }

@@ -6,6 +6,7 @@ use DateTime;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\DB;
 
 class Record extends Model
 {
@@ -22,7 +23,29 @@ class Record extends Model
 
     public function services()
     {
-        return $this->belongsToMany(Service::class)->withPivot(['comission', 'profit']);
+        return $this->belongsToMany(Service::class)->withTimestamps()->withPivot(['comission', 'profit']);
+    }
+
+    public static function get(string $startDate, string $endDate, bool $attendance = true)
+    {
+        return self::whereBetween(DB::raw('DATE(started_at)'), array($startDate, $endDate))
+            ->where('attendance', $attendance)
+            ->get();
+    }
+    public static function solveComission($records, bool $withTeamPremiumRate = false)
+    {
+        return $records->sum(function ($record) use ($withTeamPremiumRate) {
+            return $record->services->sum(function ($service) use ($withTeamPremiumRate) {
+                $premiumRate = 1;
+                if ($withTeamPremiumRate) {
+                    $team = $service->master->team;
+                    if (!empty($team->premium_rate)) {
+                        $premiumRate = floatval($team->premium_rate);
+                    }
+                }
+                return floatval($service->pivot->comission) * $premiumRate;
+            });
+        });
     }
 
     public static function seed($records, $date)
@@ -62,10 +85,8 @@ class Record extends Model
                                 ];
 
                                 if ($record->services()->where('service_id', $service->id)->exists()) {
-                                    $pivot["updated_at"] = now();
                                     $record->services()->updateExistingPivot($service->id, $pivot);
                                 } else {
-                                    $pivot["created_at"] = now();
                                     $record->services()->attach($service->id, $pivot);
                                 }
                             }

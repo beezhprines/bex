@@ -20,6 +20,7 @@ class Load extends Command
     {--services : Load services}
     {--records : Load records}
     {--rates : Load currency rates}
+    {--all : Load all entities}
     {--startDate= : From date}
     {--endDate= : To date}';
 
@@ -47,16 +48,35 @@ class Load extends Command
      */
     public function handle()
     {
+        if ($this->option('all')) {
+            LoadMastersJob::dispatchNow();
+            LoadServicesJob::dispatchNow();
+            LoadCurrencyRatesJob::dispatchNow();
+            if ($this->option('startDate') && $this->option('endDate')) {
+                $from = $this->option('startDate');
+                $to = $this->option('endDate');
+
+                foreach (daterange($from, $to, true) as $date) {
+                    $date = date_format($date, config('app.iso_date'));
+                    LoadRecordsJob::dispatchNow($date);
+                }
+            }
+            return;
+        }
+
         if ($this->option('masters')) {
             LoadMastersJob::dispatchNow();
+            return;
         }
 
         if ($this->option('services')) {
             LoadServicesJob::dispatchNow();
+            return;
         }
 
         if ($this->option('rates')) {
             LoadCurrencyRatesJob::dispatchNow();
+            return;
         }
 
         if ($this->option('records')) {
@@ -69,6 +89,7 @@ class Load extends Command
                     LoadRecordsJob::dispatchNow($date);
                 }
             }
+            return;
         }
     }
 }

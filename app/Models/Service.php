@@ -21,7 +21,7 @@ class Service extends Model
 
     public function records()
     {
-        return $this->belongsToMany(Record::class)->withPivot(['comission', 'profit']);
+        return $this->belongsToMany(Record::class)->withTimestamps()->withPivot(['comission', 'profit']);
     }
 
     public function currency()
