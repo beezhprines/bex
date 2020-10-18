@@ -17,7 +17,7 @@ class CreateBudgetsTable extends Migration
             $table->id();
 
             $table->date('date');
-            $table->float('amount')->comment('in KZT');
+            $table->float('amount')->default(0)->comment('in KZT');
             $table->json('json')->nullable()->comment('json object with different values');
 
             $table->unsignedInteger('budget_type_id');

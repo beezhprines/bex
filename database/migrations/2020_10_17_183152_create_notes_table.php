@@ -18,7 +18,7 @@ class CreateNotesTable extends Migration
 
             $table->string('level')->comment("info, warning, danger");
             $table->string('code');
-            $table->string('message');
+            $table->text('message');
             $table->text('description')->nullable();
             $table->string('model')->nullable();
             $table->unsignedInteger('model_id')->nullable();

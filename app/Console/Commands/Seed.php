@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Jobs\SeedContactsJob;
+use App\Jobs\SeedOutcomesJob;
 use App\Services\RestoreService;
 use Illuminate\Console\Command;
 
@@ -61,11 +62,12 @@ class Seed extends Command
         if ($this->option('contacts')) {
             SeedContactsJob::dispatchNow($from, $to);
         }
-        /*
+
         if ($this->option('team-outcomes')) {
-            SeedTeamOutcomes::dispatch($from, $to);
+            SeedOutcomesJob::dispatchNow($from, $to, "team");
         }
 
+        /*
         if ($this->option('custom-outcomes')) {
             SeedCustomOutcomes::dispatch($from, 'week');
 

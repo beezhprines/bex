@@ -33,4 +33,39 @@ class Team extends Model
     {
         return $this->city->country->currency ?? null;
     }
+
+    public static function seedOutcomes(string $startDate, string $endDate)
+    {
+        $budgetTypeInstagram = BudgetType::findByCode('bex:marketer:team:instagram:outcome');
+        $budgetTypeVK = BudgetType::findByCode('bex:marketer:team:vk:outcome');
+        $dates = daterange($startDate, $endDate, true);
+
+        $teams = self::all();
+
+        collect($dates)->each(function ($date) use ($teams, $budgetTypeInstagram, $budgetTypeVK) {
+            Budget::create([
+                'date' => $date,
+                'json' => $teams->map(function ($team) {
+                    return [
+                        'team_id' => $team->id,
+                        'amount' => 0
+                    ];
+                }),
+                'budget_type_id' => $budgetTypeInstagram->id,
+            ]);
+
+            Budget::create([
+                'date' => $date,
+                'json' => $teams->map(function ($team) {
+                    return [
+                        'team_id' => $team->id,
+                        'amount' => 0
+                    ];
+                }),
+                'budget_type_id' => $budgetTypeVK->id,
+            ]);
+        });
+
+        note("info", "budget:seed", "Созданы затраты на команду с {$startDate} по {$endDate}", Budget::class);
+    }
 }

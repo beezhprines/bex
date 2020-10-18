@@ -19,11 +19,6 @@ class Budget extends Model
         return $this->belongsTo(BudgetType::class);
     }
 
-    public function teams()
-    {
-        return $this->belongsToMany(Team::class, 'budget_team');
-    }
-
     public function managers()
     {
         return $this->belongsToMany(Manager::class, 'budget_manager');
