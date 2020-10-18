@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Master;
+use Exception;
 use Illuminate\Http\Request;
 
 class MasterController extends Controller
