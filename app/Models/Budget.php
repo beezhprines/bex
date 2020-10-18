@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Exception;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -121,7 +122,7 @@ class Budget extends Model
 
     public static function solveMastersProfit(string $date)
     {
-        $budgetType =   BudgetType::findByCode('master:profit:outcome');
+        $budgetType = BudgetType::findByCode('master:profit:outcome');
 
         $masters = Master::all();
 
@@ -146,5 +147,36 @@ class Budget extends Model
         }
 
         note("info", "budget:solve:master:profit", "Подсчитана выручка мастеров на дату {$date}", Budget::class);
+    }
+
+    public static function solveCustomOutcomes(string $date)
+    {
+        $types = [
+            ["budgetType" => BudgetType::findByCode('custom:month:outcome'), "days" => date("t", strtotime($date))],
+            ["budgetType" => BudgetType::findByCode('custom:week:outcome'), "days" => 7]
+        ];
+
+        foreach ($types as $type) {
+
+            $budget = self::firstWhere([
+                'budget_type_id' => $type["budgetType"]->id,
+                'date' => $date
+            ]);
+            $budgetTypeCode = $type["budgetType"]->code;
+
+            if (empty($budget)) throw new Exception("Бюджет на дату {$date} и типом {$budgetTypeCode} не найден");
+
+            if (empty($budget->json)) continue;
+
+            $amount = collect(json_decode($budget->json, true))->sum(function ($outcome) {
+                return floatval($outcome["amount"] ?? 0);
+            }) / $type["days"] * $type["budgetType"]->sign();
+
+            $budget->update([
+                'amount' => $amount
+            ]);
+
+            note("info", "budget:solve:{$budgetTypeCode}", "Подсчитаны доп затраты на дату {$date} для {$budgetTypeCode}", self::class, $budget->id);
+        }
     }
 }
