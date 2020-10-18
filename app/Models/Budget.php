@@ -38,4 +38,29 @@ class Budget extends Model
     {
         return $this->hasMany(Invoice::class);
     }
+
+    public static function seedCustomOutcomes(string $startDate, string $endDate)
+    {
+        $budgetTypes = [
+            BudgetType::findByCode('custom:month:outcome'),
+            BudgetType::findByCode('custom:week:outcome')
+        ];
+
+        foreach ($budgetTypes as $budgetType) {
+            $json = $budgetType->budgets()->whereNotNull('json')->orderBy('date')->first()->json ?? null;
+
+            foreach (daterange($startDate, $endDate, true) as $date) {
+                $date = date_format($date, config('app.iso_date'));
+                $budget = $budgetType->budgets()->firstWhere('date', $date);
+
+                if (!empty($budget)) continue;
+
+                Budget::create([
+                    "date" => $date,
+                    "json" => $json,
+                    "budget_type_id" => $budgetType->id
+                ]);
+            }
+        }
+    }
 }

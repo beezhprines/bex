@@ -21,6 +21,16 @@ class WeekService
         return session('week');
     }
 
+    public function monday(string $date)
+    {
+        return date(config('app.iso_date'), strtotime("this week Monday", strtotime($date)));
+    }
+
+    public function sunday(string $date)
+    {
+        return date(config('app.iso_date'), strtotime("this week Sunday", strtotime($date)));
+    }
+
     public function set(string $start = null, string $end = null)
     {
         $now = Carbon::now();

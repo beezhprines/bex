@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Services\CurrencyRateService;
 use App\Services\GitService;
 use App\Services\LoadService;
+use App\Services\MonthService;
 use App\Services\RestoreService;
 use App\Services\SeedService;
 use App\Services\WeekService;
@@ -36,6 +37,7 @@ class AppServiceProvider extends ServiceProvider
     private function registerServices()
     {
         $this->app->singleton(WeekService::class);
+        $this->app->singleton(MonthService::class);
         $this->app->singleton(RestoreService::class);
         $this->app->singleton(CurrencyRateService::class);
         $this->app->singleton(YClientsService::class);

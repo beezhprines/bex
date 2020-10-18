@@ -41,6 +41,10 @@ class SeedOutcomesJob implements ShouldQueue
                 $seedService->teamOutcomes($this->startDate, $this->endDate);
                 break;
 
+            case 'custom':
+                $seedService->customOutcomes($this->startDate, $this->endDate);
+                break;
+
             default:
                 # code...
                 break;

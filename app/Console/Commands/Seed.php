@@ -67,14 +67,8 @@ class Seed extends Command
             SeedOutcomesJob::dispatchNow($from, $to, "team");
         }
 
-        /*
         if ($this->option('custom-outcomes')) {
-            SeedCustomOutcomes::dispatch($from, 'week');
-
-            if (monthFirstDate($to) >= monthFirstDate($from)) {
-                SeedCustomOutcomes::dispatch(monthFirstDate($to), 'month');
-            }
+            SeedOutcomesJob::dispatchNow($from, $to, "custom");
         }
-        */
     }
 }

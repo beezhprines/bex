@@ -1,12 +1,18 @@
 <?php
 
 use App\Models\Note;
+use App\Services\MonthService;
 use App\Services\WeekService;
 use Illuminate\Support\Facades\Storage;
 
 function week()
 {
     return resolve(WeekService::class);
+}
+
+function month()
+{
+    return resolve(MonthService::class);
 }
 
 function daterange(string $from, string $to, bool $withLast = false)

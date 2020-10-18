@@ -36,8 +36,8 @@ class Team extends Model
 
     public static function seedOutcomes(string $startDate, string $endDate)
     {
-        $budgetTypeInstagram = BudgetType::findByCode('bex:marketer:team:instagram:outcome');
-        $budgetTypeVK = BudgetType::findByCode('bex:marketer:team:vk:outcome');
+        $budgetTypeInstagram = BudgetType::findByCode('marketer:team:instagram:outcome');
+        $budgetTypeVK = BudgetType::findByCode('marketer:team:vk:outcome');
         $dates = daterange($startDate, $endDate, true);
 
         $teams = self::all();

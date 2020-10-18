@@ -16,7 +16,7 @@ class Contact extends Model
 
     public function team(int $team_id)
     {
-        return collect(json_decode($this->teams, true))->where("team_id", $team_id)->first() ?? null;
+        return collect(json_decode($this->teams, true))->firstWhere("team_id", $team_id) ?? null;
     }
 
     public function contactType()
