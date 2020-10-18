@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Jobs\LoadCurrencyRatesJob;
 use App\Jobs\LoadMastersJob;
 use App\Jobs\LoadRecordsJob;
 use App\Jobs\LoadServicesJob;
@@ -18,6 +19,7 @@ class Load extends Command
     {--masters : Load masters}
     {--services : Load services}
     {--records : Load records}
+    {--rates : Load currency rates}
     {--startDate= : From date}
     {--endDate= : To date}';
 
@@ -51,6 +53,10 @@ class Load extends Command
 
         if ($this->option('services')) {
             LoadServicesJob::dispatchNow();
+        }
+
+        if ($this->option('rates')) {
+            LoadCurrencyRatesJob::dispatchNow();
         }
 
         if ($this->option('records')) {
