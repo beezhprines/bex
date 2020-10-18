@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Jobs\SolveMastersComissionJob;
+use App\Jobs\SolveMastersProfitJob;
 use App\Jobs\SolveTotalComissionJob;
 use Illuminate\Console\Command;
 
@@ -16,6 +17,7 @@ class Solve extends Command
     protected $signature = 'solve
     {--total-comission : Solve total comission}
     {--masters-comission : Solve masters comission}
+    {--masters-profit : Solve masters profit}
     {--all : Solve all budgets}
     {--date= : For date}';
 
@@ -55,6 +57,10 @@ class Solve extends Command
         if ($this->option('masters-comission')) {
             SolveMastersComissionJob::dispatchNow($date);
             return;
+        }
+
+        if ($this->option('masters-profit')) {
+            SolveMastersProfitJob::dispatchNow($date);
         }
     }
 }

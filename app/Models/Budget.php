@@ -118,4 +118,33 @@ class Budget extends Model
 
         note("info", "budget:solve:master:comission", "Подсчитана комиссия мастеров на дату {$date}", self::class);
     }
+
+    public static function solveMastersProfit(string $date)
+    {
+        $budgetType =   BudgetType::findByCode('master:profit:outcome');
+
+        $masters = Master::all();
+
+        foreach ($masters as $master) {
+            $amount = $master->solveProfit($date, $date) * $budgetType->sign();
+
+            $budget = $master->getBudget($date, $budgetType->id);
+
+            if (empty($budget)) {
+                $budget = self::create([
+                    'amount' => $amount,
+                    'date' => $date,
+                    'budget_type_id' => $budgetType->id,
+                ]);
+
+                $budget->masters()->attach($master);
+            } else {
+                $budget->update([
+                    'amount' => $amount
+                ]);
+            }
+        }
+
+        note("info", "budget:solve:master:profit", "Подсчитана выручка мастеров на дату {$date}", Budget::class);
+    }
 }

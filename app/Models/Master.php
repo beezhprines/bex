@@ -65,6 +65,11 @@ class Master extends Model
         return Record::solveComission($this->getRecords($startDate, $endDate));
     }
 
+    public function solveProfit(string $startDate, string $endDate)
+    {
+        return Record::solveProfit($this->getRecords($startDate, $endDate));
+    }
+
     public function getBudget(string $date, int $budgetTypeId)
     {
         return $this->budgets

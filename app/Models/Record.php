@@ -48,6 +48,15 @@ class Record extends Model
         });
     }
 
+    public static function solveProfit($records)
+    {
+        return $records->sum(function ($record) {
+            return $record->services->sum(function ($service) {
+                return floatval($service->pivot->profit);
+            });
+        });
+    }
+
     public static function seed($records, $date)
     {
         foreach ($records as $item) {
