@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Jobs\SolveManagersProfitJob;
 use App\Jobs\SolveMastersComissionJob;
 use App\Jobs\SolveMastersProfitJob;
 use App\Jobs\SolveOutcomesJob;
@@ -20,6 +21,7 @@ class Solve extends Command
     {--masters-comission : Solve masters comission}
     {--masters-profit : Solve masters profit}
     {--custom-outcomes : Solve custom outcomes}
+    {--managers-profit : Solve managers profit}
     {--all : Solve all budgets}
     {--date= : For date}';
 
@@ -68,6 +70,11 @@ class Solve extends Command
 
         if ($this->option('custom-outcomes')) {
             SolveOutcomesJob::dispatchNow($date);
+            return;
+        }
+
+        if ($this->option('managers-profit')) {
+            SolveManagersProfitJob::dispatchNow($date);
             return;
         }
     }

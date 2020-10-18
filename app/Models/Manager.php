@@ -18,4 +18,30 @@ class Manager extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function budgets()
+    {
+        return $this->belongsToMany(Budget::class);
+    }
+
+    public static function getMilestoneBonus(float $totalComission)
+    {
+        return collect(json_decode(Configuration::findByCode("manager:milestones")->value, true))
+            ->filter(function ($milestone) use ($totalComission) {
+                return $totalComission >= $milestone['profit'];
+            })
+            ->last()['bonus'] ?? 0;
+    }
+
+    public static function solveBonus(float $comission, float $premium_rate)
+    {
+        // get base manager comission coefficient
+        $comissionCoef = floatval(Configuration::findByCode("manager:profit")->value);
+
+        // get milestones bonus
+        $bonus = self::getMilestoneBonus($comission);
+
+        // solve
+        return (($comissionCoef * $comission) + floatval($bonus)) * floatval($premium_rate);
+    }
 }

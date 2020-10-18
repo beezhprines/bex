@@ -6,6 +6,7 @@ use Exception;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\DB;
 
 class Budget extends Model
 {
@@ -178,5 +179,48 @@ class Budget extends Model
 
             note("info", "budget:solve:{$budgetTypeCode}", "Подсчитаны доп затраты на дату {$date} для {$budgetTypeCode}", self::class, $budget->id);
         }
+    }
+
+    public static function solveManagersBonus(string $date)
+    {
+        $budgetType =  BudgetType::findByCode('manager:bonus:outcome');
+
+        $comission = self::getComission($date, $date);
+
+        $managers = Manager::all();
+
+        foreach ($managers as $manager) {
+            $amount = Manager::solveBonus($comission, $manager->premium_rate) * $budgetType->sign();
+
+            $budget = $manager->budgets->firstWhere('date', $date);
+
+            if (empty($budget)) {
+                $budget = self::create([
+                    'amount' => $amount,
+                    'date' => $date,
+                    'budget_type_id' => $budgetType->id
+                ]);
+
+                $budget->managers()->attach($manager);
+            } else {
+                $budget->update([
+                    'amount' => $amount
+                ]);
+            }
+        }
+
+        note("info", "budget:solve:manager:bonus", "Подсчитаны бонусы менеджеров на дату {$date}", self::class);
+    }
+
+    public static function getComission(string $startDate, string $endDate)
+    {
+        $budgetType = BudgetType::findByCode('total:comission:income');
+
+        return self::whereBetween(DB::raw('DATE(date)'), array($startDate, $endDate))
+            ->where('budget_type_id', $budgetType->id)
+            ->get()
+            ->sum(function ($budget) {
+                return $budget->amount;
+            });
     }
 }
