@@ -240,10 +240,32 @@ return [
 
         // master pages
         [
+            'header' => 'Master',
+        ],
+
+        [
             'text' => 'Статистика',
             'route'  => 'masters.statistics',
             'icon' => 'fa fa-list-alt',
-#            'can'  => ['is-master']
+            #'can'  => ['can-master']
+        ],
+
+        // marketer pages
+        [
+            'header' => 'Marketers',
+        ],
+
+        [
+            'text' => 'Аналитика',
+            'route'  => 'marketers.analytics',
+            'icon' => 'fa fa-list-alt',
+            #'can'  => ['can-marketer']
+        ],
+        [
+            'text' => 'Диаграммы',
+            'route' => 'marketers.diagrams',
+            'icon' => 'fa fa-chart-pie',
+            #'can'  => ['can-marketer']
         ]
     ],
 

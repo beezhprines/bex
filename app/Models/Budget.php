@@ -21,6 +21,11 @@ class Budget extends Model
         return $this->belongsTo(BudgetType::class);
     }
 
+    public function teams()
+    {
+        return $this->belongsToMany(Team::class)->withTimestamps();
+    }
+
     public function managers()
     {
         return $this->belongsToMany(Manager::class)->withTimestamps();

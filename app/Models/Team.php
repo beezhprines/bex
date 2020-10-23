@@ -34,6 +34,11 @@ class Team extends Model
         return $this->city->country->currency ?? null;
     }
 
+    public function budgets()
+    {
+        return $this->belongsToMany(Budget::class)->withTimestamps();
+    }
+
     public static function seedOutcomes(string $startDate, string $endDate)
     {
         $budgetTypeInstagram = BudgetType::findByCode('marketer:team:instagram:outcome');
@@ -78,5 +83,26 @@ class Team extends Model
                 $endDate
             );
         }) * floatval($this->premium_rate);
+    }
+
+    public function solveConversion(string $startDate, string $endDate, bool $onlyAttendance)
+    {
+        // get attendance records
+        $recordsCount = $this->masters->sum(function ($master) use ($startDate, $endDate, $onlyAttendance) {
+            $count = $master->getRecords($startDate, $endDate, true, true)->count();
+            if (!$onlyAttendance) {
+                $count += $master->getRecords($startDate, $endDate, false, true)->count();
+            }
+            return $count;
+        });
+
+        // get new contacts
+        $team = $this;
+        $contactDifference = ContactType::all()
+            ->sum(function ($contactType) use ($startDate, $endDate, $team) {
+                return $this->contactRepo->getDifference($startDate, $endDate, $contactType, $team);
+            });
+
+        return $contactDifference == 0 ? 0 : round($recordsCount / $contactDifference * 100, 2);
     }
 }

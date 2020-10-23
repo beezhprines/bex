@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\InvoiceController;
+use App\Http\Controllers\MarketerController;
 use App\Http\Controllers\MasterController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -30,6 +31,12 @@ Route::middleware(["auth"])->group(function () {
         Route::get("statistics", [MasterController::class, "statistics"])->name("statistics");
     });
 
+    // marketers
+
+    Route::prefix('marketers')->name('marketers.')->group(function () {
+        Route::get('analytics', [MarketerController::class, 'analytics'])->name('analytics');
+        Route::get('diagrams', [MarketerController::class, 'diagrams'])->name('diagrams');
+    });
 
     // invoices
     Route::resources(["invoices" => InvoiceController::class]);

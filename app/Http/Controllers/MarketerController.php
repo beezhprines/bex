@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Budget;
+use App\Models\BudgetType;
+use App\Models\Configuration;
 use App\Models\Marketer;
+use App\Models\Team;
 use Illuminate\Http\Request;
 
 class MarketerController extends Controller
@@ -81,5 +85,31 @@ class MarketerController extends Controller
     public function destroy(Marketer $marketer)
     {
         //
+    }
+
+
+    public function analytics()
+    {
+        $budgetTypeInstagram = BudgetType::findByCode('marketer:team:instagram:outcome');
+        $budgetTypeVK = BudgetType::findByCode('marketer:team:vk:outcome');
+
+        // todo: add dollars, tenge, rubles as in whatsapp video
+        return view("marketers.analytics");
+    }
+
+    public function diagrams()
+    {
+        $milestones = collect(json_decode(Configuration::findByCode('manager:milestones')->value, true))
+            ->map(function ($milestone) {
+                $milestone['bonus'] = null;
+                return $milestone;
+            });
+
+        $totalComission =  Budget::getComission(week()->start(), week()->end());
+
+        return view("marketers.diagrams", [
+            'milestones' => $milestones,
+            'totalComission' => $totalComission,
+        ]);
     }
 }
