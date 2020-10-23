@@ -23,4 +23,65 @@ class Operator extends Model
     {
         return $this->hasMany(Team::class);
     }
+
+    public function budgets()
+    {
+        return $this->belongsToMany(Budget::class)->withTimestamps();
+    }
+
+    public function solveComission(string $startDate, string $endDate)
+    {
+        return $this->teams->sum(function ($team) use ($startDate, $endDate) {
+            return $team->solveComission($startDate, $endDate);
+        });
+    }
+
+    public function getPoints(float $profit)
+    {
+        return round($profit / ($this->profitCoef() * $this->pointValue()));
+    }
+
+    private function profitCoef()
+    {
+        return floatval(Configuration::findByCode('operator:profit')->value);
+    }
+
+    private function pointValue()
+    {
+        return floatval(Configuration::findByCode('operator:point')->value);
+    }
+
+    public function solveProfit(float $comission)
+    {
+        return $comission * $this->profitCoef();
+    }
+
+    public function solvePointsPerService(Service $service, string $startDate, string $endDate)
+    {
+        $comission = $service->solveComission($startDate, $endDate);
+
+        return round($comission / $this->pointValue());
+    }
+
+    public function solvePointsPerTeam(Team $team, string $startDate, string $endDate)
+    {
+        $comission = $team->solveComission($startDate, $endDate);
+
+        return round($comission / $this->pointValue());
+    }
+
+    public function solvePointsPerMaster(Master $master, string $startDate, string $endDate)
+    {
+        $comission = $master->getComission($startDate, $endDate) * floatval($master->team->premium_rate);
+
+        return round($comission / $this->pointValue);
+    }
+
+    public function getBudget(string $date, int $budgetTypeId)
+    {
+        return $this->budgets
+            ->where('date', $date)
+            ->where('budget_type_id', $budgetTypeId)
+            ->first();
+    }
 }

@@ -70,6 +70,53 @@ class Master extends Model
         return Record::solveProfit($this->getRecords($startDate, $endDate));
     }
 
+    public function getComission(string $startDate, string $endDate)
+    {
+        $budgetType = BudgetType::findByCode('master:comission:income');
+
+        $amount = round(
+            $this->budgets
+                ->whereBetween('date', [$startDate, $endDate])
+                ->where('budget_type_id', $budgetType->id)
+                ->sum(function ($budget) {
+                    return $budget->amount;
+                })
+        );
+
+        return $amount == 0 ? 0 : $amount *  $budgetType->sign();
+    }
+
+    public function getProfit(string $startDate, string $endDate)
+    {
+        $budgetType = BudgetType::findByCode('master:profit:outcome');
+
+        $amount = round(
+            $this->budgets
+                ->whereBetween('date', [$startDate, $endDate])
+                ->where('budget_type_id', $budgetType->id)
+                ->sum(function ($budget) {
+                    return $budget->amount;
+                })
+        );
+
+        return $amount == 0 ? 0 : $amount *  $budgetType->sign();
+    }
+
+    public function getTotalProfit()
+    {
+        $budgetType = BudgetType::findByCode('master:profit:outcome');
+
+        $amount = round(
+            $this->budgets
+                ->where('budget_type_id', $budgetType->id)
+                ->sum(function ($budget) {
+                    return $budget->amount;
+                })
+        );
+
+        return $amount == 0 ? 0 : $amount *  $budgetType->sign();
+    }
+
     public function getBudget(string $date, int $budgetTypeId)
     {
         return $this->budgets

@@ -212,6 +212,35 @@ class Budget extends Model
         note("info", "budget:solve:manager:bonus", "Подсчитаны бонусы менеджеров на дату {$date}", self::class);
     }
 
+    public static function solveOperatorsProfit(string $date)
+    {
+        $budgetType =  BudgetType::findByCode('operator:profit:outcome');
+
+        $operators = Operator::all();
+
+        foreach ($operators as $operator) {
+            $amount = $operator->solveProfit($operator->solveComission($date, $date)) * $budgetType->sign();
+
+            $budget = $operator->getBudget($date, $budgetType->id);
+
+            if (empty($budget)) {
+                $budget = self::create([
+                    'amount' => $amount,
+                    'date' => $date,
+                    'budget_type_id' => $budgetType->id
+                ]);
+
+                $budget->operators()->attach($operator);
+            } else {
+                $budget->update([
+                    'amount' => $amount
+                ]);
+            }
+        }
+
+        note("info", "budget:solve:operator:profit", "Подсчитаны бонусы операторов на дату {$date}", seld::class);
+    }
+
     public static function getComission(string $startDate, string $endDate)
     {
         $budgetType = BudgetType::findByCode('total:comission:income');

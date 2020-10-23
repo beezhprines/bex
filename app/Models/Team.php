@@ -68,4 +68,15 @@ class Team extends Model
 
         note("info", "budget:seed", "Созданы затраты на команду с {$startDate} по {$endDate}", Budget::class);
     }
+
+    public function solveComission(string $startDate, string $endDate)
+    {
+        // get total team comission in KZT
+        return $this->masters->sum(function ($master) use ($startDate, $endDate) {
+            return $master->solveComission(
+                $startDate,
+                $endDate
+            );
+        }) * floatval($this->premium_rate);
+    }
 }

@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\DB;
 
 class Service extends Model
 {
@@ -27,6 +28,28 @@ class Service extends Model
     public function currency()
     {
         return $this->master->currency() ?? null;
+    }
+
+    public function getRecordsBetweenDates(string $startDate, string $endDate, bool $attendance = true)
+    {
+        $records = $this->records()
+            ->whereBetween(DB::raw('DATE(started_at)'), array($startDate, $endDate))
+            ->where('attendance', $attendance)
+            ->get();
+
+        $this->recordsWeek += $records->count();
+
+        return $records;
+    }
+
+    public function solveComission(string $startDate, string $endDate, bool $attendance = true)
+    {
+        $records = $this->records()
+            ->whereBetween(DB::raw('DATE(started_at)'), array($startDate, $endDate))
+            ->where('attendance', $attendance)
+            ->get();
+
+        return Record::solveComission($records, true);
     }
 
     public static function seed(array $items)

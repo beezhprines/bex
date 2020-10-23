@@ -75,6 +75,12 @@ class Record extends Model
                     if (!empty($item["services"])) {
 
                         foreach ($item['services'] as $serviceData) {
+                            $service = $record->services->first();
+
+                            if (!empty($service) && $service->origin_id != $serviceData["id"]) {
+                                $record->services()->detach($service->id);
+                            }
+
                             $service = Service::findByOriginId($serviceData["id"]);
 
                             if (!empty($service) && !empty($master->currency())) {
