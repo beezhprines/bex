@@ -34,7 +34,7 @@ class Handler extends ExceptionHandler
     public function register()
     {
         $this->reportable(function (Exception $e) {
-            note("danger", "fatal:error", $e->getMessage(), null, null, $e->getTraceAsString());
+            //note("danger", "fatal:error", $e->getMessage(), null, null, $e->getTraceAsString());
         });
     }
 }

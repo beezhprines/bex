@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\MasterController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -19,10 +20,20 @@ use Illuminate\Support\Facades\Route;
 Auth::routes();
 
 Route::middleware(["auth"])->group(function () {
+
+    // home
     Route::get("/", [HomeController::class, "dashboard"])->name("dashboard");
     Route::post("/calendar", [HomeController::class, "calendar"])->name("calendar");
 
+    // masters
     Route::prefix("masters")->name("masters.")->group(function () {
         Route::get("statistics", [MasterController::class, "statistics"])->name("statistics");
+    });
+
+
+    // invoices
+    Route::resources(["invoices" => InvoiceController::class]);
+    Route::prefix("invoices")->name("invoices.")->group(function () {
+        Route::post("/store/many", [InvoiceController::class, "storeMany"])->name("store.many");
     });
 });

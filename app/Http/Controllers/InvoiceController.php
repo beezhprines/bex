@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Budget;
 use App\Models\Invoice;
+use App\Models\Master;
 use Illuminate\Http\Request;
 
 class InvoiceController extends Controller
@@ -80,6 +82,37 @@ class InvoiceController extends Controller
      */
     public function destroy(Invoice $invoice)
     {
-        //
+        $invoice->delete();
+
+        note("info", "invoice:delete", "Удален чек", Invoice::class, $invoice->id);
+
+        return redirect()->back()->with(['success' => __('common.deleted-success')]);
+    }
+
+    public function storeMany(Request $request)
+    {
+        $data = $request->validate([
+            'master_id' => 'required|exists:masters,id',
+            'budget_id' => 'required|exists:budgets,id',
+            'invoices' => 'required',
+            'invoices.*' => 'image|max:5120'
+        ]);
+
+        if ($request->hasFile('invoices')) {
+            foreach ($request->file('invoices') as $file) {
+                $base64 = base64_encode(file_get_contents($file));
+
+                $budget = Budget::find($data["budget_id"]);
+                $master = Master::find($data["master_id"]);
+
+                $budget->invoices()->create([
+                    'file' => $base64
+                ]);
+            }
+        }
+
+        note("info", "invoice:create", "Созданы чеки на бюджет мастером {$master->name}", Budget::class, $budget->id);
+
+        return redirect()->back()->with(['success' => __('common.saved-success')]);
     }
 }

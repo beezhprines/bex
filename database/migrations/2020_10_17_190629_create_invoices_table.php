@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 class CreateInvoicesTable extends Migration
@@ -23,6 +24,8 @@ class CreateInvoicesTable extends Migration
 
             $table->index('budget_id');
         });
+
+        DB::statement("ALTER TABLE invoices ADD file MEDIUMBLOB NULL");
     }
 
     /**

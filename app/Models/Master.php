@@ -22,6 +22,11 @@ class Master extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function services()
+    {
+        return $this->hasMany(Service::class);
+    }
+
     public function team()
     {
         return $this->belongsTo(Team::class);

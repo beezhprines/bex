@@ -5,6 +5,21 @@ use App\Services\MonthService;
 use App\Services\WeekService;
 use Illuminate\Support\Facades\Storage;
 
+function isodate(string $date = null)
+{
+    if (is_null($date)) return date(config('app.iso_date'));
+    return date(config('app.iso_date'), strtotime($date));
+}
+
+function price($value)
+{
+    if (is_float($value) || is_int($value)) {
+        return number_format($value, 0, '.', ' ');
+    };
+
+    return $value;
+}
+
 function week()
 {
     return resolve(WeekService::class);

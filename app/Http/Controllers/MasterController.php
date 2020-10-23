@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Budget;
+use App\Models\BudgetType;
 use App\Models\Master;
 use Exception;
 use Illuminate\Http\Request;
@@ -86,6 +88,12 @@ class MasterController extends Controller
 
     public function statistics()
     {
-        return view("masters.statistics");
+        $master = Master::find(2);
+        $budget = $master->getBudget(week()->end(), BudgetType::findByCode("master:comission:income")->id);
+
+        return view("masters.statistics", [
+            "master" => $master,
+            "budget" => $budget
+        ]);
     }
 }

@@ -6,6 +6,7 @@ use App\Jobs\SeedContactsJob;
 use App\Jobs\SeedOutcomesJob;
 use App\Services\RestoreService;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Artisan;
 
 class Seed extends Command
 {
@@ -47,10 +48,6 @@ class Seed extends Command
      */
     public function handle(RestoreService $restoreService)
     {
-        if ($this->option('restore')) {
-            $restoreService->restore();
-            return;
-        }
 
         if (empty($this->option('startDate')) || empty($this->option('endDate'))) {
             $this->error("Start date or end date invalid");
@@ -59,6 +56,22 @@ class Seed extends Command
 
         $from = $this->option('startDate');
         $to = $this->option('endDate');
+
+        if ($this->option('restore')) {
+            Artisan::call("migrate:fresh --seed");
+
+            $restoreService->restore();
+
+            Artisan::call("seed --all --startDate={$from} --endDate={$to}");
+            Artisan::call("load --all --startDate={$from} --endDate={$to}");
+
+            foreach (daterange($from, $to, true) as $date) {
+                $date = date_format($date, config('app.iso_date'));
+
+                Artisan::call("solve --all --date={$date}");
+            }
+            return;
+        }
 
         if ($this->option('all')) {
             SeedContactsJob::dispatchNow($from, $to);

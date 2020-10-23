@@ -63,6 +63,8 @@
     <script src="{{ asset('vendor/adminlte/dist/js/adminlte.min.js') }}"></script>
     <script src="{{ asset('js/app.js') }}"></script>
 
+    @include("vendor.adminlte.partials.common.toastr")
+
     {{-- Custom Scripts --}}
     @yield('adminlte_js')
 
