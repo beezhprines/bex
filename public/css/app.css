@@ -32710,6 +32710,57 @@ a.text-muted:hover {
   opacity: 1;
 }
 
+.progress-container .progress {
+  height: 30px;
+}
+
+.progress-container .progress .progress-bar {
+  font-size: 1rem;
+  font-weight: bold;
+  text-align: right;
+}
+
+.progress-container .progress .progress-bar .profit {
+  position: absolute;
+  margin-left: 1rem;
+}
+
+.progress-container .milestones {
+  height: 50px;
+}
+
+.progress-container .milestones .milestone:before {
+  content: "";
+  display: inline-block;
+  position: absolute;
+  left: -2px;
+  bottom: -6px;
+  width: 2px;
+  height: 7px;
+  background-color: #fff;
+  transform: rotate(45deg);
+  -webkit-transform: rotate(45deg);
+  -moz-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  -o-transform: rotate(45deg);
+}
+
+.progress-container .milestones .milestone {
+  height: 25px;
+  position: absolute;
+  top: 8px;
+  font-weight: normal;
+  transform: rotate(-45deg);
+  -webkit-transform: rotate(-45deg);
+  -moz-transform: rotate(-45deg);
+  -ms-transform: rotate(-45deg);
+  -o-transform: rotate(-45deg);
+}
+
+.progress-container .milestones .milestone > .value {
+  font-size: 0.8rem;
+}
+
 .nav-sidebar > .nav-item .nav-icon.fa,
 .nav-sidebar > .nav-item .nav-icon.fas,
 .nav-sidebar > .nav-item .nav-icon.far,

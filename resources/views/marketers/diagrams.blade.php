@@ -4,7 +4,7 @@
 <h4>
     Аналитика
     <small class="float-right">
-        @include('components.tools.weekrange')
+        <x-week-range></x-week-range>
     </small>
 </h4>
 @stop
@@ -14,7 +14,7 @@
     <div class="col-md-8">
         <div class="card card-warning card-outline">
             <div class="card-body">
-                <x-tools.weekplan-progress :profit='$totalComission' :milestones='$milestones'></x-tools.weekplan-progress>
+                <x-weekplan-progress :profit='$totalComission' :milestones='$milestones'></x-weekplan-progress>
             </div>
         </div>
     </div>
