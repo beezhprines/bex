@@ -1,7 +1,9 @@
 <?php
 
+use App\Http\Controllers\ContactController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\InvoiceController;
+use App\Http\Controllers\ManagerController;
 use App\Http\Controllers\MarketerController;
 use App\Http\Controllers\MasterController;
 use App\Http\Controllers\OperatorController;
@@ -44,6 +46,22 @@ Route::middleware(["auth"])->group(function () {
         Route::get('statistics', [OperatorController::class, 'statistics'])->name('statistics');
         Route::get('salesplan', [OperatorController::class, 'salesplan'])->name('salesplan');
     });
+
+    // managers
+    Route::prefix('managers')->name('managers.')->group(function () {
+        Route::get("weekplan", [ManagerController::class, "weekplan"])->name("weekplan");
+        Route::get("statistics", [ManagerController::class, "statistics"])->name("statistics");
+        Route::get("diagrams", [ManagerController::class, "diagrams"])->name("diagrams");
+        Route::get("monitoring", [ManagerController::class, "monitoring"])->name("monitoring");
+        Route::get("comissions", [ManagerController::class, "comissions"])->name("comissions");
+        Route::get("currencyRates", [ManagerController::class, "currencyRates"])->name("currencyRates");
+    });
+
+    // contacts
+    Route::prefix("contacts")->name("contacts.")->group(function () {
+        Route::post("saveMany", [ContactController::class, "saveMany"])->name("saveMany");
+    });
+
 
     // invoices
     Route::resources(["invoices" => InvoiceController::class]);

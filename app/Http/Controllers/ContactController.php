@@ -82,4 +82,36 @@ class ContactController extends Controller
     {
         //
     }
+
+    public function saveMany(Request $request)
+    {
+        $data = $request->validate([
+            "contacts" => "required|array",
+            "contacts.*.team" => "required|array"
+        ]);
+
+        foreach ($data["contacts"] as $contactId => $teamData) {
+            $contact = Contact::find($contactId);
+
+            if (empty($contact)) return back()->with(["error" => "Контакт не найден"]);
+
+            $teams = json_decode($contact->teams, true);
+
+            foreach ($teamData as $items) {
+                foreach ($items as $teamId => $amount) {
+                    foreach ($teams as $key => $team) {
+                        if ($team["team_id"] == $teamId) {
+                            $teams[$key]["amount"] = intval($amount["amount"]);
+                        }
+                    }
+                }
+            }
+
+            $contact->update([
+                "teams" => json_encode($teams)
+            ]);
+        }
+
+        return back()->with(["success" => __("common.saved-success")]);
+    }
 }

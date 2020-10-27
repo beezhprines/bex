@@ -41,9 +41,9 @@ class WeekService
         return isodate() < $this->end() ? isodate() : $this->end();
     }
 
-    public function weekTitles()
+    public function weekTitles(string $day = null)
     {
-        return [
+        $week = [
             'Mon' => 'Пн',
             'Tue' => 'Вт',
             'Wed' => 'Ср',
@@ -52,6 +52,8 @@ class WeekService
             'Sat' => 'Сб',
             'Sun' => 'Вс'
         ];
+
+        return empty($day) ? $week : $week[$day];
     }
 
     public function set(string $start = null, string $end = null)

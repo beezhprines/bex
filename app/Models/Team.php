@@ -60,7 +60,7 @@ class Team extends Model
                         "team_id" => $team->id,
                         "amount" => 0
                     ];
-                }),
+                })->toJson(),
                 "budget_type_id" => $budgetTypeInstagram->id,
             ]);
 
@@ -71,7 +71,7 @@ class Team extends Model
                         "team_id" => $team->id,
                         "amount" => 0
                     ];
-                }),
+                })->toJson(),
                 "budget_type_id" => $budgetTypeVK->id,
             ]);
         });
@@ -105,7 +105,7 @@ class Team extends Model
         $team = $this;
         $contactDifference = ContactType::all()
             ->sum(function ($contactType) use ($startDate, $endDate, $team) {
-                return $this->contactRepo->getDifference($startDate, $endDate, $contactType, $team);
+                return Contact::getDifference($startDate, $endDate, $team, $contactType);
             });
 
         return $contactDifference == 0 ? 0 : round($recordsCount / $contactDifference * 100, 2);

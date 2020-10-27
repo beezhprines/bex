@@ -284,7 +284,49 @@ return [
             "route" => "operators.salesplan",
             "icon" => "fa fa-chart-line",
             #"can"  => ["can-operator"]
-        ]
+        ],
+
+        // managers pages
+        [
+            "header" => "Managers",
+        ],
+
+        [
+            "text" => "Недельный план",
+            "route" => "managers.weekplan",
+            "icon" => "fa fa-chart-line",
+            #"can"  => ["can-manager"]
+        ],
+        [
+            "text" => "Статистика",
+            "route" => "managers.statistics",
+            "icon" => "fa fa-list-alt",
+            #"can"  => ["can-manager"]
+        ],
+        [
+            "text" => "Диаграммы",
+            "route" => "managers.diagrams",
+            "icon" => "fa fa-chart-pie",
+            #"can"  => ["can-manager"]
+        ],
+        [
+            "text" => "Мониторинг",
+            "route" => "managers.monitoring",
+            "icon" => "fa fa-binoculars",
+            #"can"  => ["can-manager"]
+        ],
+        [
+            "text" => "Комиссии",
+            "route" => "managers.comissions",
+            "icon" => "fa fa-coins",
+            #"can"  => ["can-manager"]
+        ],
+        [
+            "text" => "Курсы валют",
+            "route" => "managers.currencyRates",
+            "icon" => "fa fa-ruble-sign",
+            #"can"  => ["can-manager"]
+        ],
     ],
 
     /*
