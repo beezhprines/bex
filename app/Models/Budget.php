@@ -77,10 +77,7 @@ class Budget extends Model
 
         $amount = Record::solveComission(Record::get($date, $date)) * $budgetType->sign();
 
-        $budget = self::firstWhere([
-            'budget_type_id' => $budgetType->id,
-            'date' => $date
-        ]);
+        $budget = self::findByDateAndType($date, $budgetType);
 
         if (empty($budget)) {
             $budget = self::create([
@@ -164,10 +161,7 @@ class Budget extends Model
 
         foreach ($types as $type) {
 
-            $budget = self::firstWhere([
-                'budget_type_id' => $type["budgetType"]->id,
-                'date' => $date
-            ]);
+            $budget = self::findByDateAndType($date, $type["budgetType"]);
             $budgetTypeCode = $type["budgetType"]->code;
 
             if (empty($budget)) throw new Exception("Бюджет на дату {$date} и типом {$budgetTypeCode} не найден");
@@ -250,11 +244,24 @@ class Budget extends Model
     {
         $budgetType = BudgetType::findByCode('total:comission:income');
 
-        return self::whereBetween(DB::raw('DATE(date)'), array($startDate, $endDate))
-            ->where('budget_type_id', $budgetType->id)
-            ->get()
+        return self::getBetweenDatesAndType($startDate, $endDate, $budgetType)
             ->sum(function ($budget) {
                 return $budget->amount;
             });
+    }
+
+    public static function getBetweenDatesAndType(string $startDate, string $endDate, BudgetType $budgetType)
+    {
+        return self::whereBetween(DB::raw('DATE(date)'), array($startDate, $endDate))
+            ->where('budget_type_id', $budgetType->id)
+            ->get();
+    }
+
+    public static function findByDateAndType(string $date, BudgetType $budgetType)
+    {
+        return self::firstWhere([
+            'budget_type_id' => $budgetType->id,
+            'date' => $date
+        ]);
     }
 }

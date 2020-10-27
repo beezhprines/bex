@@ -11,6 +11,12 @@ function isodate(string $date = null)
     return date(config('app.iso_date'), strtotime($date));
 }
 
+function viewdate(string $date = null)
+{
+    if (is_null($date)) return date(config('app.view_date'));
+    return date(config('app.view_date'), strtotime($date));
+}
+
 function price($value)
 {
     if (is_float($value) || is_int($value)) {

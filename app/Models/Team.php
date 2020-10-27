@@ -11,7 +11,7 @@ class Team extends Model
     use HasFactory, SoftDeletes, ModelBase;
 
     protected $fillable = [
-        'title', 'premium_rate', 'operator_id', 'city_id'
+        "title", "premium_rate", "operator_id", "city_id"
     ];
 
     public function city()
@@ -34,6 +34,11 @@ class Team extends Model
         return $this->city->country->currency ?? null;
     }
 
+    public function currencyRate(string $date)
+    {
+        return CurrencyRate::findByCurrencyAndDate($this->team->currency(), $date);
+    }
+
     public function budgets()
     {
         return $this->belongsToMany(Budget::class)->withTimestamps();
@@ -41,33 +46,33 @@ class Team extends Model
 
     public static function seedOutcomes(string $startDate, string $endDate)
     {
-        $budgetTypeInstagram = BudgetType::findByCode('marketer:team:instagram:outcome');
-        $budgetTypeVK = BudgetType::findByCode('marketer:team:vk:outcome');
+        $budgetTypeInstagram = BudgetType::findByCode("marketer:team:instagram:outcome");
+        $budgetTypeVK = BudgetType::findByCode("marketer:team:vk:outcome");
         $dates = daterange($startDate, $endDate, true);
 
         $teams = self::all();
 
         collect($dates)->each(function ($date) use ($teams, $budgetTypeInstagram, $budgetTypeVK) {
             Budget::create([
-                'date' => $date,
-                'json' => $teams->map(function ($team) {
+                "date" => $date,
+                "json" => $teams->map(function ($team) {
                     return [
-                        'team_id' => $team->id,
-                        'amount' => 0
+                        "team_id" => $team->id,
+                        "amount" => 0
                     ];
                 }),
-                'budget_type_id' => $budgetTypeInstagram->id,
+                "budget_type_id" => $budgetTypeInstagram->id,
             ]);
 
             Budget::create([
-                'date' => $date,
-                'json' => $teams->map(function ($team) {
+                "date" => $date,
+                "json" => $teams->map(function ($team) {
                     return [
-                        'team_id' => $team->id,
-                        'amount' => 0
+                        "team_id" => $team->id,
+                        "amount" => 0
                     ];
                 }),
-                'budget_type_id' => $budgetTypeVK->id,
+                "budget_type_id" => $budgetTypeVK->id,
             ]);
         });
 

@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Budget;
 use App\Models\BudgetType;
 use App\Models\Configuration;
+use App\Models\Currency;
+use App\Models\CurrencyRate;
 use App\Models\Marketer;
 use App\Models\Team;
 use Illuminate\Http\Request;
@@ -90,26 +92,89 @@ class MarketerController extends Controller
 
     public function analytics()
     {
-        $budgetTypeInstagram = BudgetType::findByCode('marketer:team:instagram:outcome');
-        $budgetTypeVK = BudgetType::findByCode('marketer:team:vk:outcome');
+        $budgetTypeInstagram = BudgetType::findByCode("marketer:team:instagram:outcome");
+        $budgetTypeVK = BudgetType::findByCode("marketer:team:vk:outcome");
+
+        $instagram = collect(json_decode(Budget::findByDateAndType(week()->last(), $budgetTypeInstagram)->json, true));
+        $vk = collect(json_decode(Budget::findByDateAndType(week()->last(), $budgetTypeVK)->json, true));
+        $teams = Team::all();
+
+        $currencyRates = [];
+        foreach (Currency::all() as $currency) {
+            $currencyRates[$currency->code] = CurrencyRate::findByCurrencyAndDate($currency, week()->last());
+        }
 
         // todo: add dollars, tenge, rubles as in whatsapp video
-        return view("marketers.analytics");
+        return view("marketers.analytics", [
+            "teams" => $teams,
+            "instagram" => $instagram,
+            "vk" => $vk,
+            "currencyRates" => collect($currencyRates)
+        ]);
+    }
+
+    public function saveTeamOutcomes(Request $request)
+    {
+        $data = $request->validate([
+            "date" => "required|date",
+            "teams" => "required|array",
+            "teams.*.id" => "required|exists:teams,id",
+            "teams.*.instagram" => "nullable|numeric",
+            "teams.*.vk" => "nullable|numeric",
+        ]);
+
+        $budgetTypes = [
+            "instagram" => BudgetType::findByCode("marketer:team:instagram:outcome"),
+            "vk" => BudgetType::findByCode("marketer:team:vk:outcome")
+        ];
+
+        $teams = collect($data["teams"]);
+
+        foreach ($budgetTypes as $key => $budgetType) {
+            $budget = Budget::findByDateAndType($data["date"], $budgetType);
+
+            $json = $teams->map(function ($team) use ($key) {
+                return [
+                    "amount" => floatval($team[$key]),
+                    "team_id" => intval($team["id"])
+                ];
+            });
+
+            $amount = $json->sum(function ($team) {
+                return $team["amount"];
+            }) * $budgetType->sign();
+
+            if (empty($budget)) {
+                $budget = Budget::create([
+                    "amount" => $amount,
+                    "json" => json_encode(array_values($json->toArray())),
+                    "date" => $data["date"],
+                    "budget_type_id" => $budgetType->id
+                ]);
+            } else {
+                $budget->update([
+                    "amount" => $amount,
+                    "json" => json_encode(array_values($json->toArray())),
+                ]);
+            }
+        }
+
+        return back()->with(["success" => __("common.saved-success")]);
     }
 
     public function diagrams()
     {
-        $milestones = collect(json_decode(Configuration::findByCode('manager:milestones')->value, true))
+        $milestones = collect(json_decode(Configuration::findByCode("manager:milestones")->value, true))
             ->map(function ($milestone) {
-                $milestone['bonus'] = null;
+                $milestone["bonus"] = null;
                 return $milestone;
             });
 
         $totalComission =  Budget::getComission(week()->start(), week()->end());
 
         return view("marketers.diagrams", [
-            'milestones' => $milestones,
-            'totalComission' => $totalComission,
+            "milestones" => $milestones,
+            "totalComission" => $totalComission,
         ]);
     }
 }

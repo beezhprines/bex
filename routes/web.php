@@ -35,6 +35,7 @@ Route::middleware(["auth"])->group(function () {
 
     Route::prefix('marketers')->name('marketers.')->group(function () {
         Route::get('analytics', [MarketerController::class, 'analytics'])->name('analytics');
+        Route::post('saveteamoutcomes', [MarketerController::class, 'saveTeamOutcomes'])->name('saveTeamOutcomes');
         Route::get('diagrams', [MarketerController::class, 'diagrams'])->name('diagrams');
     });
 

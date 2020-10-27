@@ -31,6 +31,11 @@ class WeekService
         return date(config('app.iso_date'), strtotime("this week Sunday", strtotime($date)));
     }
 
+    public function last()
+    {
+        return isodate() < $this->end() ? isodate() : $this->end();
+    }
+
     public function set(string $start = null, string $end = null)
     {
         $now = Carbon::now();
