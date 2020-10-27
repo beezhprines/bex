@@ -4,6 +4,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\MarketerController;
 use App\Http\Controllers\MasterController;
+use App\Http\Controllers\OperatorController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -32,11 +33,16 @@ Route::middleware(["auth"])->group(function () {
     });
 
     // marketers
-
     Route::prefix('marketers')->name('marketers.')->group(function () {
         Route::get('analytics', [MarketerController::class, 'analytics'])->name('analytics');
         Route::post('saveteamoutcomes', [MarketerController::class, 'saveTeamOutcomes'])->name('saveTeamOutcomes');
         Route::get('diagrams', [MarketerController::class, 'diagrams'])->name('diagrams');
+    });
+
+    // operators
+    Route::prefix('operators')->name('operators.')->group(function () {
+        Route::get('statistics', [OperatorController::class, 'statistics'])->name('statistics');
+        Route::get('salesplan', [OperatorController::class, 'salesplan'])->name('salesplan');
     });
 
     // invoices

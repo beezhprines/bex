@@ -11,7 +11,7 @@ class Operator extends Model
     use HasFactory, SoftDeletes, ModelBase;
 
     protected $fillable = [
-        'user_id', 'name'
+        "user_id", "name"
     ];
 
     public function user()
@@ -43,12 +43,12 @@ class Operator extends Model
 
     private function profitCoef()
     {
-        return floatval(Configuration::findByCode('operator:profit')->value);
+        return floatval(Configuration::findByCode("operator:profit")->value);
     }
 
     private function pointValue()
     {
-        return floatval(Configuration::findByCode('operator:point')->value);
+        return floatval(Configuration::findByCode("operator:point")->value);
     }
 
     public function solveProfit(float $comission)
@@ -74,14 +74,30 @@ class Operator extends Model
     {
         $comission = $master->getComission($startDate, $endDate) * floatval($master->team->premium_rate);
 
-        return round($comission / $this->pointValue);
+        return round($comission / $this->pointValue());
+    }
+
+    public function getProfit(string $startDate, string $endDate)
+    {
+        $budgetType = BudgetType::findByCode("operator:profit:outcome");
+
+        $amount = round(
+            $this->budgets
+                ->whereBetween("date", [$startDate, $endDate])
+                ->where("budget_type_id", $budgetType->id)
+                ->sum(function ($budget) {
+                    return $budget->amount;
+                })
+        );
+
+        return $amount == 0 ? 0 : $amount *  $budgetType->sign();
     }
 
     public function getBudget(string $date, int $budgetTypeId)
     {
         return $this->budgets
-            ->where('date', $date)
-            ->where('budget_type_id', $budgetTypeId)
+            ->where("date", $date)
+            ->where("budget_type_id", $budgetTypeId)
             ->first();
     }
 }

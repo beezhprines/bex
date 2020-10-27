@@ -95,6 +95,8 @@
 
 __webpack_require__(/*! ./datepicker */ "./resources/js/datepicker.js");
 
+__webpack_require__(/*! ./selectpicker */ "./resources/js/selectpicker.js");
+
 var $loader = $("#loader");
 $.ajaxSetup({
   headers: {
@@ -207,6 +209,22 @@ var setWeek = function setWeek(startDate, endDate) {
     weeks.on("mouseout", function () {
       $(this).find("td").removeClass("highlighted");
     });
+  });
+})(jQuery);
+
+/***/ }),
+
+/***/ "./resources/js/selectpicker.js":
+/*!**************************************!*\
+  !*** ./resources/js/selectpicker.js ***!
+  \**************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+(function ($) {
+  $(".selectpicker.linkable").on("change", function (e) {
+    e.preventDefault();
+    window.location.href = $(this).find("option:selected").attr("data-link");
   });
 })(jQuery);
 

@@ -14,9 +14,9 @@ return [
     |
     */
 
-    'title' => 'Beauty Expert',
-    'title_prefix' => '',
-    'title_postfix' => '',
+    "title" => "Beauty Expert",
+    "title_prefix" => "",
+    "title_postfix" => "",
 
     /*
     |--------------------------------------------------------------------------
@@ -30,8 +30,8 @@ return [
     |
     */
 
-    'use_ico_only' => false,
-    'use_full_favicon' => false,
+    "use_ico_only" => false,
+    "use_full_favicon" => false,
 
     /*
     |--------------------------------------------------------------------------
@@ -45,12 +45,12 @@ return [
     |
     */
 
-    'logo' => 'Beauty Expert',
-    'logo_img' => null,
-    'logo_img_class' => 'brand-image img-circle elevation-3',
-    'logo_img_xl' => null,
-    'logo_img_xl_class' => 'brand-image-xs',
-    'logo_img_alt' => 'Beauty Expert',
+    "logo" => "Beauty Expert",
+    "logo_img" => null,
+    "logo_img_class" => "brand-image img-circle elevation-3",
+    "logo_img_xl" => null,
+    "logo_img_xl_class" => "brand-image-xs",
+    "logo_img_alt" => "Beauty Expert",
 
     /*
     |--------------------------------------------------------------------------
@@ -64,12 +64,12 @@ return [
     |
     */
 
-    'usermenu_enabled' => false,
-    'usermenu_header' => false,
-    'usermenu_header_class' => 'bg-primary',
-    'usermenu_image' => false,
-    'usermenu_desc' => false,
-    'usermenu_profile_url' => false,
+    "usermenu_enabled" => false,
+    "usermenu_header" => false,
+    "usermenu_header_class" => "bg-primary",
+    "usermenu_image" => false,
+    "usermenu_desc" => false,
+    "usermenu_profile_url" => false,
 
     /*
     |--------------------------------------------------------------------------
@@ -83,11 +83,11 @@ return [
     |
     */
 
-    'layout_topnav' => null,
-    'layout_boxed' => null,
-    'layout_fixed_sidebar' => null,
-    'layout_fixed_navbar' => null,
-    'layout_fixed_footer' => null,
+    "layout_topnav" => null,
+    "layout_boxed" => null,
+    "layout_fixed_sidebar" => null,
+    "layout_fixed_navbar" => null,
+    "layout_fixed_footer" => null,
 
     /*
     |--------------------------------------------------------------------------
@@ -101,12 +101,12 @@ return [
     |
     */
 
-    'classes_auth_card' => 'card-outline card-primary',
-    'classes_auth_header' => '',
-    'classes_auth_body' => '',
-    'classes_auth_footer' => '',
-    'classes_auth_icon' => '',
-    'classes_auth_btn' => 'btn-flat btn-primary',
+    "classes_auth_card" => "card-outline card-primary",
+    "classes_auth_header" => "",
+    "classes_auth_body" => "",
+    "classes_auth_footer" => "",
+    "classes_auth_icon" => "",
+    "classes_auth_btn" => "btn-flat btn-primary",
 
     /*
     |--------------------------------------------------------------------------
@@ -120,17 +120,17 @@ return [
     |
     */
 
-    'classes_body' => '',
-    'classes_brand' => '',
-    'classes_brand_text' => '',
-    'classes_content_wrapper' => '',
-    'classes_content_header' => '',
-    'classes_content' => '',
-    'classes_sidebar' => 'sidebar-dark-primary',
-    'classes_sidebar_nav' => 'nav-legacy',
-    'classes_topnav' => 'navbar-white navbar-light',
-    'classes_topnav_nav' => 'navbar-expand',
-    'classes_topnav_container' => 'container',
+    "classes_body" => "",
+    "classes_brand" => "",
+    "classes_brand_text" => "",
+    "classes_content_wrapper" => "",
+    "classes_content_header" => "",
+    "classes_content" => "",
+    "classes_sidebar" => "sidebar-dark-primary",
+    "classes_sidebar_nav" => "nav-legacy",
+    "classes_topnav" => "navbar-white navbar-light",
+    "classes_topnav_nav" => "navbar-expand",
+    "classes_topnav_container" => "container",
 
     /*
     |--------------------------------------------------------------------------
@@ -144,15 +144,15 @@ return [
     |
     */
 
-    'sidebar_mini' => false,
-    'sidebar_collapse' => false,
-    'sidebar_collapse_auto_size' => false,
-    'sidebar_collapse_remember' => false,
-    'sidebar_collapse_remember_no_transition' => false,
-    'sidebar_scrollbar_theme' => 'os-theme-light',
-    'sidebar_scrollbar_auto_hide' => 'l',
-    'sidebar_nav_accordion' => true,
-    'sidebar_nav_animation_speed' => 300,
+    "sidebar_mini" => false,
+    "sidebar_collapse" => false,
+    "sidebar_collapse_auto_size" => false,
+    "sidebar_collapse_remember" => false,
+    "sidebar_collapse_remember_no_transition" => false,
+    "sidebar_scrollbar_theme" => "os-theme-light",
+    "sidebar_scrollbar_auto_hide" => "l",
+    "sidebar_nav_accordion" => true,
+    "sidebar_nav_animation_speed" => 300,
 
     /*
     |--------------------------------------------------------------------------
@@ -166,13 +166,13 @@ return [
     |
     */
 
-    'right_sidebar' => false,
-    'right_sidebar_icon' => 'fas fa-cogs',
-    'right_sidebar_theme' => 'dark',
-    'right_sidebar_slide' => true,
-    'right_sidebar_push' => true,
-    'right_sidebar_scrollbar_theme' => 'os-theme-light',
-    'right_sidebar_scrollbar_auto_hide' => 'l',
+    "right_sidebar" => false,
+    "right_sidebar_icon" => "fas fa-cogs",
+    "right_sidebar_theme" => "dark",
+    "right_sidebar_slide" => true,
+    "right_sidebar_push" => true,
+    "right_sidebar_scrollbar_theme" => "os-theme-light",
+    "right_sidebar_scrollbar_auto_hide" => "l",
 
     /*
     |--------------------------------------------------------------------------
@@ -186,21 +186,21 @@ return [
     |
     */
 
-    'use_route_url' => false,
+    "use_route_url" => false,
 
-    'dashboard_url' => '/',
+    "dashboard_url" => "/",
 
-    'logout_url' => 'logout',
+    "logout_url" => "logout",
 
-    'login_url' => 'login',
+    "login_url" => "login",
 
-    'register_url' => 'register',
+    "register_url" => "register",
 
-    'password_reset_url' => 'password/reset',
+    "password_reset_url" => "password/reset",
 
-    'password_email_url' => 'password/email',
+    "password_email_url" => "password/email",
 
-    'profile_url' => false,
+    "profile_url" => false,
 
     /*
     |--------------------------------------------------------------------------
@@ -214,9 +214,9 @@ return [
     |
     */
 
-    'enabled_laravel_mix' => true,
-    'laravel_mix_css_path' => 'css/app.css',
-    'laravel_mix_js_path' => 'js/app.js',
+    "enabled_laravel_mix" => true,
+    "laravel_mix_css_path" => "css/app.css",
+    "laravel_mix_js_path" => "js/app.js",
 
     /*
     |--------------------------------------------------------------------------
@@ -230,42 +230,60 @@ return [
     |
     */
 
-    'menu' => [
+    "menu" => [
         // websites menu
         [
-            'text' => 'Beauty Expert',
-            'url'  => '/',
-            'topnav' => true
+            "text" => "Beauty Expert",
+            "url"  => "/",
+            "topnav" => true
         ],
 
         // master pages
         [
-            'header' => 'Master',
+            "header" => "Master",
         ],
 
         [
-            'text' => 'Статистика',
-            'route'  => 'masters.statistics',
-            'icon' => 'fa fa-list-alt',
-            #'can'  => ['can-master']
+            "text" => "Статистика",
+            "route"  => "masters.statistics",
+            "icon" => "fa fa-list-alt",
+            #"can"  => ["can-master"]
         ],
 
         // marketer pages
         [
-            'header' => 'Marketers',
+            "header" => "Marketers",
         ],
 
         [
-            'text' => 'Аналитика',
-            'route'  => 'marketers.analytics',
-            'icon' => 'fa fa-list-alt',
-            #'can'  => ['can-marketer']
+            "text" => "Аналитика",
+            "route"  => "marketers.analytics",
+            "icon" => "fa fa-list-alt",
+            #"can"  => ["can-marketer"]
         ],
         [
-            'text' => 'Диаграммы',
-            'route' => 'marketers.diagrams',
-            'icon' => 'fa fa-chart-pie',
-            #'can'  => ['can-marketer']
+            "text" => "Диаграммы",
+            "route" => "marketers.diagrams",
+            "icon" => "fa fa-chart-pie",
+            #"can"  => ["can-marketer"]
+        ],
+
+        // operators pages
+        [
+            "header" => "Operators",
+        ],
+
+        [
+            "text" => "Статистика",
+            "route" => "operators.statistics",
+            "icon" => "fa fa-list-alt",
+            #"can"  => ["can-operator"]
+        ],
+        [
+            "text" => "План продаж",
+            "route" => "operators.salesplan",
+            "icon" => "fa fa-chart-line",
+            #"can"  => ["can-operator"]
         ]
     ],
 
@@ -281,7 +299,7 @@ return [
     |
     */
 
-    'filters' => [
+    "filters" => [
         JeroenNoten\LaravelAdminLte\Menu\Filters\GateFilter::class,
         JeroenNoten\LaravelAdminLte\Menu\Filters\HrefFilter::class,
         JeroenNoten\LaravelAdminLte\Menu\Filters\SearchFilter::class,
@@ -303,74 +321,74 @@ return [
     |
     */
 
-    'plugins' => [
-        'bootstrap-datepicker' => [
-            'active' => true,
-            'files' => [
+    "plugins" => [
+        "bootstrap-datepicker" => [
+            "active" => true,
+            "files" => [
                 [
-                    'type' => 'js',
-                    'asset' => false,
-                    'location' => '//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js'
+                    "type" => "js",
+                    "asset" => false,
+                    "location" => "//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"
                 ],
                 [
-                    'type' => 'js',
-                    'asset' => false,
-                    'location' => '//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/locales/bootstrap-datepicker.ru.min.js'
+                    "type" => "js",
+                    "asset" => false,
+                    "location" => "//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/locales/bootstrap-datepicker.ru.min.js"
                 ],
                 [
-                    'type' => 'css',
-                    'asset' => false,
-                    'location' => '//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker3.min.css'
-                ],
-            ]
-        ],
-        'bootstrap-select' => [
-            'active' => true,
-            'files' => [
-                [
-                    'type' => 'js',
-                    'asset' => false,
-                    'location' => '//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.18/js/bootstrap-select.min.js'
-                ],
-                [
-                    'type' => 'js',
-                    'asset' => false,
-                    'location' => '//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.18/js/i18n/defaults-ru_RU.min.js'
-                ],
-                [
-                    'type' => 'css',
-                    'asset' => false,
-                    'location' => '//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.18/css/bootstrap-select.min.css'
+                    "type" => "css",
+                    "asset" => false,
+                    "location" => "//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker3.min.css"
                 ],
             ]
         ],
-        'momentjs' => [
-            'active' => true,
-            'files' => [
+        "bootstrap-select" => [
+            "active" => true,
+            "files" => [
                 [
-                    'type' => 'js',
-                    'asset' => false,
-                    'location' => '//cdnjs.cloudflare.com/ajax/libs/moment.js/2.27.0/moment.min.js'
+                    "type" => "js",
+                    "asset" => false,
+                    "location" => "//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.18/js/bootstrap-select.min.js"
                 ],
                 [
-                    'type' => 'js',
-                    'asset' => false,
-                    'location' => '//cdnjs.cloudflare.com/ajax/libs/moment.js/2.27.0/locale/ru.min.js'
+                    "type" => "js",
+                    "asset" => false,
+                    "location" => "//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.18/js/i18n/defaults-ru_RU.min.js"
+                ],
+                [
+                    "type" => "css",
+                    "asset" => false,
+                    "location" => "//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.18/css/bootstrap-select.min.css"
                 ],
             ]
         ],
-        'Toastr' => [
-            'active' => true,
-            'files' => [
+        "momentjs" => [
+            "active" => true,
+            "files" => [
                 [
-                    'type' => 'js',
-                    'asset' => false,
-                    'location' => '//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js'
+                    "type" => "js",
+                    "asset" => false,
+                    "location" => "//cdnjs.cloudflare.com/ajax/libs/moment.js/2.27.0/moment.min.js"
                 ],
                 [
-                    'type' => 'css',
-                    'asset' => false,
-                    'location' => '//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css'
+                    "type" => "js",
+                    "asset" => false,
+                    "location" => "//cdnjs.cloudflare.com/ajax/libs/moment.js/2.27.0/locale/ru.min.js"
+                ],
+            ]
+        ],
+        "Toastr" => [
+            "active" => true,
+            "files" => [
+                [
+                    "type" => "js",
+                    "asset" => false,
+                    "location" => "//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"
+                ],
+                [
+                    "type" => "css",
+                    "asset" => false,
+                    "location" => "//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css"
                 ],
             ]
         ],
@@ -387,5 +405,5 @@ return [
     | https://github.com/jeroennoten/Laravel-AdminLTE/#93-livewire
     */
 
-    'livewire' => false,
+    "livewire" => false,
 ];

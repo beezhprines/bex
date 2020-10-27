@@ -7,6 +7,7 @@ use App\Models\BudgetType;
 use App\Models\Master;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class MasterController extends Controller
 {
@@ -88,7 +89,7 @@ class MasterController extends Controller
 
     public function statistics()
     {
-        $master = Master::find(2);
+        $master = Auth::user()->master;
         $budget = $master->getBudget(week()->end(), BudgetType::findByCode("master:comission:income")->id);
 
         return view("masters.statistics", [

@@ -21,6 +21,11 @@ class WeekService
         return session('week');
     }
 
+    public function range()
+    {
+        return $this->get()["range"];
+    }
+
     public function monday(string $date)
     {
         return date(config('app.iso_date'), strtotime("this week Monday", strtotime($date)));
@@ -34,6 +39,19 @@ class WeekService
     public function last()
     {
         return isodate() < $this->end() ? isodate() : $this->end();
+    }
+
+    public function weekTitles()
+    {
+        return [
+            'Mon' => 'Пн',
+            'Tue' => 'Вт',
+            'Wed' => 'Ср',
+            'Thu' => 'Чт',
+            'Fri' => 'Пт',
+            'Sat' => 'Сб',
+            'Sun' => 'Вс'
+        ];
     }
 
     public function set(string $start = null, string $end = null)

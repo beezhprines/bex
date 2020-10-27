@@ -37,6 +37,11 @@ class Master extends Model
         return $this->team->currency() ?? null;
     }
 
+    public function operator()
+    {
+        return $this->team->operator ?? null;
+    }
+
     public function records()
     {
         return $this->hasMany(Record::class);
@@ -201,5 +206,10 @@ class Master extends Model
         }
 
         return $master;
+    }
+
+    public function solveOperatorsPoints(string $startDate, string $endDate)
+    {
+        return $this->operator()->solvePointsPerMaster($this, $startDate, $endDate);
     }
 }

@@ -48,6 +48,26 @@ class User extends Authenticatable
         return $this->belongsTo(Role::class);
     }
 
+    public function master()
+    {
+        return $this->hasOne(Master::class);
+    }
+
+    public function operator()
+    {
+        return $this->hasOne(Operator::class);
+    }
+
+    public function marketer()
+    {
+        return $this->hasOne(Marketer::class);
+    }
+
+    public function manager()
+    {
+        return $this->hasOne(Manager::class);
+    }
+
     public function isMaster()
     {
         return $this->role->code == "master";

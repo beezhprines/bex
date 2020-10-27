@@ -1,4 +1,5 @@
 require("./datepicker");
+require("./selectpicker");
 
 var $loader = $("#loader");
 
