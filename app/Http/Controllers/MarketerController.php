@@ -20,7 +20,11 @@ class MarketerController extends Controller
      */
     public function index()
     {
-        //
+        $marketers = Marketer::all();
+
+        return view("marketers.index", [
+            'marketers' => $marketers
+        ]);
     }
 
     /**
@@ -41,7 +45,18 @@ class MarketerController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->validate([
+            'name' => 'required|string|min:3',
+            'user' => 'required|array',
+            'user.account' => 'required|string|min:3',
+            'user.password' => 'nullable|string|min:3',
+            'user.email' => 'nullable|email',
+            'user.phone' => 'nullable|string'
+        ]);
+
+        $marketer = Marketer::createWithRelations($data);
+
+        return back()->with(['success' => __('common.saved-success')]);
     }
 
     /**
@@ -75,7 +90,18 @@ class MarketerController extends Controller
      */
     public function update(Request $request, Marketer $marketer)
     {
-        //
+        $data = $request->validate([
+            'name' => 'required|string|min:3',
+            'user' => 'required|array',
+            'user.account' => 'required|string|min:3',
+            'user.password' => 'nullable|string|min:3',
+            'user.email' => 'nullable|email',
+            'user.phone' => 'nullable|string'
+        ]);
+
+        $marketer = $marketer->updateWithRelations($data);
+
+        return back()->with(['success' => __('common.saved-success')]);
     }
 
     /**
@@ -86,7 +112,15 @@ class MarketerController extends Controller
      */
     public function destroy(Marketer $marketer)
     {
-        //
+        $marketerId = $marketer->id;
+        $marketerName = $marketer->name;
+
+        $marketer->user->delete();
+        $marketer->delete();
+
+        note("info", "marketer:delete", "Удален маркетолог {$marketerName}", Marketer::class, $marketerId);
+
+        return back()->with(['success' => __('common.deleted-success')]);
     }
 
 

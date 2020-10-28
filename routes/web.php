@@ -45,6 +45,11 @@ Route::middleware(["auth"])->group(function () {
         Route::get('analytics', [MarketerController::class, 'analytics'])->name('analytics');
         Route::post('saveteamoutcomes', [MarketerController::class, 'saveTeamOutcomes'])->name('saveTeamOutcomes');
         Route::get('diagrams', [MarketerController::class, 'diagrams'])->name('diagrams');
+        Route::get('/', [MarketerController::class, 'index'])->name('index');
+        Route::post('/store', [MarketerController::class, 'store'])->name('store');
+        Route::put('/update/{marketer}', [MarketerController::class, 'update'])->name('update');
+        Route::delete('/{marketer}', [MarketerController::class, 'destroy'])->name('destroy');
+        Route::put('/auth/{marketer}', [MarketerController::class, 'auth'])->name('auth');
     });
 
     // operators

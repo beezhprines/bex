@@ -4,7 +4,6 @@
 <h4>
     Операторы
     <span class="float-right">
-
         <div class="btn-group dropleft">
             <button type="button" class="btn btn-tool btn-transparent btn-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <i class="fa fa-ellipsis-v"></i>

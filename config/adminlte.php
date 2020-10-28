@@ -349,6 +349,12 @@ return [
                     'icon' => 'fa fa-headset',
                     "active" => ["operators"]
                 ],
+                [
+                    "text" => "Маркетологи",
+                    "route" => "marketers.index",
+                    'icon' => 'fa fa-user-edit',
+                    "active" => ["marketers"]
+                ],
             ],
             #"can"  => ["can-owner"]
         ],
