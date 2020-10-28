@@ -34,12 +34,12 @@ class Master extends Model
 
     public function currency()
     {
-        return $this->team->currency() ?? null;
+        return optional($this->team)->currency() ?? null;
     }
 
     public function operator()
     {
-        return $this->team->operator ?? null;
+        return optional($this->team)->operator ?? null;
     }
 
     public function records()
@@ -211,5 +211,10 @@ class Master extends Model
     public function solveOperatorsPoints(string $startDate, string $endDate)
     {
         return $this->operator()->solvePointsPerMaster($this, $startDate, $endDate);
+    }
+
+    public function solveManagerBonus(float $masterComission, float $comission, float $managerBonus)
+    {
+        return $comission != 0 ?  $masterComission / $comission * $managerBonus : 0;
     }
 }

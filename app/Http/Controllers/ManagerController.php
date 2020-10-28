@@ -6,11 +6,15 @@ use App\Models\Budget;
 use App\Models\Configuration;
 use App\Models\Contact;
 use App\Models\ContactType;
+use App\Models\Currency;
+use App\Models\CurrencyRate;
+use App\Models\Invoice;
 use App\Models\Manager;
 use App\Models\Master;
 use App\Models\Operator;
 use App\Models\Team;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ManagerController extends Controller
 {
@@ -135,15 +139,16 @@ class ManagerController extends Controller
 
     public function comissions(Request $request)
     {
+        $masters = Master::all();
         return view("managers.comissions", [
-            "masters" => $this->masterRepo->all()
+            "masters" => $masters
         ]);
     }
 
     public function monitoring()
     {
-        $comissions = $this->budgetRepo->getComissionsPerWeek();
-        $masters = $this->invoiceRepo->getMastersNotLoadedInvoiceForWeek(week()->end());
+        $comissions = Budget::getComissionsPerWeek();
+        $masters = Invoice::getMastersNotLoadedInvoiceForWeek(week()->end());
 
         return view("managers.monitoring", [
             "comissions" => $comissions,
@@ -153,11 +158,13 @@ class ManagerController extends Controller
 
     public function currencyRates()
     {
-        $currencyRUB = BaseRepo::instance(Currency::class)->findByCode("RUB");
-        $currencyRates = $currencyRUB->rates()->orderByDesc("date")->paginate();
+        $currencyCount = Currency::count();
+        $currencyRatesPaginator = CurrencyRate::orderByDesc("date")->paginate($currencyCount * 15);
+        $currencyRatesGrouped = collect($currencyRatesPaginator->items())->groupBy("date");
 
         return view("managers.currency-rates", [
-            "currencyRates" => $currencyRates
+            "currencyRatesPaginator" => $currencyRatesPaginator,
+            "currencyRatesGrouped" => $currencyRatesGrouped
         ]);
     }
 }

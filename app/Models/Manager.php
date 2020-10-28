@@ -44,4 +44,12 @@ class Manager extends Model
         // solve
         return (($comissionCoef * $comission) + floatval($bonus)) * floatval($premium_rate);
     }
+
+    public function getBonus(string $startDate, string $endDate)
+    {
+        return $this->budgets->whereBetween('date', [$startDate, $endDate])
+            ->sum(function ($budget) {
+                return $budget->amount;
+            }) * -1;
+    }
 }

@@ -13,7 +13,7 @@ class Budget extends Model
     use HasFactory, SoftDeletes, ModelBase;
 
     protected $fillable = [
-        'date', 'amount', 'json', 'budget_type_id'
+        "date", "amount", "json", "budget_type_id"
     ];
 
     public function budgetType()
@@ -46,19 +46,24 @@ class Budget extends Model
         return $this->hasMany(Invoice::class);
     }
 
+    public function master()
+    {
+        return $this->masters->first();
+    }
+
     public static function seedCustomOutcomes(string $startDate, string $endDate)
     {
         $budgetTypes = [
-            BudgetType::findByCode('custom:month:outcome'),
-            BudgetType::findByCode('custom:week:outcome')
+            BudgetType::findByCode("custom:month:outcome"),
+            BudgetType::findByCode("custom:week:outcome")
         ];
 
         foreach ($budgetTypes as $budgetType) {
-            $json = $budgetType->budgets()->whereNotNull('json')->orderBy('date')->first()->json ?? null;
+            $json = $budgetType->budgets()->whereNotNull("json")->orderBy("date")->first()->json ?? null;
 
             foreach (daterange($startDate, $endDate, true) as $date) {
-                $date = date_format($date, config('app.iso_date'));
-                $budget = $budgetType->budgets()->firstWhere('date', $date);
+                $date = date_format($date, config("app.iso_date"));
+                $budget = $budgetType->budgets()->firstWhere("date", $date);
 
                 if (!empty($budget)) continue;
 
@@ -73,7 +78,7 @@ class Budget extends Model
 
     public static function solveComission(string $date)
     {
-        $budgetType = BudgetType::findByCode('total:comission:income');
+        $budgetType = BudgetType::findByCode("total:comission:income");
 
         $amount = Record::solveComission(Record::get($date, $date)) * $budgetType->sign();
 
@@ -81,13 +86,13 @@ class Budget extends Model
 
         if (empty($budget)) {
             $budget = self::create([
-                'amount' => $amount,
-                'date' => $date,
-                'budget_type_id' => $budgetType->id
+                "amount" => $amount,
+                "date" => $date,
+                "budget_type_id" => $budgetType->id
             ]);
         } else {
             $budget->update([
-                'amount' => $amount
+                "amount" => $amount
             ]);
         }
 
@@ -96,7 +101,7 @@ class Budget extends Model
 
     public static function solveMastersComission(string $date)
     {
-        $budgetType =  BudgetType::findByCode('master:comission:income');
+        $budgetType =  BudgetType::findByCode("master:comission:income");
 
         $masters = Master::all();
 
@@ -107,15 +112,15 @@ class Budget extends Model
 
             if (empty($budget)) {
                 $budget = self::create([
-                    'amount' => $amount,
-                    'date' => $date,
-                    'budget_type_id' => $budgetType->id,
+                    "amount" => $amount,
+                    "date" => $date,
+                    "budget_type_id" => $budgetType->id,
                 ]);
 
                 $budget->masters()->attach($master);
             } else {
                 $budget->update([
-                    'amount' => $amount
+                    "amount" => $amount
                 ]);
             }
         }
@@ -125,7 +130,7 @@ class Budget extends Model
 
     public static function solveMastersProfit(string $date)
     {
-        $budgetType = BudgetType::findByCode('master:profit:outcome');
+        $budgetType = BudgetType::findByCode("master:profit:outcome");
 
         $masters = Master::all();
 
@@ -136,15 +141,15 @@ class Budget extends Model
 
             if (empty($budget)) {
                 $budget = self::create([
-                    'amount' => $amount,
-                    'date' => $date,
-                    'budget_type_id' => $budgetType->id,
+                    "amount" => $amount,
+                    "date" => $date,
+                    "budget_type_id" => $budgetType->id,
                 ]);
 
                 $budget->masters()->attach($master);
             } else {
                 $budget->update([
-                    'amount' => $amount
+                    "amount" => $amount
                 ]);
             }
         }
@@ -155,8 +160,8 @@ class Budget extends Model
     public static function solveCustomOutcomes(string $date)
     {
         $types = [
-            ["budgetType" => BudgetType::findByCode('custom:month:outcome'), "days" => date("t", strtotime($date))],
-            ["budgetType" => BudgetType::findByCode('custom:week:outcome'), "days" => 7]
+            ["budgetType" => BudgetType::findByCode("custom:month:outcome"), "days" => date("t", strtotime($date))],
+            ["budgetType" => BudgetType::findByCode("custom:week:outcome"), "days" => 7]
         ];
 
         foreach ($types as $type) {
@@ -173,7 +178,7 @@ class Budget extends Model
             }) / $type["days"] * $type["budgetType"]->sign();
 
             $budget->update([
-                'amount' => $amount
+                "amount" => $amount
             ]);
 
             note("info", "budget:solve:{$budgetTypeCode}", "Подсчитаны доп затраты на дату {$date} для {$budgetTypeCode}", self::class, $budget->id);
@@ -182,7 +187,7 @@ class Budget extends Model
 
     public static function solveManagersBonus(string $date)
     {
-        $budgetType =  BudgetType::findByCode('manager:bonus:outcome');
+        $budgetType =  BudgetType::findByCode("manager:bonus:outcome");
 
         $comission = self::getComission($date, $date);
 
@@ -191,19 +196,19 @@ class Budget extends Model
         foreach ($managers as $manager) {
             $amount = Manager::solveBonus($comission, $manager->premium_rate) * $budgetType->sign();
 
-            $budget = $manager->budgets->firstWhere('date', $date);
+            $budget = $manager->budgets->firstWhere("date", $date);
 
             if (empty($budget)) {
                 $budget = self::create([
-                    'amount' => $amount,
-                    'date' => $date,
-                    'budget_type_id' => $budgetType->id
+                    "amount" => $amount,
+                    "date" => $date,
+                    "budget_type_id" => $budgetType->id
                 ]);
 
                 $budget->managers()->attach($manager);
             } else {
                 $budget->update([
-                    'amount' => $amount
+                    "amount" => $amount
                 ]);
             }
         }
@@ -213,7 +218,7 @@ class Budget extends Model
 
     public static function solveOperatorsProfit(string $date)
     {
-        $budgetType =  BudgetType::findByCode('operator:profit:outcome');
+        $budgetType =  BudgetType::findByCode("operator:profit:outcome");
 
         $operators = Operator::all();
 
@@ -224,15 +229,15 @@ class Budget extends Model
 
             if (empty($budget)) {
                 $budget = self::create([
-                    'amount' => $amount,
-                    'date' => $date,
-                    'budget_type_id' => $budgetType->id
+                    "amount" => $amount,
+                    "date" => $date,
+                    "budget_type_id" => $budgetType->id
                 ]);
 
                 $budget->operators()->attach($operator);
             } else {
                 $budget->update([
-                    'amount' => $amount
+                    "amount" => $amount
                 ]);
             }
         }
@@ -242,7 +247,7 @@ class Budget extends Model
 
     public static function getComission(string $startDate, string $endDate)
     {
-        $budgetType = BudgetType::findByCode('total:comission:income');
+        $budgetType = BudgetType::findByCode("total:comission:income");
 
         return self::getBetweenDatesAndType($startDate, $endDate, $budgetType)
             ->sum(function ($budget) {
@@ -252,16 +257,55 @@ class Budget extends Model
 
     public static function getBetweenDatesAndType(string $startDate, string $endDate, BudgetType $budgetType)
     {
-        return self::whereBetween(DB::raw('DATE(date)'), array($startDate, $endDate))
-            ->where('budget_type_id', $budgetType->id)
+        return self::whereBetween(DB::raw("DATE(date)"), array($startDate, $endDate))
+            ->where("budget_type_id", $budgetType->id)
             ->get();
     }
 
     public static function findByDateAndType(string $date, BudgetType $budgetType)
     {
         return self::firstWhere([
-            'budget_type_id' => $budgetType->id,
-            'date' => $date
+            "budget_type_id" => $budgetType->id,
+            "date" => $date
         ]);
+    }
+
+    public static function getByDateAndType(string $date, BudgetType $budgetType)
+    {
+        return self::where([
+            "budget_type_id" => $budgetType->id,
+            "date" => $date
+        ])->get();
+    }
+
+    public static function getComissionsPerWeek()
+    {
+        $comissions = [];
+        $budgetType = BudgetType::findByCode("total:comission:income");
+
+        $weeks = intval(Configuration::findByCode("manager:comission:weeks")->value);
+
+        for ($i = 0; $i < $weeks; $i++) {
+            $diff = 7 * $i;
+            $weekday = date(config("app.iso_date"), strtotime("-{$diff} day"));
+            $weekStart = week()->monday($weekday);
+            $weekEnd = week()->sunday($weekday);
+            $comissions[$weekStart] = [];
+
+            $prev = 0;
+            foreach (daterange($weekStart, $weekEnd, true) as $date) {
+                $comissions[$weekStart][date_format($date, "D")] = floatval(
+                    self::findByDateAndType(
+                        date_format($date, config("app.iso_date")),
+                        $budgetType
+                    )->amount ?? 0
+                ) / 1000 + $prev;
+
+                $prev = $comissions[$weekStart][date_format($date, "D")];
+            }
+            $comissions[$weekStart]["total"] = $prev;
+        }
+
+        return $comissions;
     }
 }
