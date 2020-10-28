@@ -117,6 +117,8 @@ Route::middleware(["auth"])->group(function () {
     // currencies
     Route::prefix("currencies")->name("currencies.")->group(function () {
         Route::get("/", [CurrencyController::class, "index"])->name("index");
+        Route::post("/update/all", [CurrencyController::class, "updateAll"])->name("update.all");
+        Route::post("/store", [CurrencyController::class, "store"])->name("store");
     });
 
     // configurations

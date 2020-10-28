@@ -39,10 +39,10 @@
                                     Название
                                 </th>
                                 <th>
-                                    Код города
+                                    Код страны
                                 </th>
                                 <th>
-                                    Страна
+                                    Валюта
                                 </th>
                             </thead>
                             <tbody>
@@ -89,7 +89,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="addCountryModalLabel">Добавить новую команду</h5>
+                <h5 class="modal-title" id="addCountryModalLabel">Добавить новую страну</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>

@@ -2,14 +2,14 @@
 
 @section('content_header')
 <h4>
-    Города
+    Валюты
 </h4>
 @stop
 
 @section('content')
 <div class="row">
-    <div class="col-md-12">
-        <form action="{{ route('cities.update.all') }}" method="POST">
+    <div class="col-md-6">
+        <form action="{{ route('currencies.update.all') }}" method="POST">
             @csrf
             <div class="card card-outline card-secondary">
                 <div class="card-header">
@@ -23,7 +23,7 @@
                             </button>
                             <div class="dropdown-menu">
                                 <li>
-                                    <a href="#" class="dropdown-item" data-toggle="modal" data-target="#addCityModal">
+                                    <a href="#" class="dropdown-item" data-toggle="modal" data-target="#addCurrencyModal">
                                         Добавить
                                     </a>
                                 </li>
@@ -39,38 +39,17 @@
                                     Название
                                 </th>
                                 <th>
-                                    Код города
-                                </th>
-                                <th>
-                                    Страна
+                                    Код валюты
                                 </th>
                             </thead>
                             <tbody>
-                                @foreach($cities as $city)
+                                @foreach($currencies as $currency)
                                 <tr>
                                     <td>
-                                        <input type="text" class="form-control form-control-sm" name="cities[{{ $city->id }}][title]" value="{{ $city->title }}" required>
+                                        <input type="text" class="form-control form-control-sm" name="currencies[{{ $currency->id }}][title]" value="{{ $currency->title }}" required>
                                     </td>
                                     <td class="align-middle">
-                                        <input type="text" class="form-control form-control-sm" name="cities[{{ $city->id }}][code]" value="{{ $city->code }}" required>
-                                    </td>
-                                    <td>
-                                        <select class="form-control selectpicker" name="cities[{{ $city->id }}][country_id]" data-live-search="true" data-size="10" required>
-                                            @if(empty($city->country->id))
-                                            <option>
-                                                @lang('common.not-selected')
-                                            </option>
-                                            @endif
-                                            @forelse($countries as $country)
-                                            <option value="{{ $country->id }}" @if ( $country->id == $city->country_id) selected @endif>
-                                                {{ $country->title }}
-                                            </option>
-                                            @empty
-                                            <option>
-                                                @lang('common.no-data')
-                                            </option>
-                                            @endforelse
-                                        </select>
+                                        <input type="text" class="form-control form-control-sm" name="currencies[{{ $currency->id }}][code]" value="{{ $currency->code }}" required>
                                     </td>
                                 </tr>
                                 @endforeach
@@ -84,18 +63,33 @@
             </div>
         </form>
     </div>
+    <div class="col-md-6">
+        <div class="card card-outline card-secondary">
+            <div class="card-header">
+                <div class="card-title">
+                    Валюты
+                </div>
+            </div>
+            <div class="card-body p-0">
+                @include("currencies.currency-rates-table", [
+                "currencyRatesGrouped" => $currencyRatesGrouped,
+                "currencyRatesPaginator" => $currencyRatesPaginator
+                ])
+            </div>
+        </div>
+    </div>
 </div>
-<div class="modal fade" id="addCityModal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="addCityModalLabel" aria-hidden="true">
+<div class="modal fade" id="addCurrencyModal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="addCurrencyModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="addCityModalLabel">Добавить новый город</h5>
+                <h5 class="modal-title" id="addCurrencyModalLabel">Добавить новую валюту</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <form action="{{ route('cities.store') }}" method="POST">
+                <form action="{{ route('currencies.store') }}" method="POST">
                     @csrf
 
                     <div class="form-group">
@@ -112,36 +106,10 @@
 
                     <div class="form-group">
                         <label for="code">
-                            Уникальный код города
+                            Уникальный код валюты
                         </label>
                         <input type="text" class="form-control @error('code') is-invalid @enderror" id="code" name="code" required>
                         @error('code')
-                        <span class="error invalid-feedback" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
-                        @enderror
-                    </div>
-
-                    <div class="form-group">
-                        <label for="country_id">
-                            Страна
-                        </label>
-                        <select class="form-control selectpicker @error('country_id') is-invalid @enderror" id="country_id" name="country_id" data-live-search="true" data-size="10" required>
-                            <option>
-                                @lang('common.not-selected')
-                            </option>
-                            @forelse($countries as $country)
-                            <option value="{{ $country->id }}">
-                                {{ $country->title }}
-                            </option>
-                            @empty
-                            <option>
-                                @lang('common.no-data')
-                            </option>
-                            @endforelse
-                        </select>
-
-                        @error('country_id')
                         <span class="error invalid-feedback" role="alert">
                             <strong>{{ $message }}</strong>
                         </span>

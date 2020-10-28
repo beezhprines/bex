@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Currency;
+use App\Models\CurrencyRate;
 use Illuminate\Http\Request;
 
 class CurrencyController extends Controller
@@ -14,7 +15,15 @@ class CurrencyController extends Controller
      */
     public function index()
     {
-        //
+        $currencies = Currency::all();
+        $currencyCount = $currencies->count();
+        $currencyRatesPaginator = CurrencyRate::orderByDesc("date")->paginate($currencyCount * 15);
+        $currencyRatesGrouped = collect($currencyRatesPaginator->items())->groupBy("date");
+        return view("currencies.index", [
+            'currencies' => $currencies,
+            "currencyRatesPaginator" => $currencyRatesPaginator,
+            "currencyRatesGrouped" => $currencyRatesGrouped
+        ]);
     }
 
     /**
@@ -35,7 +44,13 @@ class CurrencyController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $currency = Currency::create($request->all());
+
+        note("info", "currency:create", "Создана валюта {$currency->title}", Currency::class, $currency->id);
+
+        return back()->with([
+            'success' => __('common.saved-success')
+        ]);
     }
 
     /**
@@ -69,7 +84,13 @@ class CurrencyController extends Controller
      */
     public function update(Request $request, Currency $currency)
     {
-        //
+        $currency->update($request->all());
+
+        note("info", "currency:update", "Обновлена валюта {$currency->title}", Currency::class, $currency->id);
+
+        return back()->with([
+            'success' => __('common.saved-success')
+        ]);
     }
 
     /**
@@ -81,5 +102,23 @@ class CurrencyController extends Controller
     public function destroy(Currency $currency)
     {
         //
+    }
+
+    public function updateAll(Request $request)
+    {
+        $data = $request->validate([
+            'currencies' => 'required|array',
+            'currencies.*.title' => 'required|string',
+            'currencies.*.code' => 'required|string|min:3',
+        ]);
+
+        foreach ($data['currencies'] as $currencyId => $currencyData) {
+            $currency = Currency::find($currencyId);
+            $currency = $currency->update($currencyData);
+        }
+
+        note("info", "currency:update", "Обновлены валюты", Currency::class);
+
+        return back()->with(['success' => __('common.saved-success')]);
     }
 }

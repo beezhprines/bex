@@ -81,7 +81,7 @@ class Manager extends Model
         return $this;
     }
 
-    public function createWithRelations(array $data)
+    public static function createWithRelations(array $data)
     {
         $role =  Role::findByCode('manager');
 
