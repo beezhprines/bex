@@ -7,6 +7,7 @@ use App\Http\Controllers\ManagerController;
 use App\Http\Controllers\MarketerController;
 use App\Http\Controllers\MasterController;
 use App\Http\Controllers\OperatorController;
+use App\Http\Controllers\ServiceController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -32,6 +33,10 @@ Route::middleware(["auth"])->group(function () {
     // masters
     Route::prefix("masters")->name("masters.")->group(function () {
         Route::get("statistics", [MasterController::class, "statistics"])->name("statistics");
+        Route::get('/', [MasterController::class, 'index'])->name('index');
+        Route::post('/update/{master}', [MasterController::class, 'update'])->name('update');
+        Route::put('/load/all', [MasterController::class, 'loadAll'])->name('load.all');
+        Route::put('/load/{master}', [MasterController::class, 'load'])->name('load');
     });
 
     // marketers
@@ -62,6 +67,10 @@ Route::middleware(["auth"])->group(function () {
         Route::post("saveMany", [ContactController::class, "saveMany"])->name("saveMany");
     });
 
+    // services
+    Route::prefix("services")->name("services.")->group(function () {
+        Route::post("store/{master}", [ServiceController::class, "store"])->name("store");
+    });
 
     // invoices
     Route::resources(["invoices" => InvoiceController::class]);

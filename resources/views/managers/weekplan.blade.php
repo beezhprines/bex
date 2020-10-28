@@ -5,12 +5,9 @@
     Недельный план
 
     <span class="float-right">
+        <x-week-range></x-week-range>
     </span>
 </h4>
-
-<div>
-    <x-week-range></x-week-range>
-</div>
 @stop
 
 @section('content')

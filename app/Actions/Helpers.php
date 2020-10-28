@@ -109,3 +109,8 @@ function translit($value)
     $value = strtr(str_replace(" ", "", $value), $converter);
     return $value;
 }
+
+function secondsToTime(int $seconds)
+{
+    return sprintf('%02d:%02d', ($seconds / 3600), ($seconds / 60 % 60));
+}

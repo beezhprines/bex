@@ -1,1 +1,1 @@
-{{ week()->start() }} по {{ week()->end() }}
+{{ viewdate(week()->start()) }} по {{ viewdate(week()->end()) }}

@@ -327,6 +327,25 @@ return [
             "icon" => "fa fa-ruble-sign",
             #"can"  => ["can-manager"]
         ],
+
+        // owner pages
+        [
+            "header" => "Owner",
+        ],
+
+        [
+            "text" => "Учетные записи",
+            "icon" => "fa fa-user-cog",
+            "submenu" => [
+                [
+                    "text" => "Мастера",
+                    "route" => "masters.index",
+                    "icon" => "fa fa-user-tag",
+                    "active" => ["masters"]
+                ],
+            ],
+            #"can"  => ["can-owner"]
+        ],
     ],
 
     /*

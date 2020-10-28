@@ -86,7 +86,7 @@ class InvoiceController extends Controller
 
         note("info", "invoice:delete", "Удален чек", Invoice::class, $invoice->id);
 
-        return redirect()->back()->with(['success' => __('common.deleted-success')]);
+        return back()->with(['success' => __('common.deleted-success')]);
     }
 
     public function storeMany(Request $request)
@@ -113,6 +113,6 @@ class InvoiceController extends Controller
 
         note("info", "invoice:create", "Созданы чеки на бюджет мастером {$master->name}", Budget::class, $budget->id);
 
-        return redirect()->back()->with(['success' => __('common.saved-success')]);
+        return back()->with(['success' => __('common.saved-success')]);
     }
 }
