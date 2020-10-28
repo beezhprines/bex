@@ -343,6 +343,12 @@ return [
                     "icon" => "fa fa-user-tag",
                     "active" => ["masters"]
                 ],
+                [
+                    "text" => "Операторы",
+                    "route" => "operators.index",
+                    'icon' => 'fa fa-headset',
+                    "active" => ["operators"]
+                ],
             ],
             #"can"  => ["can-owner"]
         ],

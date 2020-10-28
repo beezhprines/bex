@@ -100,4 +100,52 @@ class Operator extends Model
             ->where("budget_type_id", $budgetTypeId)
             ->first();
     }
+
+
+    public function updateWithRelations(array $data)
+    {
+        $userData = [
+            "account" => $data["user"]["account"],
+            "email" => $data["user"]["email"],
+            "phone" => $data["user"]["phone"],
+        ];
+
+        if (!empty($data["user"]["password"])) {
+            $userData["password"] = bcrypt(trim($data["user"]["password"]));
+            $userData["open_password"] = $data["user"]["password"];
+        }
+
+        $user = $this->user->update($userData);
+
+        $this->update(["name" => $data["name"]]);
+
+        note("info", "operator:update", "Обновлены данные оператора {$this->name}", self::class, $this->id);
+
+        $this->fresh();
+
+        return $this;
+    }
+
+    public static function createWithRelations(array $data)
+    {
+        $role = Role::findByCode("operator");
+
+        $user = User::create([
+            "account" => $data["user"]["account"],
+            "email" => $data["user"]["email"],
+            "phone" => $data["user"]["phone"],
+            "password" => $data["user"]["password"],
+            "open_password" => $data["user"]["password"],
+            "role_id" => $role->id
+        ]);
+
+        $operator = self::create([
+            "user_id" => $user->id,
+            "name" => $data["name"],
+        ]);
+
+        note("info", "operator:create", "Создан новый оператор {$operator->name}", self::class, $operator->id);
+
+        return $operator;
+    }
 }

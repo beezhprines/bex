@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Operator;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-
 class OperatorController extends Controller
 {
     /**
@@ -15,7 +13,11 @@ class OperatorController extends Controller
      */
     public function index()
     {
-        //
+        $operators = Operator::all();
+
+        return view("operators.index", [
+            'operators' => $operators
+        ]);
     }
 
     /**
@@ -36,7 +38,18 @@ class OperatorController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->validate([
+            'name' => 'required|string|min:3',
+            'user' => 'required|array',
+            'user.account' => 'required|string|min:3',
+            'user.password' => 'nullable|string|min:3',
+            'user.email' => 'nullable|email',
+            'user.phone' => 'nullable|string'
+        ]);
+
+        $operator = Operator::createWithRelations($data);
+
+        return back()->with(['success' => __('common.saved-success')]);
     }
 
     /**
@@ -70,7 +83,18 @@ class OperatorController extends Controller
      */
     public function update(Request $request, Operator $operator)
     {
-        //
+        $data = $request->validate([
+            'name' => 'required|string|min:3',
+            'user' => 'required|array',
+            'user.account' => 'required|string|min:3',
+            'user.password' => 'nullable|string|min:3',
+            'user.email' => 'nullable|email',
+            'user.phone' => 'nullable|string'
+        ]);
+
+        $operator = $operator->updateWithRelations($data);
+
+        return back()->with(['success' => __('common.saved-success')]);
     }
 
     /**
@@ -81,7 +105,15 @@ class OperatorController extends Controller
      */
     public function destroy(Operator $operator)
     {
-        //
+        $operatorId = $operator->id;
+        $operatorName = $operator->name;
+
+        $operator->user->delete();
+        $operator->delete();
+
+        note("info", "operator:delete", "Удален оператор {$operatorName}", Operator::class, $operatorId);
+
+        return back()->with(['success' => __('common.deleted-success')]);
     }
 
     public function statistics(Request $request)

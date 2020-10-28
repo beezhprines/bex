@@ -51,6 +51,10 @@ Route::middleware(["auth"])->group(function () {
     Route::prefix('operators')->name('operators.')->group(function () {
         Route::get('statistics', [OperatorController::class, 'statistics'])->name('statistics');
         Route::get('salesplan', [OperatorController::class, 'salesplan'])->name('salesplan');
+        Route::get('/', [OperatorController::class, 'index'])->name('index');
+        Route::post('/store', [OperatorController::class, 'store'])->name('store');
+        Route::put('/update/{operator}', [OperatorController::class, 'update'])->name('update');
+        Route::delete('/{operator}', [OperatorController::class, 'destroy'])->name('destroy');
     });
 
     // managers
