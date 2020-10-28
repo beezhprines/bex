@@ -138,7 +138,6 @@ class MarketerController extends Controller
             $currencyRates[$currency->code] = CurrencyRate::findByCurrencyAndDate($currency, week()->last());
         }
 
-        // todo: add dollars, tenge, rubles as in whatsapp video
         return view("marketers.analytics", [
             "teams" => $teams,
             "instagram" => $instagram,

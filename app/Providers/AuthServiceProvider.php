@@ -25,8 +25,28 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        Gate::define('is-master', function ($user) {
+        $this->registerGates();
+    }
+
+    private function registerGates()
+    {
+        Gate::define('can-master', function ($user) {
             return $user->isMaster();
+        });
+        Gate::define('can-operator', function ($user) {
+            return $user->isOperator();
+        });
+        Gate::define('can-marketer', function ($user) {
+            return $user->isMarketer();
+        });
+        Gate::define('can-manager', function ($user) {
+            return $user->isManager();
+        });
+        Gate::define('can-owner', function ($user) {
+            return $user->isOwner();
+        });
+        Gate::define('can-host', function ($user) {
+            return $user->isHost();
         });
     }
 }

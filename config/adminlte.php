@@ -240,99 +240,79 @@ return [
 
         // master pages
         [
-            "header" => "Master",
-        ],
-
-        [
             "text" => "Статистика",
             "route"  => "masters.statistics",
             "icon" => "fa fa-list-alt",
-            #"can"  => ["can-master"]
+            "can"  => ["can-master"]
         ],
 
         // marketer pages
         [
-            "header" => "Marketers",
-        ],
-
-        [
             "text" => "Аналитика",
             "route"  => "marketers.analytics",
             "icon" => "fa fa-list-alt",
-            #"can"  => ["can-marketer"]
+            "can"  => ["can-marketer"]
         ],
         [
             "text" => "Диаграммы",
             "route" => "marketers.diagrams",
             "icon" => "fa fa-chart-pie",
-            #"can"  => ["can-marketer"]
+            "can"  => ["can-marketer"]
         ],
 
         // operators pages
         [
-            "header" => "Operators",
-        ],
-
-        [
             "text" => "Статистика",
             "route" => "operators.statistics",
             "icon" => "fa fa-list-alt",
-            #"can"  => ["can-operator"]
+            "can"  => ["can-operator"]
         ],
         [
             "text" => "План продаж",
             "route" => "operators.salesplan",
             "icon" => "fa fa-chart-line",
-            #"can"  => ["can-operator"]
+            "can"  => ["can-operator"]
         ],
 
         // managers pages
         [
-            "header" => "Managers",
-        ],
-
-        [
             "text" => "Недельный план",
             "route" => "managers.weekplan",
             "icon" => "fa fa-chart-line",
-            #"can"  => ["can-manager"]
+            "can"  => ["can-manager"]
         ],
         [
             "text" => "Статистика",
             "route" => "managers.statistics",
             "icon" => "fa fa-list-alt",
-            #"can"  => ["can-manager"]
+            "can"  => ["can-manager"]
         ],
         [
             "text" => "Диаграммы",
             "route" => "managers.diagrams",
             "icon" => "fa fa-chart-pie",
-            #"can"  => ["can-manager"]
+            "can"  => ["can-manager"]
         ],
         [
             "text" => "Мониторинг",
             "route" => "managers.monitoring",
             "icon" => "fa fa-binoculars",
-            #"can"  => ["can-manager"]
+            "can"  => ["can-manager"]
         ],
         [
             "text" => "Комиссии",
             "route" => "managers.comissions",
             "icon" => "fa fa-coins",
-            #"can"  => ["can-manager"]
+            "can"  => ["can-manager"]
         ],
         [
             "text" => "Курсы валют",
             "route" => "managers.currencyRates",
             "icon" => "fa fa-ruble-sign",
-            #"can"  => ["can-manager"]
+            "can"  => ["can-manager"]
         ],
 
         // owner pages
-        [
-            "header" => "Owner",
-        ],
-
         [
             "text" => "Учетные записи",
             "icon" => "fa fa-user-cog",
@@ -362,12 +342,12 @@ return [
                     "active" => ["managers"]
                 ],
             ],
-            #"can"  => ["can-owner"]
+            "can"  => ["can-owner", "can-host"]
         ],
 
         [
             "text" => "Настройки",
-            "icon" => "fa fa-user-cog",
+            "icon" => "fa fa-cog",
             "submenu" => [
                 [
                     "text" => "Команды",
@@ -400,7 +380,27 @@ return [
                     "active" => ["configurations"]
                 ],
             ],
-            #"can"  => ["can-owner"]
+            "can"  => ["can-owner", "can-host"]
+        ],
+
+        [
+            "text" => "Финансы",
+            'icon' => 'fa fa-donate',
+            "submenu" => [
+                [
+                    "text" => "Статистика",
+                    "route" => "finances.statistics",
+                    'icon' => 'fa fa-money-check-alt',
+                    "active" => ["finances/statistics"]
+                ],
+                [
+                    "text" => "Расходы",
+                    "route" => "finances.customOutcomes",
+                    'icon' => 'fa fa-file-invoice-dollar',
+                    "active" => ["finances/customOutcomes"]
+                ],
+            ],
+            "can"  => ["can-owner", "can-host"]
         ],
     ],
 

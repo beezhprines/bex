@@ -121,7 +121,7 @@ class OperatorController extends Controller
 
     public function statistics(Request $request)
     {
-        $teams = Operator::first()->teams; // todo change to Auth::user()
+        $teams = Auth::user()->teams;
         $team = $request->has('team') ? $teams->find($request->team) : $teams->first();
         $conversion = 0; // todo solve conversion
 
@@ -134,7 +134,7 @@ class OperatorController extends Controller
 
     public function salesplan()
     {
-        $operator = Operator::first(); // todo change to Auth::user()
+        $operator = Auth::user()->operator;
 
         $profit = $operator->getProfit(week()->start(), week()->end());
         $lastWeekProfit = $operator->getProfit(week()->monday(isodate(strtotime(isodate() . ' -7 day'))), week()->sunday(isodate(strtotime(isodate() . ' -7 day'))));

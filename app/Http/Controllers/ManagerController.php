@@ -62,7 +62,7 @@ class ManagerController extends Controller
 
         $manager = Manager::createWithRelations($data);
 
-        return redirect()->back()->with(['success' => __('common.saved-success')]);
+        return back()->with(['success' => __('common.saved-success')]);
     }
 
     /**
@@ -108,7 +108,7 @@ class ManagerController extends Controller
 
         $manager = $manager->updateWithRelations($data);
 
-        return redirect()->back()->with(['success' => __('common.saved-success')]);
+        return back()->with(['success' => __('common.saved-success')]);
     }
 
     /**
@@ -127,7 +127,7 @@ class ManagerController extends Controller
 
         note("info", "manager:delete", "Удален менеджер {$managerName}", Manager::class, $managerId);
 
-        return redirect()->back()->with(['success' => __('common.deleted-success')]);
+        return back()->with(['success' => __('common.deleted-success')]);
     }
 
     public function weekplan(Request $request)
@@ -136,7 +136,7 @@ class ManagerController extends Controller
         $comission = Budget::getComission(week()->start(), week()->end());
         $managerBonusRate = floatval(Configuration::findByCode("manager:profit")->value);
         $milestoneBonus = Manager::getMilestoneBonus($comission);
-        $manager = Manager::first(); // todo Auth::user()->manager;
+        $manager = Auth::user()->manager;
         $masters = Master::all();
 
         return view("managers.weekplan", [
@@ -210,7 +210,7 @@ class ManagerController extends Controller
 
         if ($user->isOwner() || $user->isHost()) {
             Auth::login($manager->user);
-            return redirect()->route("dashboard");
+            return route("dashboard");
         }
 
         return back()->with(["error" => "Ошибка авторизации"]);

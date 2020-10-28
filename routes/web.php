@@ -5,6 +5,7 @@ use App\Http\Controllers\ConfigurationController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\CountryController;
 use App\Http\Controllers\CurrencyController;
+use App\Http\Controllers\FinanceController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\ManagerController;
@@ -128,8 +129,15 @@ Route::middleware(["auth"])->group(function () {
     });
 
     // invoices
-    Route::resources(["invoices" => InvoiceController::class]);
     Route::prefix("invoices")->name("invoices.")->group(function () {
+        Route::delete('/{invoice}', [InvoiceController::class, 'destroy'])->name('destroy');
         Route::post("/store/many", [InvoiceController::class, "storeMany"])->name("store.many");
+    });
+
+    // finances
+    Route::prefix("finances")->name("finances.")->group(function () {
+        Route::get('/statistics', [FinanceController::class, 'statistics'])->name('statistics');
+        Route::get('/customOutcomes', [FinanceController::class, 'customOutcomes'])->name('customOutcomes');
+        Route::post('/customOutcomes/update', [FinanceController::class, 'updateCustomOutcomes'])->name('customOutcomes.update');
     });
 });
