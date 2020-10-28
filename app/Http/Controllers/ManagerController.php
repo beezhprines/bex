@@ -11,10 +11,10 @@ use App\Models\CurrencyRate;
 use App\Models\Invoice;
 use App\Models\Manager;
 use App\Models\Master;
-use App\Models\Operator;
 use App\Models\Team;
+use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class ManagerController extends Controller
 {
@@ -25,7 +25,11 @@ class ManagerController extends Controller
      */
     public function index()
     {
-        //
+        $managers = Manager::all();
+
+        return view("managers.index", [
+            'managers' => $managers
+        ]);
     }
 
     /**
@@ -46,7 +50,19 @@ class ManagerController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->validate([
+            'name' => 'required|string|min:3',
+            'premium_rate' => 'required|numeric',
+            'user' => 'required|array',
+            'user.account' => 'required|string|min:3',
+            'user.password' => 'nullable|string|min:3',
+            'user.email' => 'nullable|email',
+            'user.phone' => 'nullable|string'
+        ]);
+
+        $manager = Manager::createWithRelations($data);
+
+        return redirect()->back()->with(['success' => __('common.saved-success')]);
     }
 
     /**
@@ -80,7 +96,19 @@ class ManagerController extends Controller
      */
     public function update(Request $request, Manager $manager)
     {
-        //
+        $data = $request->validate([
+            'name' => 'required|string|min:3',
+            'premium_rate' => 'required|numeric',
+            'user' => 'required|array',
+            'user.account' => 'required|string|min:3',
+            'user.password' => 'nullable|string|min:3',
+            'user.email' => 'nullable|email',
+            'user.phone' => 'nullable|string'
+        ]);
+
+        $manager = $manager->updateWithRelations($data);
+
+        return redirect()->back()->with(['success' => __('common.saved-success')]);
     }
 
     /**
@@ -91,7 +119,15 @@ class ManagerController extends Controller
      */
     public function destroy(Manager $manager)
     {
-        //
+        $managerId = $manager->id;
+        $managerName = $manager->name;
+
+        $manager->user->delete();
+        $manager->delete();
+
+        note("info", "manager:delete", "Удален менеджер {$managerName}", Manager::class, $managerId);
+
+        return redirect()->back()->with(['success' => __('common.deleted-success')]);
     }
 
     public function weekplan(Request $request)
@@ -166,5 +202,17 @@ class ManagerController extends Controller
             "currencyRatesPaginator" => $currencyRatesPaginator,
             "currencyRatesGrouped" => $currencyRatesGrouped
         ]);
+    }
+
+    public function auth(Manager $manager)
+    {
+        $user = User::find(Auth::id());
+
+        if ($user->isOwner() || $user->isHost()) {
+            Auth::login($manager->user);
+            return redirect()->route("dashboard");
+        }
+
+        return back()->with(["error" => "Ошибка авторизации"]);
     }
 }

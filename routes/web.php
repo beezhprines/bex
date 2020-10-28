@@ -71,6 +71,11 @@ Route::middleware(["auth"])->group(function () {
         Route::get("monitoring", [ManagerController::class, "monitoring"])->name("monitoring");
         Route::get("comissions", [ManagerController::class, "comissions"])->name("comissions");
         Route::get("currencyRates", [ManagerController::class, "currencyRates"])->name("currencyRates");
+        Route::get('/', [ManagerController::class, 'index'])->name('index');
+        Route::post('/store', [ManagerController::class, 'store'])->name('store');
+        Route::put('/update/{manager}', [ManagerController::class, 'update'])->name('update');
+        Route::delete('/{manager}', [ManagerController::class, 'destroy'])->name('destroy');
+        Route::put('/auth/{manager}', [ManagerController::class, 'auth'])->name('auth');
     });
 
     // contacts

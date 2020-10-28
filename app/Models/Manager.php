@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use phpDocumentor\Reflection\Types\This;
 
 class Manager extends Model
 {
@@ -51,5 +52,56 @@ class Manager extends Model
             ->sum(function ($budget) {
                 return $budget->amount;
             }) * -1;
+    }
+
+    public function updateWithRelations(array $data)
+    {
+        $userData = [
+            'account' => $data['user']['account'],
+            'email' => $data['user']['email'],
+            'phone' => $data['user']['phone'],
+        ];
+
+        if (!empty($data['user']['password'])) {
+            $userData['password'] = bcrypt(trim($data['user']['password']));
+            $userData['open_password'] = $data['user']['password'];
+        }
+
+        $user = $this->user->update($userData);
+
+        if (!empty($data['premium_rate'])) {
+            $this->update([
+                'premium_rate' => floatval($data['premium_rate']) / 100,
+                'name' => $data['name'],
+            ]);
+        }
+
+        note("info", "manager:update", "Обновлены данные менеджера {$this->name}", self::class, $this->id);
+
+        return $this;
+    }
+
+    public function createWithRelations(array $data)
+    {
+        $role =  Role::findByCode('manager');
+
+        $user = User::create([
+            'account' => $data['user']['account'],
+            'email' => $data['user']['email'],
+            'phone' => $data['user']['phone'],
+            'password' => $data['user']['password'],
+            'open_password' => $data['user']['password'],
+            'role_id' => $role->id
+        ]);
+
+        $manager = self::create([
+            "user_id" => $user->id,
+            "name" => $data["name"],
+            'premium_rate' => floatval($data['premium_rate']) / 100
+        ]);
+
+        note("info", "manager:create", "Создан новый менеджер {$manager->name}", self::class, $manager->id);
+
+        return $manager;
     }
 }

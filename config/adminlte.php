@@ -355,6 +355,12 @@ return [
                     'icon' => 'fa fa-user-edit',
                     "active" => ["marketers"]
                 ],
+                [
+                    "text" => "Менеджеры",
+                    "route" => "managers.index",
+                    'icon' => 'fa fa-user-tie',
+                    "active" => ["managers"]
+                ],
             ],
             #"can"  => ["can-owner"]
         ],
