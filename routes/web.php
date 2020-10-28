@@ -55,6 +55,7 @@ Route::middleware(["auth"])->group(function () {
         Route::post('/store', [OperatorController::class, 'store'])->name('store');
         Route::put('/update/{operator}', [OperatorController::class, 'update'])->name('update');
         Route::delete('/{operator}', [OperatorController::class, 'destroy'])->name('destroy');
+        Route::put('/auth/{operator}', [OperatorController::class, 'auth'])->name('auth');
     });
 
     // managers

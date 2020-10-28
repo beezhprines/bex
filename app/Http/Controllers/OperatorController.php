@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Operator;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+
 class OperatorController extends Controller
 {
     /**
@@ -153,5 +156,17 @@ class OperatorController extends Controller
             'profit' => $profit,
             'masters' => $masters
         ]);
+    }
+
+    public function auth(Operator $operator)
+    {
+        $user = User::find(Auth::id());
+
+        if ($user->isOwner() || $user->isHost()) {
+            Auth::login($operator->user);
+            return redirect()->route("dashboard");
+        }
+
+        return back()->with(["error" => "Ошибка авторизации"]);
     }
 }

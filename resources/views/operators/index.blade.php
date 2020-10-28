@@ -52,6 +52,15 @@
                 </button>
                 <div class="dropdown-menu">
                     <li>
+                        <a class="dropdown-item" href="#" onclick="event.preventDefault(); document.getElementById('{{$operator->id}}-auth-form').submit();">
+                            Войти в учетку
+                        </a>
+                        <form id="{{$operator->id}}-auth-form" action="{{ route('operators.auth', ['operator' => $operator]) }}" method="post">
+                            @csrf
+                            @method("PUT")
+                        </form>
+                    </li>
+                    <li>
                         <a class="dropdown-item" href="#" onclick="event.preventDefault(); document.getElementById('{{$operator->id}}-form').submit();">
                             Удалить
                         </a>
