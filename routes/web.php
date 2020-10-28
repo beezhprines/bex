@@ -1,6 +1,10 @@
 <?php
 
+use App\Http\Controllers\CityController;
+use App\Http\Controllers\ConfigurationController;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\CountryController;
+use App\Http\Controllers\CurrencyController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\ManagerController;
@@ -8,6 +12,7 @@ use App\Http\Controllers\MarketerController;
 use App\Http\Controllers\MasterController;
 use App\Http\Controllers\OperatorController;
 use App\Http\Controllers\ServiceController;
+use App\Http\Controllers\TeamController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -86,6 +91,33 @@ Route::middleware(["auth"])->group(function () {
     // services
     Route::prefix("services")->name("services.")->group(function () {
         Route::post("store/{master}", [ServiceController::class, "store"])->name("store");
+    });
+
+    // teams
+    Route::prefix("teams")->name("teams.")->group(function () {
+        Route::get("/", [TeamController::class, "index"])->name("index");
+        Route::post("/update/all", [TeamController::class, "updateAll"])->name("update.all");
+        Route::post("/store", [TeamController::class, "store"])->name("store");
+    });
+
+    // cities
+    Route::prefix("cities")->name("cities.")->group(function () {
+        Route::get("/", [CityController::class, "index"])->name("index");
+    });
+
+    // countries
+    Route::prefix("countries")->name("countries.")->group(function () {
+        Route::get("/", [CountryController::class, "index"])->name("index");
+    });
+
+    // currencies
+    Route::prefix("currencies")->name("currencies.")->group(function () {
+        Route::get("/", [CurrencyController::class, "index"])->name("index");
+    });
+
+    // configurations
+    Route::prefix("configurations")->name("configurations.")->group(function () {
+        Route::get("/", [ConfigurationController::class, "index"])->name("index");
     });
 
     // invoices

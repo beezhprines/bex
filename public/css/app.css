@@ -32770,3 +32770,7 @@ a.text-muted:hover {
   font-size: 0.8rem;
 }
 
+.nav-sidebar .nav-link > .fa {
+  width: 16px;
+}
+

@@ -364,6 +364,44 @@ return [
             ],
             #"can"  => ["can-owner"]
         ],
+
+        [
+            "text" => "Настройки",
+            "icon" => "fa fa-user-cog",
+            "submenu" => [
+                [
+                    "text" => "Команды",
+                    "route" => "teams.index",
+                    'icon' => 'fa fa-users',
+                    "active" => ["teams"]
+                ],
+                [
+                    "text" => "Города",
+                    "route" => "cities.index",
+                    'icon' => 'fa fa-city',
+                    "active" => ["cities"]
+                ],
+                [
+                    "text" => "Страны",
+                    "route" => "countries.index",
+                    'icon' => 'fa fa-globe-europe',
+                    "active" => ["countries"]
+                ],
+                [
+                    "text" => "Валюты",
+                    "route" => "currencies.index",
+                    'icon' => 'fa fa-ruble-sign',
+                    "active" => ["currencies"]
+                ],
+                [
+                    "text" => "Бонусы",
+                    "route" => "configurations.index",
+                    'icon' => 'fa fa-percentage',
+                    "active" => ["configurations"]
+                ],
+            ],
+            #"can"  => ["can-owner"]
+        ],
     ],
 
     /*
