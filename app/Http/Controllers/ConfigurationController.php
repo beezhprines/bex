@@ -69,7 +69,29 @@ class ConfigurationController extends Controller
      */
     public function update(Request $request, Configuration $configuration)
     {
-        //
+        switch ($configuration->code) {
+            case "bex:manager:milestones":
+                $data = ["value" => json_encode($request->value)];
+                break;
+
+            case "bex:manager:profit":
+                $data = ["value" => intval($request->value) / 100];
+                break;
+
+            case "bex:operator:profit":
+                $data = ["value" => intval($request->value) / 1000];
+                break;
+
+            default:
+                $data = $request->all();
+                break;
+        }
+
+        $configuration->update($data);
+
+        note("info", "configuration:update", "Обновлена конфигурация", Configuration::class, $configuration->id);
+
+        return back()->with(["success" => __("common.saved-success")]);
     }
 
     /**
@@ -81,5 +103,20 @@ class ConfigurationController extends Controller
     public function destroy(Configuration $configuration)
     {
         //
+    }
+
+    public function bonuses()
+    {
+        $bexManagerProfit = Configuration::findByCode("manager:profit");
+        $bexManagerMilestones = Configuration::findByCode("manager:milestones");
+        $bexOperatorPoint = Configuration::findByCode("operator:point");
+        $bexOperatorProfit = Configuration::findByCode("operator:profit");
+
+        return view("configurations.bonuses", [
+            "bexManagerProfit" => $bexManagerProfit,
+            "bexManagerMilestones" => $bexManagerMilestones,
+            "bexOperatorPoint" => $bexOperatorPoint,
+            "bexOperatorProfit" => $bexOperatorProfit,
+        ]);
     }
 }

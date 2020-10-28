@@ -123,7 +123,8 @@ Route::middleware(["auth"])->group(function () {
 
     // configurations
     Route::prefix("configurations")->name("configurations.")->group(function () {
-        Route::get("/", [ConfigurationController::class, "index"])->name("index");
+        Route::get("/bonuses", [ConfigurationController::class, "bonuses"])->name("bonuses");
+        Route::put("/udpate/{configuration}", [ConfigurationController::class, "update"])->name("update");
     });
 
     // invoices

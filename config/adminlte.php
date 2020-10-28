@@ -395,7 +395,7 @@ return [
                 ],
                 [
                     "text" => "Бонусы",
-                    "route" => "configurations.index",
+                    "route" => "configurations.bonuses",
                     'icon' => 'fa fa-percentage',
                     "active" => ["configurations"]
                 ],
