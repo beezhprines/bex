@@ -103,6 +103,8 @@ Route::middleware(["auth"])->group(function () {
     // cities
     Route::prefix("cities")->name("cities.")->group(function () {
         Route::get("/", [CityController::class, "index"])->name("index");
+        Route::post("/update/all", [CityController::class, "updateAll"])->name("update.all");
+        Route::post("/store", [CityController::class, "store"])->name("store");
     });
 
     // countries

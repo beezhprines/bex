@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\City;
+use App\Models\Country;
 use Illuminate\Http\Request;
 
 class CityController extends Controller
@@ -14,7 +15,13 @@ class CityController extends Controller
      */
     public function index()
     {
-        //
+        $cities = City::all();
+        $countries = Country::all();
+
+        return view("cities.index", [
+            'cities' => $cities,
+            'countries' => $countries,
+        ]);
     }
 
     /**
@@ -35,7 +42,13 @@ class CityController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $city = City::create($request->all());
+
+        note("info", "city:create", "Создан город {$city->title}", City::class, $city->id);
+
+        return back()->with([
+            'success' => __('common.saved-success')
+        ]);
     }
 
     /**
@@ -69,7 +82,13 @@ class CityController extends Controller
      */
     public function update(Request $request, City $city)
     {
-        //
+        $city->update($request->all());
+
+        note("info", "city:update", "Обновлен город {$city->title}", City::class, $city->id);
+
+        return back()->with([
+            'success' => __('common.saved-success')
+        ]);
     }
 
     /**
@@ -81,5 +100,24 @@ class CityController extends Controller
     public function destroy(City $city)
     {
         //
+    }
+
+    public function updateAll(Request $request)
+    {
+        $data = $request->validate([
+            'cities' => 'required|array',
+            'cities.*.title' => 'required|string',
+            'cities.*.code' => 'required|string|min:3',
+            'cities.*.country_id' => 'required|exists:countries,id',
+        ]);
+
+        foreach ($data['cities'] as $cityId => $cityData) {
+            $city = City::find($cityId);
+            $city = $city->update($cityData);
+        }
+
+        note("info", "city:update", "Обновлены города", City::class);
+
+        return back()->with(['success' => __('common.saved-success')]);
     }
 }
