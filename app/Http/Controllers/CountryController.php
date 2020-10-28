@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Country;
+use App\Models\Currency;
 use Illuminate\Http\Request;
 
 class CountryController extends Controller
@@ -14,7 +15,13 @@ class CountryController extends Controller
      */
     public function index()
     {
-        //
+        $countries = Country::all();
+        $currencies = Currency::all();
+
+        return view("countries.index", [
+            'countries' => $countries,
+            'currencies' => $currencies,
+        ]);
     }
 
     /**
@@ -35,7 +42,13 @@ class CountryController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $country = Country::create($request->all());
+
+        note("info", "country:create", "Создана страна {$country->title}", Country::class, $country->id);
+
+        return back()->with([
+            'success' => __('common.saved-success')
+        ]);
     }
 
     /**
@@ -69,7 +82,13 @@ class CountryController extends Controller
      */
     public function update(Request $request, Country $country)
     {
-        //
+        $country->update($request->all());
+
+        note("info", "country:update", "Обновлена страна {$country->title}", Country::class, $country->id);
+
+        return back()->with([
+            'success' => __('common.saved-success')
+        ]);
     }
 
     /**
@@ -81,5 +100,24 @@ class CountryController extends Controller
     public function destroy(Country $country)
     {
         //
+    }
+
+    public function updateAll(Request $request)
+    {
+        $data = $request->validate([
+            'countries' => 'required|array',
+            'countries.*.title' => 'required|string',
+            'countries.*.code' => 'required|string|min:3',
+            'countries.*.currency_id' => 'required|exists:currencies,id',
+        ]);
+
+        foreach ($data['countries'] as $countryId => $countryData) {
+            $country = Country::find($countryId);
+            $country = $country->update($countryData);
+        }
+
+        note("info", "country:update", "Обновлены страны", Country::class);
+
+        return back()->with(['success' => __('common.saved-success')]);
     }
 }

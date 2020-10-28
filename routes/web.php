@@ -110,6 +110,8 @@ Route::middleware(["auth"])->group(function () {
     // countries
     Route::prefix("countries")->name("countries.")->group(function () {
         Route::get("/", [CountryController::class, "index"])->name("index");
+        Route::post("/update/all", [CountryController::class, "updateAll"])->name("update.all");
+        Route::post("/store", [CountryController::class, "store"])->name("store");
     });
 
     // currencies
