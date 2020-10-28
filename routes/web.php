@@ -37,6 +37,7 @@ Route::middleware(["auth"])->group(function () {
         Route::post('/update/{master}', [MasterController::class, 'update'])->name('update');
         Route::put('/load/all', [MasterController::class, 'loadAll'])->name('load.all');
         Route::put('/load/{master}', [MasterController::class, 'load'])->name('load');
+        Route::put('/auth/{master}', [MasterController::class, 'auth'])->name('auth');
     });
 
     // marketers

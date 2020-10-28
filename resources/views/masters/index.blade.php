@@ -49,6 +49,15 @@
                         </form>
                     </li>
                     <li>
+                        <a class="dropdown-item" href="#" onclick="event.preventDefault(); document.getElementById('{{$master->id}}-auth-form').submit();">
+                            Войти в учетку
+                        </a>
+                        <form id="{{$master->id}}-auth-form" action="{{ route('masters.auth', ['master' => $master]) }}" method="post">
+                            @csrf
+                            @method("PUT")
+                        </form>
+                    </li>
+                    <li>
                         <a data-route="{{ route('services.store', ['master' => $master]) }}" class="dropdown-item add-service" href="#" data-toggle="modal" data-target="#addServiceModal">
                             Добавить услугу
                         </a>

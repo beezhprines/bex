@@ -73,4 +73,14 @@ class User extends Authenticatable
     {
         return $this->role->code == "master";
     }
+
+    public function isOwner()
+    {
+        return $this->role->code == "owner";
+    }
+
+    public function isHost()
+    {
+        return $this->role->code == "host";
+    }
 }

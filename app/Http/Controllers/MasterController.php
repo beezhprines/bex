@@ -8,6 +8,7 @@ use App\Models\BudgetType;
 use App\Models\Master;
 use App\Models\Service;
 use App\Models\Team;
+use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -163,5 +164,17 @@ class MasterController extends Controller
         LoadServicesJob::dispatchNow();
 
         return back()->with(['success' => __("common.loaded-success")]);
+    }
+
+    public function auth(Master $master)
+    {
+        $user = User::find(Auth::id());
+
+        if ($user->isOwner() || $user->isHost()) {
+            Auth::login($master->user);
+            return redirect()->route("dashboard");
+        }
+
+        return back()->with(["error" => "Ошибка авторизации"]);
     }
 }
