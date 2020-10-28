@@ -82,6 +82,8 @@ class InvoiceController extends Controller
      */
     public function destroy(Invoice $invoice)
     {
+        access(["can-master"]);
+
         $invoice->delete();
 
         note("info", "invoice:delete", "Удален чек", Invoice::class, $invoice->id);
@@ -91,6 +93,8 @@ class InvoiceController extends Controller
 
     public function storeMany(Request $request)
     {
+        access(["can-master"]);
+
         $data = $request->validate([
             'master_id' => 'required|exists:masters,id',
             'budget_id' => 'required|exists:budgets,id',

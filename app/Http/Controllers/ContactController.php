@@ -85,6 +85,8 @@ class ContactController extends Controller
 
     public function saveMany(Request $request)
     {
+        access(["can-manager"]);
+
         $data = $request->validate([
             "contacts" => "required|array",
             "contacts.*.team" => "required|array"

@@ -11,6 +11,8 @@ class FinanceController extends Controller
 {
     public function customOutcomes()
     {
+        access(["can-owner", "can-host"]);
+
         $monthBudget = Budget::findByDateAndType(month()->start(week()->end()), BudgetType::findByCode("custom:month:outcome"));
 
         $weekBudget = Budget::findByDateAndType(week()->start(), BudgetType::findByCode("custom:week:outcome"));
@@ -23,6 +25,8 @@ class FinanceController extends Controller
 
     public function updateCustomOutcomes(Request $request)
     {
+        access(["can-owner", "can-host"]);
+
         $data = $request->validate([
             "budget_id" => "required|exists:budgets,id",
             "custom-outcomes" => "nullable|array",
@@ -43,6 +47,8 @@ class FinanceController extends Controller
 
     public function statistics()
     {
+        access(["can-owner", "can-host"]);
+
         $masters = Master::all();
 
         $budgetType =  BudgetType::findByCode("master:comission:income");

@@ -43,6 +43,8 @@ class ServiceController extends Controller
      */
     public function store(Request $request, Master $master)
     {
+        access(["can-owner", "can-host", "can-manager"]);
+
         $data = $request->validate([
             'title' => 'required|string',
             'price' => 'required|numeric',

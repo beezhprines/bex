@@ -25,6 +25,8 @@ class ManagerController extends Controller
      */
     public function index()
     {
+        access(["can-owner", "can-host"]);
+
         $managers = Manager::all();
 
         return view("managers.index", [
@@ -50,6 +52,8 @@ class ManagerController extends Controller
      */
     public function store(Request $request)
     {
+        access(["can-owner", "can-host"]);
+
         $data = $request->validate([
             'name' => 'required|string|min:3',
             'premium_rate' => 'required|numeric',
@@ -96,6 +100,8 @@ class ManagerController extends Controller
      */
     public function update(Request $request, Manager $manager)
     {
+        access(["can-owner", "can-host"]);
+
         $data = $request->validate([
             'name' => 'required|string|min:3',
             'premium_rate' => 'required|numeric',
@@ -119,6 +125,8 @@ class ManagerController extends Controller
      */
     public function destroy(Manager $manager)
     {
+        access(["can-owner", "can-host"]);
+
         $managerId = $manager->id;
         $managerName = $manager->name;
 
@@ -132,6 +140,8 @@ class ManagerController extends Controller
 
     public function weekplan(Request $request)
     {
+        access(["can-manager"]);
+
         $milestones = collect(json_decode(Configuration::findByCode("manager:milestones")->value, true));
         $comission = Budget::getComission(week()->start(), week()->end());
         $managerBonusRate = floatval(Configuration::findByCode("manager:profit")->value);
@@ -151,6 +161,8 @@ class ManagerController extends Controller
 
     public function statistics(Request $request)
     {
+        access(["can-manager"]);
+
         $teams = Team::all();
         $team = $request->has('team') ? $teams->find($request->team) : $teams->first();
 
@@ -170,11 +182,15 @@ class ManagerController extends Controller
 
     public function diagrams()
     {
+        access(["can-manager"]);
+
         return view("managers.diagrams");
     }
 
     public function comissions(Request $request)
     {
+        access(["can-manager"]);
+
         $masters = Master::all();
         return view("managers.comissions", [
             "masters" => $masters
@@ -183,6 +199,8 @@ class ManagerController extends Controller
 
     public function monitoring()
     {
+        access(["can-manager"]);
+
         $comissions = Budget::getComissionsPerWeek();
         $masters = Invoice::getMastersNotLoadedInvoiceForWeek(week()->end());
 
@@ -194,6 +212,8 @@ class ManagerController extends Controller
 
     public function currencyRates()
     {
+        access(["can-manager"]);
+
         $currencyCount = Currency::count();
         $currencyRatesPaginator = CurrencyRate::orderByDesc("date")->paginate($currencyCount * 15);
         $currencyRatesGrouped = collect($currencyRatesPaginator->items())->groupBy("date");
@@ -206,6 +226,8 @@ class ManagerController extends Controller
 
     public function auth(Manager $manager)
     {
+        access(["can-owner", "can-host"]);
+
         $user = User::find(Auth::id());
 
         if ($user->isOwner() || $user->isHost()) {

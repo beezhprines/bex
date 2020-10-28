@@ -16,6 +16,8 @@ class OperatorController extends Controller
      */
     public function index()
     {
+        access(["can-owner", "can-host"]);
+
         $operators = Operator::all();
 
         return view("operators.index", [
@@ -41,6 +43,8 @@ class OperatorController extends Controller
      */
     public function store(Request $request)
     {
+        access(["can-owner", "can-host"]);
+
         $data = $request->validate([
             'name' => 'required|string|min:3',
             'user' => 'required|array',
@@ -86,6 +90,8 @@ class OperatorController extends Controller
      */
     public function update(Request $request, Operator $operator)
     {
+        access(["can-owner", "can-host"]);
+
         $data = $request->validate([
             'name' => 'required|string|min:3',
             'user' => 'required|array',
@@ -108,6 +114,8 @@ class OperatorController extends Controller
      */
     public function destroy(Operator $operator)
     {
+        access(["can-owner", "can-host"]);
+
         $operatorId = $operator->id;
         $operatorName = $operator->name;
 
@@ -121,6 +129,8 @@ class OperatorController extends Controller
 
     public function statistics(Request $request)
     {
+        access(["can-operator"]);
+
         $teams = Auth::user()->teams;
         $team = $request->has('team') ? $teams->find($request->team) : $teams->first();
         $conversion = 0; // todo solve conversion
@@ -134,6 +144,8 @@ class OperatorController extends Controller
 
     public function salesplan()
     {
+        access(["can-operator"]);
+
         $operator = Auth::user()->operator;
 
         $profit = $operator->getProfit(week()->start(), week()->end());
@@ -160,6 +172,8 @@ class OperatorController extends Controller
 
     public function auth(Operator $operator)
     {
+        access(["can-owner", "can-host"]);
+
         $user = User::find(Auth::id());
 
         if ($user->isOwner() || $user->isHost()) {

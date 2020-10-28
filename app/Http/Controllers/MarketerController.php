@@ -9,7 +9,9 @@ use App\Models\Currency;
 use App\Models\CurrencyRate;
 use App\Models\Marketer;
 use App\Models\Team;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class MarketerController extends Controller
 {
@@ -20,6 +22,8 @@ class MarketerController extends Controller
      */
     public function index()
     {
+        access(["can-owner", "can-host"]);
+
         $marketers = Marketer::all();
 
         return view("marketers.index", [
@@ -45,6 +49,8 @@ class MarketerController extends Controller
      */
     public function store(Request $request)
     {
+        access(["can-owner", "can-host"]);
+
         $data = $request->validate([
             'name' => 'required|string|min:3',
             'user' => 'required|array',
@@ -90,6 +96,8 @@ class MarketerController extends Controller
      */
     public function update(Request $request, Marketer $marketer)
     {
+        access(["can-owner", "can-host"]);
+
         $data = $request->validate([
             'name' => 'required|string|min:3',
             'user' => 'required|array',
@@ -112,6 +120,8 @@ class MarketerController extends Controller
      */
     public function destroy(Marketer $marketer)
     {
+        access(["can-owner", "can-host"]);
+
         $marketerId = $marketer->id;
         $marketerName = $marketer->name;
 
@@ -126,6 +136,8 @@ class MarketerController extends Controller
 
     public function analytics()
     {
+        access(["can-marketer"]);
+
         $budgetTypeInstagram = BudgetType::findByCode("marketer:team:instagram:outcome");
         $budgetTypeVK = BudgetType::findByCode("marketer:team:vk:outcome");
 
@@ -148,6 +160,8 @@ class MarketerController extends Controller
 
     public function saveTeamOutcomes(Request $request)
     {
+        access(["can-marketer"]);
+
         $data = $request->validate([
             "date" => "required|date",
             "teams" => "required|array",
@@ -197,6 +211,8 @@ class MarketerController extends Controller
 
     public function diagrams()
     {
+        access(["can-marketer"]);
+
         $milestones = collect(json_decode(Configuration::findByCode("manager:milestones")->value, true))
             ->map(function ($milestone) {
                 $milestone["bonus"] = null;
@@ -209,5 +225,19 @@ class MarketerController extends Controller
             "milestones" => $milestones,
             "totalComission" => $totalComission,
         ]);
+    }
+
+    public function auth(Marketer $marketer)
+    {
+        access(["can-owner", "can-host"]);
+
+        $user = User::find(Auth::id());
+
+        if ($user->isOwner() || $user->isHost()) {
+            Auth::login($marketer->user);
+            return route("dashboard");
+        }
+
+        return back()->with(["error" => "Ошибка авторизации"]);
     }
 }

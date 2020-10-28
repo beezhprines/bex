@@ -69,6 +69,8 @@ class ConfigurationController extends Controller
      */
     public function update(Request $request, Configuration $configuration)
     {
+        access(["can-owner", "can-host"]);
+
         switch ($configuration->code) {
             case "bex:manager:milestones":
                 $data = ["value" => json_encode($request->value)];
@@ -107,6 +109,8 @@ class ConfigurationController extends Controller
 
     public function bonuses()
     {
+        access(["can-owner", "can-host"]);
+
         $bexManagerProfit = Configuration::findByCode("manager:profit");
         $bexManagerMilestones = Configuration::findByCode("manager:milestones");
         $bexOperatorPoint = Configuration::findByCode("operator:point");

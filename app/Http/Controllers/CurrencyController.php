@@ -15,6 +15,8 @@ class CurrencyController extends Controller
      */
     public function index()
     {
+        access(["can-owner", "can-host"]);
+
         $currencies = Currency::all();
         $currencyCount = $currencies->count();
         $currencyRatesPaginator = CurrencyRate::orderByDesc("date")->paginate($currencyCount * 15);
@@ -44,6 +46,8 @@ class CurrencyController extends Controller
      */
     public function store(Request $request)
     {
+        access(["can-owner", "can-host"]);
+
         $currency = Currency::create($request->all());
 
         note("info", "currency:create", "Создана валюта {$currency->title}", Currency::class, $currency->id);
@@ -84,6 +88,8 @@ class CurrencyController extends Controller
      */
     public function update(Request $request, Currency $currency)
     {
+        access(["can-owner", "can-host"]);
+
         $currency->update($request->all());
 
         note("info", "currency:update", "Обновлена валюта {$currency->title}", Currency::class, $currency->id);
@@ -106,6 +112,8 @@ class CurrencyController extends Controller
 
     public function updateAll(Request $request)
     {
+        access(["can-owner", "can-host"]);
+
         $data = $request->validate([
             'currencies' => 'required|array',
             'currencies.*.title' => 'required|string',

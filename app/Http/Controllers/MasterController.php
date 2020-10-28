@@ -9,7 +9,6 @@ use App\Models\Master;
 use App\Models\Service;
 use App\Models\Team;
 use App\Models\User;
-use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -22,6 +21,8 @@ class MasterController extends Controller
      */
     public function index()
     {
+        access(["can-owner", "can-host"]);
+
         $masters = Master::all();
         $teams = Team::all();
 
@@ -83,6 +84,8 @@ class MasterController extends Controller
      */
     public function update(Request $request, Master $master)
     {
+        access(["can-owner", "can-host"]);
+
         $data = $request->validate([
             'team_id' => 'required|exists:teams,id',
             'user' => 'required|array',
@@ -141,6 +144,8 @@ class MasterController extends Controller
 
     public function statistics()
     {
+        access(["can-master"]);
+
         $master = Auth::user()->master;
         $budget = $master->getBudget(week()->end(), BudgetType::findByCode("master:comission:income")->id);
 
@@ -152,6 +157,8 @@ class MasterController extends Controller
 
     public function load(Master $master)
     {
+        access(["can-owner", "can-host", "can-manager"]);
+
         LoadMastersJob::dispatchNow($master->origin_id);
         LoadServicesJob::dispatchNow($master->origin_id);
 
@@ -160,6 +167,8 @@ class MasterController extends Controller
 
     public function loadAll()
     {
+        access(["can-owner", "can-host", "can-manager"]);
+
         LoadMastersJob::dispatchNow();
         LoadServicesJob::dispatchNow();
 
@@ -168,6 +177,8 @@ class MasterController extends Controller
 
     public function auth(Master $master)
     {
+        access(["can-owner", "can-host"]);
+
         $user = User::find(Auth::id());
 
         if ($user->isOwner() || $user->isHost()) {

@@ -15,6 +15,8 @@ class CityController extends Controller
      */
     public function index()
     {
+        access(["can-owner", "can-host"]);
+
         $cities = City::all();
         $countries = Country::all();
 
@@ -42,6 +44,8 @@ class CityController extends Controller
      */
     public function store(Request $request)
     {
+        access(["can-owner", "can-host"]);
+
         $city = City::create($request->all());
 
         note("info", "city:create", "Создан город {$city->title}", City::class, $city->id);
@@ -82,6 +86,8 @@ class CityController extends Controller
      */
     public function update(Request $request, City $city)
     {
+        access(["can-owner", "can-host"]);
+
         $city->update($request->all());
 
         note("info", "city:update", "Обновлен город {$city->title}", City::class, $city->id);
@@ -104,6 +110,8 @@ class CityController extends Controller
 
     public function updateAll(Request $request)
     {
+        access(["can-owner", "can-host"]);
+
         $data = $request->validate([
             'cities' => 'required|array',
             'cities.*.title' => 'required|string',

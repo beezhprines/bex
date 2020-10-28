@@ -15,6 +15,8 @@ class CountryController extends Controller
      */
     public function index()
     {
+        access(["can-owner", "can-host"]);
+
         $countries = Country::all();
         $currencies = Currency::all();
 
@@ -42,6 +44,8 @@ class CountryController extends Controller
      */
     public function store(Request $request)
     {
+        access(["can-owner", "can-host"]);
+
         $country = Country::create($request->all());
 
         note("info", "country:create", "Создана страна {$country->title}", Country::class, $country->id);
@@ -82,6 +86,8 @@ class CountryController extends Controller
      */
     public function update(Request $request, Country $country)
     {
+        access(["can-owner", "can-host"]);
+
         $country->update($request->all());
 
         note("info", "country:update", "Обновлена страна {$country->title}", Country::class, $country->id);
@@ -104,6 +110,8 @@ class CountryController extends Controller
 
     public function updateAll(Request $request)
     {
+        access(["can-owner", "can-host"]);
+
         $data = $request->validate([
             'countries' => 'required|array',
             'countries.*.title' => 'required|string',
