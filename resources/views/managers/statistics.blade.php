@@ -10,6 +10,10 @@
 @stop
 
 @section('content')
+@foreach($teams as $team)
+<h4>
+    {{ $team->title }}
+</h4>
 <div class="row">
     <div class="col-md-8">
         @forelse($team->masters as $master)
@@ -23,14 +27,9 @@
         @endforelse
     </div>
     <div class="col-md-4">
-        <div class="card card-info card-outline">
-            <div class="card-body">
-                <!-- TEAM CONTENTS -->
-                @if (!empty($teams))
-                @include('teams.team-selects', ['teams' => $teams, 'route' => 'managers.statistics', 'current' => $team])
-                @endif
-
-                <ul class="list-group list-group-unbordered">
+        <div class="card card-outline card-info">
+            <div class="card-body p-0">
+                <ul class="list-group list-group-flush">
                     <li class="list-group-item">
                         <b>Оператор</b>
                         <span class="float-right">
@@ -59,7 +58,6 @@
                 </ul>
             </div>
         </div>
-
         <div class="card card-warning card-outline">
             <div class="card-header">
                 <strong>Контакты</strong>
@@ -69,9 +67,14 @@
                 </div>
             </div>
             <div class="card-body p-0">
-                @include('contacts.week-form', ['contactTypes' => $contactTypes])
+                @include("contacts.week-form", [
+                "contactTypes" => $contactTypes,
+                "contacts" => $team->contacts(week()->start(), week()->end())
+                ])
             </div>
         </div>
     </div>
 </div>
+<hr>
+@endforeach
 @stop

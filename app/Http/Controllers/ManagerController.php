@@ -30,7 +30,7 @@ class ManagerController extends Controller
         $managers = Manager::all();
 
         return view("managers.index", [
-            'managers' => $managers
+            "managers" => $managers
         ]);
     }
 
@@ -55,18 +55,18 @@ class ManagerController extends Controller
         access(["can-owner", "can-host"]);
 
         $data = $request->validate([
-            'name' => 'required|string|min:3',
-            'premium_rate' => 'required|numeric',
-            'user' => 'required|array',
-            'user.account' => 'required|string|min:3',
-            'user.password' => 'nullable|string|min:3',
-            'user.email' => 'nullable|email',
-            'user.phone' => 'nullable|string'
+            "name" => "required|string|min:3",
+            "premium_rate" => "required|numeric",
+            "user" => "required|array",
+            "user.account" => "required|string|min:3",
+            "user.password" => "nullable|string|min:3",
+            "user.email" => "nullable|email",
+            "user.phone" => "nullable|string"
         ]);
 
         $manager = Manager::createWithRelations($data);
 
-        return back()->with(['success' => __('common.saved-success')]);
+        return back()->with(["success" => __("common.saved-success")]);
     }
 
     /**
@@ -103,18 +103,18 @@ class ManagerController extends Controller
         access(["can-owner", "can-host"]);
 
         $data = $request->validate([
-            'name' => 'required|string|min:3',
-            'premium_rate' => 'required|numeric',
-            'user' => 'required|array',
-            'user.account' => 'required|string|min:3',
-            'user.password' => 'nullable|string|min:3',
-            'user.email' => 'nullable|email',
-            'user.phone' => 'nullable|string'
+            "name" => "required|string|min:3",
+            "premium_rate" => "required|numeric",
+            "user" => "required|array",
+            "user.account" => "required|string|min:3",
+            "user.password" => "nullable|string|min:3",
+            "user.email" => "nullable|email",
+            "user.phone" => "nullable|string"
         ]);
 
         $manager = $manager->updateWithRelations($data);
 
-        return back()->with(['success' => __('common.saved-success')]);
+        return back()->with(["success" => __("common.saved-success")]);
     }
 
     /**
@@ -135,7 +135,7 @@ class ManagerController extends Controller
 
         note("info", "manager:delete", "Удален менеджер {$managerName}", Manager::class, $managerId);
 
-        return back()->with(['success' => __('common.deleted-success')]);
+        return back()->with(["success" => __("common.deleted-success")]);
     }
 
     public function weekplan(Request $request)
@@ -159,24 +159,16 @@ class ManagerController extends Controller
         ]);
     }
 
-    public function statistics(Request $request)
+    public function statistics()
     {
         access(["can-manager"]);
 
         $teams = Team::all();
-        $team = $request->has('team') ? $teams->find($request->team) : $teams->first();
-
         $contactTypes = ContactType::all();
-        $contacts = collect();
-        foreach ($contactTypes as $contactType) {
-            $contacts = $contacts->merge(Contact::getByDatesTypeTeam(week()->start(), week()->end(), $team, $contactType));
-        }
 
         return view("managers.statistics", [
-            'team' => $team,
-            'teams' => $teams,
-            'contactTypes' => $contactTypes,
-            'contacts' => $contacts->groupBy("date"),
+            "teams" => $teams,
+            "contactTypes" => $contactTypes
         ]);
     }
 

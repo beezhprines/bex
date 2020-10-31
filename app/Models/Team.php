@@ -110,4 +110,15 @@ class Team extends Model
 
         return $contactDifference == 0 ? 0 : round($recordsCount / $contactDifference * 100, 2);
     }
+
+    public function contacts(string $startDate, string $endDate)
+    {
+        $contactTypes = ContactType::all();
+        $contacts = collect();
+        foreach ($contactTypes as $contactType) {
+            $contacts = $contacts->merge(Contact::getByDatesTypeTeam(week()->start(), week()->end(), $this, $contactType));
+        }
+
+        return $contacts->groupBy("date");
+    }
 }
