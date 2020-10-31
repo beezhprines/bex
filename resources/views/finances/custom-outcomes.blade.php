@@ -12,7 +12,7 @@
         <div class="card card-outline card-secondary">
             <div class="card-header">
                 <div class="card-title">
-                    Месячные расходы на {{ viewdate($monthBudget->date)a }}
+                    Месячные расходы на {{ viewdate($monthBudget->date) }}
                 </div>
             </div>
             <div class="card-body p-0">

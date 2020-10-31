@@ -31,11 +31,11 @@ class RestoreService
         }
     }
 
-    public function restore()
+    public function restore(string $from, string $to)
     {
-        $this->seedCurrencies();
-
         $models = [
+            ["tableName" => "currencies", "class" => Currency::class],
+            ["tableName" => "currency_rates", "class" => CurrencyRate::class],
             ["tableName" => "countries", "class" => Country::class],
             ["tableName" => "cities", "class" => City::class],
             ["tableName" => "configurations", "class" => Configuration::class],
@@ -60,8 +60,8 @@ class RestoreService
         $this->restoreMarketers($employees);
         $this->restoreOperators($employees);
     }
-
-    private function seedCurrencies()
+    /*
+    private function seedCurrencies(string $from, string $to)
     {
         $currencies = [
             ["title" => "Тенге", "code" => "KZT"],
@@ -77,7 +77,7 @@ class RestoreService
 
         foreach ($currencies as $currency) {
             $currency = Currency::create($currency);
-            foreach (daterange("2020-10-12", "2020-10-18", true) as $date) {
+            foreach (daterange($from, $to, true) as $date) {
                 CurrencyRate::create([
                     "date" => date_format($date, config("app.iso_date")),
                     "rate" => $rates[$currency->code],
@@ -86,7 +86,7 @@ class RestoreService
             }
         }
     }
-
+*/
     private function restoreMasters($employees)
     {
         $items = collect($this->collection->filter(function ($table) {

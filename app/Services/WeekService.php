@@ -26,6 +26,18 @@ class WeekService
         return $this->get()["range"];
     }
 
+    public function previous(string $date = null)
+    {
+        $date = is_null($date) ? isodate() : $date;
+        return date(config('app.iso_date'), strtotime($date . ' -7 day'));
+    }
+
+    public function next(string $date = null)
+    {
+        $date = is_null($date) ? isodate() : $date;
+        return date(config('app.iso_date'), strtotime($date . ' +7 day'));
+    }
+
     public function monday(string $date)
     {
         return date(config('app.iso_date'), strtotime("this week Monday", strtotime($date)));

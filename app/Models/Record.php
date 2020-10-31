@@ -13,7 +13,7 @@ class Record extends Model
     use HasFactory, SoftDeletes, ModelBase;
 
     protected $fillable = [
-        'origin_id', 'started_at', 'duration', 'comment', 'attendance', 'master_id'
+        "origin_id", "started_at", "duration", "comment", "attendance", "master_id"
     ];
 
     public function master()
@@ -23,13 +23,13 @@ class Record extends Model
 
     public function services()
     {
-        return $this->belongsToMany(Service::class)->withTimestamps()->withPivot(['comission', 'profit']);
+        return $this->belongsToMany(Service::class)->withTimestamps()->withPivot(["comission", "profit"]);
     }
 
     public static function get(string $startDate, string $endDate, bool $attendance = true)
     {
-        return self::whereBetween(DB::raw('DATE(started_at)'), array($startDate, $endDate))
-            ->where('attendance', $attendance)
+        return self::whereBetween(DB::raw("DATE(started_at)"), array($startDate, $endDate))
+            ->where("attendance", $attendance)
             ->get();
     }
     public static function solveComission($records, bool $withTeamPremiumRate = false)
@@ -60,7 +60,7 @@ class Record extends Model
     public static function seed($records, $date)
     {
         foreach ($records as $item) {
-            if (!in_array($item["visit_attendance"], [1, -1])) continue;
+            if (!isset($item["visit_attendance"]) || !in_array($item["visit_attendance"], [1, -1])) continue;
 
             // create or update record
             $record = self::createOrUpdate(self::peel($item));
@@ -74,7 +74,7 @@ class Record extends Model
 
                     if (!empty($item["services"])) {
 
-                        foreach ($item['services'] as $serviceData) {
+                        foreach ($item["services"] as $serviceData) {
                             $service = $record->services->first();
 
                             if (!empty($service) && $service->origin_id != $serviceData["id"]) {
@@ -87,19 +87,19 @@ class Record extends Model
                                 // associate service with record and exchange comission
 
                                 $pivot = [
-                                    'comission' => CurrencyRate::exchange(
-                                        date_format(new DateTime($record->started_at), config('app.iso_date')),
+                                    "comission" => CurrencyRate::exchange(
+                                        date_format(new DateTime($record->started_at), config("app.iso_date")),
                                         $master->currency(),
                                         $service->comission
                                     ),
-                                    'profit' => !empty($service->price) ? CurrencyRate::exchange(
-                                        date_format(new DateTime($record->started_at), config('app.iso_date')),
+                                    "profit" => !empty($service->price) ? CurrencyRate::exchange(
+                                        date_format(new DateTime($record->started_at), config("app.iso_date")),
                                         $master->currency(),
                                         $service->price - $service->comission
                                     ) : 0
                                 ];
 
-                                if ($record->services()->where('service_id', $service->id)->exists()) {
+                                if ($record->services()->where("service_id", $service->id)->exists()) {
                                     $record->services()->updateExistingPivot($service->id, $pivot);
                                 } else {
                                     $record->services()->attach($service->id, $pivot);
@@ -136,24 +136,24 @@ class Record extends Model
     {
         $data = [];
 
-        if (!empty($item['id'])) {
-            $data['origin_id'] = $item['id'];
+        if (!empty($item["id"])) {
+            $data["origin_id"] = $item["id"];
         }
 
         if (!empty($item["datetime"])) {
-            $data['started_at'] = date(config('app.iso_datetime'), strtotime($item['datetime']));
+            $data["started_at"] = date(config("app.iso_datetime"), strtotime($item["datetime"]));
         }
 
         if (!empty($item["seance_length"])) {
-            $data['duration'] = $item["seance_length"];
+            $data["duration"] = $item["seance_length"];
         }
 
         if (!empty($item["comment"])) {
-            $data['comment'] = $item["comment"];
+            $data["comment"] = $item["comment"];
         }
 
         if (!empty($item["attendance"])) {
-            $data['attendance'] = $item["attendance"] == 1;
+            $data["attendance"] = $item["attendance"] == 1;
         }
 
         return $data;

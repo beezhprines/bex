@@ -91,13 +91,13 @@
   !*** ./resources/js/app.js ***!
   \*****************************/
 /*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, exports) {
 
-__webpack_require__(/*! ./datepicker */ "./resources/js/datepicker.js");
-
-__webpack_require__(/*! ./selectpicker */ "./resources/js/selectpicker.js");
-
-var $loader = $("#loader");
+/* GLOBALS */
+var isoDateFormat = "YYYY-MM-DD",
+    calendar = "#calendar",
+    calendarInput = "#calendar-value",
+    $loader = $("#loader");
 $.ajaxSetup({
   headers: {
     "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content")
@@ -108,37 +108,11 @@ $(document).ajaxStart(function () {
 }).ajaxStop(function () {
   $loader.hide();
 });
+/* DATEPICKER */
 
-(function ($) {
-  $(document).on("scroll", function () {
-    if ($(this).scrollTop() < $(window).height()) {
-      $("#up-button").hide();
-    } else {
-      $("#up-button").show();
-    }
-  });
-  $("#up-button").on("click", function () {
-    $("html, body").animate({
-      scrollTop: 0
-    }, "fast");
-  });
-  $("input[type='checkbox']").on("change", function () {
-    $(this).prev("input[type='hidden']").val($(this).is(":checked") ? 1 : 0);
-  });
-})(jQuery);
-
-/***/ }),
-
-/***/ "./resources/js/datepicker.js":
-/*!************************************!*\
-  !*** ./resources/js/datepicker.js ***!
-  \************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-var isoDateFormat = "YYYY-MM-DD";
-var calendar = "#calendar";
-var calendarInput = "#calendar-value";
+var setWeek = function setWeek(startDate, endDate) {
+  window.location.href = "/calendar?startDate=".concat(startDate, "&endDate=").concat(endDate);
+};
 
 var betweenDates = function betweenDates(startDate, endDate) {
   var dates = [];
@@ -152,21 +126,6 @@ var betweenDates = function betweenDates(startDate, endDate) {
 
   dates.push(lastDate.clone().toDate());
   return dates;
-};
-
-var setWeek = function setWeek(startDate, endDate) {
-  var daterange = startDate + ":" + endDate;
-  $.post("/calendar", {
-    startDate: startDate,
-    endDate: endDate
-  }).done(function (data) {
-    $(calendarInput).val(daterange);
-    var selected = $(document).find(calendar).find("td.active");
-    selected.siblings("td").addClass("active");
-    window.location.reload();
-  }).fail(function (error) {
-    toastr.error(error.responseJSON.message);
-  }).always(function () {});
 };
 
 (function ($) {
@@ -211,20 +170,42 @@ var setWeek = function setWeek(startDate, endDate) {
     });
   });
 })(jQuery);
+/* END DATEPICKER */
 
-/***/ }),
+/* SELECTPICKER SETTINGS */
 
-/***/ "./resources/js/selectpicker.js":
-/*!**************************************!*\
-  !*** ./resources/js/selectpicker.js ***!
-  \**************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
 
 (function ($) {
   $(".selectpicker.linkable").on("change", function (e) {
     e.preventDefault();
     window.location.href = $(this).find("option:selected").attr("data-link");
+  });
+})(jQuery);
+/* END SELECTPICKER SETTINGS */
+
+/* OTHERS */
+
+
+(function ($) {
+  $(document).on("scroll", function () {
+    if ($(this).scrollTop() < $(window).height()) {
+      $("#up-button").hide();
+    } else {
+      $("#up-button").show();
+    }
+  });
+  $("#up-button").on("click", function () {
+    $("html, body").animate({
+      scrollTop: 0
+    }, "fast");
+  });
+  $("input[type='checkbox']").on("change", function () {
+    $(this).prev("input[type='hidden']").val($(this).is(":checked") ? 1 : 0);
+  });
+  $(".week-control").on("click", function () {
+    var startDate = $(this).attr("data-startDate");
+    var endDate = $(this).attr("data-endDate");
+    setWeek(startDate, endDate);
   });
 })(jQuery);
 

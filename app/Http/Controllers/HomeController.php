@@ -33,7 +33,7 @@ class HomeController extends Controller
             $end->format(config('app.iso_date'))
         );
 
-        return response()->json(['success' => true]);
+        return back();
     }
 
     public function denied()

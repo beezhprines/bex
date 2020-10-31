@@ -11,6 +11,7 @@ use App\Services\SeedService;
 use App\Services\WeekService;
 use App\Services\YClientsService;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Pagination\Paginator;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -31,7 +32,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        Paginator::useBootstrap();
     }
 
     private function registerServices()

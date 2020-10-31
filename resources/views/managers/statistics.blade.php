@@ -47,13 +47,13 @@
                     <li class="list-group-item">
                         <b>Конверсия записей</b>
                         <span class="float-right">
-                            {{ $team->solveConversion(week()->sunday(isodate(strtotime(isodate() . ' -7 day'))), week()->end(), true) }}%
+                            {{ $team->solveConversion(week()->previous(week()->end()), week()->end(), true) }}%
                         </span>
                     </li>
                     <li class="list-group-item">
                         <b>Конверсия пришедших</b>
                         <span class="float-right">
-                            {{ $team->solveConversion(week()->sunday(isodate(strtotime(isodate() . ' -7 day'))), week()->end(), false) }}%
+                            {{ $team->solveConversion(week()->previous(week()->end()), week()->end(), false) }}%
                         </span>
                     </li>
                 </ul>

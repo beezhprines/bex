@@ -72,6 +72,7 @@
             </div>
             <div class="card-body p-0">
                 @include("currencies.currency-rates-table", [
+                "currencies" => $currencies,
                 "currencyRatesGrouped" => $currencyRatesGrouped,
                 "currencyRatesPaginator" => $currencyRatesPaginator
                 ])

@@ -4,15 +4,11 @@
             <th>
                 Дата
             </th>
+            @foreach($currencies as $currency)
             <th class="text-center">
-                Тенге
+                {{ $currency->title }}
             </th>
-            <th class="text-center">
-                Рубль
-            </th>
-            <th class="text-center">
-                Доллар
-            </th>
+            @endforeach
         </thead>
         <tbody>
             @foreach($currencyRatesGrouped as $date => $currencyRates)
@@ -20,9 +16,9 @@
                 <td>
                     {{ viewdate($date) }}
                 </td>
-                @foreach($currencyRates as $currencyRate)
+                @foreach($currencies as $currency)
                 <td class="text-center">
-                    {{ $currencyRate->rate }}
+                    {{ $currencyRates->firstWhere("currency_id", $currency->id)->rate ?? "-" }}
                 </td>
                 @endforeach
             </tr>

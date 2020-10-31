@@ -60,7 +60,7 @@ class Seed extends Command
         if ($this->option("restore")) {
             Artisan::call("migrate:fresh --seed");
 
-            $restoreService->restore();
+            $restoreService->restore($from, $to);
 
             Artisan::call("seed --all --startDate={$from} --endDate={$to}");
             Artisan::call("load --all --startDate={$from} --endDate={$to}");

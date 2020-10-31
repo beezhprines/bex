@@ -11,10 +11,10 @@ class Master extends Model
 {
     use HasFactory, SoftDeletes, ModelBase;
 
-    private static string $password = '1234qwer';
+    private static string $password = "1234qwer";
 
     protected $fillable = [
-        'origin_id', 'specialization', 'avatar', 'schedule_till', 'user_id', 'team_id', 'deleted_at', 'name'
+        "origin_id", "specialization", "avatar", "schedule_till", "user_id", "team_id", "deleted_at", "name"
     ];
 
     public function user()
@@ -55,8 +55,8 @@ class Master extends Model
     public function getRecords(string $startDate, string $endDate, bool $attendance = true, bool $onlyConversionServices = false)
     {
         $records = $this->records()
-            ->whereBetween(DB::raw('DATE(started_at)'), array($startDate, $endDate))
-            ->where('attendance', $attendance)
+            ->whereBetween(DB::raw("DATE(started_at)"), array($startDate, $endDate))
+            ->where("attendance", $attendance)
             ->get();
 
         if ($onlyConversionServices) {
@@ -82,12 +82,12 @@ class Master extends Model
 
     public function getComission(string $startDate, string $endDate)
     {
-        $budgetType = BudgetType::findByCode('master:comission:income');
+        $budgetType = BudgetType::findByCode("master:comission:income");
 
         $amount = round(
             $this->budgets
-                ->whereBetween('date', [$startDate, $endDate])
-                ->where('budget_type_id', $budgetType->id)
+                ->whereBetween("date", [$startDate, $endDate])
+                ->where("budget_type_id", $budgetType->id)
                 ->sum(function ($budget) {
                     return $budget->amount;
                 })
@@ -98,12 +98,12 @@ class Master extends Model
 
     public function getProfit(string $startDate, string $endDate)
     {
-        $budgetType = BudgetType::findByCode('master:profit:outcome');
+        $budgetType = BudgetType::findByCode("master:profit:outcome");
 
         $amount = round(
             $this->budgets
-                ->whereBetween('date', [$startDate, $endDate])
-                ->where('budget_type_id', $budgetType->id)
+                ->whereBetween("date", [$startDate, $endDate])
+                ->where("budget_type_id", $budgetType->id)
                 ->sum(function ($budget) {
                     return $budget->amount;
                 })
@@ -114,11 +114,11 @@ class Master extends Model
 
     public function getTotalProfit()
     {
-        $budgetType = BudgetType::findByCode('master:profit:outcome');
+        $budgetType = BudgetType::findByCode("master:profit:outcome");
 
         $amount = round(
             $this->budgets
-                ->where('budget_type_id', $budgetType->id)
+                ->where("budget_type_id", $budgetType->id)
                 ->sum(function ($budget) {
                     return $budget->amount;
                 })
@@ -130,20 +130,20 @@ class Master extends Model
     public function getBudget(string $date, int $budgetTypeId)
     {
         return $this->budgets
-            ->where('date', $date)
-            ->where('budget_type_id', $budgetTypeId)
+            ->where("date", $date)
+            ->where("budget_type_id", $budgetTypeId)
             ->first();
     }
 
     private static function peel(array $item)
     {
-        if (!empty($item['id'])) {
-            $item['origin_id'] = intval(trim($item['id']));
-            unset($item['id']);
+        if (!empty($item["id"])) {
+            $item["origin_id"] = intval(trim($item["id"]));
+            unset($item["id"]);
         }
 
-        if (($item['fired'] ?? 1) == 1 || ($item['hidden'] ?? 1 == 1)) {
-            $item['deleted_at'] = date(config('app.iso_datetime'));
+        if (($item["fired"] ?? 1) == 1 || ($item["hidden"] ?? 1 == 1)) {
+            $item["deleted_at"] = date(config("app.iso_datetime"));
         }
 
         return $item;
@@ -164,11 +164,11 @@ class Master extends Model
 
     private static function createOrUpdate(array $item)
     {
-        if (empty($item['origin_id'])) {
+        if (empty($item["origin_id"])) {
             return null;
         }
 
-        return self::createOrUpdateWithRelations($item, self::findByOriginId($item['origin_id']));
+        return self::createOrUpdateWithRelations($item, self::findByOriginId($item["origin_id"]));
     }
 
     private static function createOrUpdateWithRelations(array $data, ?Master $master)
@@ -180,28 +180,28 @@ class Master extends Model
             $master->refresh();
         }
 
-        if (empty($data['deleted_at'] ?? null)) {
+        if (empty($data["deleted_at"] ?? null)) {
             $master->restore();
         }
 
-        $role = Role::findByCode('master');
+        $role = Role::findByCode("master");
 
         if (empty($master->user)) {
             $user = User::create([
-                'account' => translit($data['name'] . "-" . $data['origin_id']),
-                'email' => $data['user']['email'] ?? null,
-                'phone' => $data['user']['phone'] ?? null,
-                'password' => bcrypt(self::$password),
-                'open_password' => self::$password,
-                'role_id' => $role->id
+                "account" => translit($data["name"] . "-" . $data["origin_id"]),
+                "email" => $data["user"]["email"] ?? null,
+                "phone" => $data["user"]["phone"] ?? null,
+                "password" => bcrypt(self::$password),
+                "open_password" => self::$password,
+                "role_id" => $role->id
             ]);
 
             $master->user()->associate($user);
             $master->save();
         } else {
             $user = $master->user->update([
-                'email' => $data['user']['email'] ?? null,
-                'phone' => $data['user']['phone'] ?? null
+                "email" => $data["user"]["email"] ?? null,
+                "phone" => $data["user"]["phone"] ?? null
             ]);
         }
 

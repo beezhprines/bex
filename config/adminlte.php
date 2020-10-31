@@ -377,7 +377,7 @@ return [
                     "text" => "Бонусы",
                     "route" => "configurations.bonuses",
                     'icon' => 'fa fa-percentage',
-                    "active" => ["configurations"]
+                    "active" => ["configurations*"]
                 ],
             ],
             "can"  => ["can-owner", "can-host"]

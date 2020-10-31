@@ -34,7 +34,7 @@ Route::middleware(["auth"])->group(function () {
 
     // home
     Route::get("/", [HomeController::class, "dashboard"])->name("dashboard");
-    Route::post("/calendar", [HomeController::class, "calendar"])->name("calendar");
+    Route::get("/calendar", [HomeController::class, "calendar"])->name("calendar");
     Route::post("/denied", [HomeController::class, "denied"])->name("denied");
 
     // masters

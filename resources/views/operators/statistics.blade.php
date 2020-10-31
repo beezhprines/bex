@@ -37,7 +37,7 @@
                     <li class="list-group-item">
                         <b>Прошлая неделя</b>
                         <span class="float-right">
-                            {{ $team->operator->solvePointsPerTeam($team, week()->monday(isodate(strtotime(isodate() . ' -7 day'))), week()->sunday(isodate(strtotime(isodate() . ' -7 day')))) }}
+                            {{ $team->operator->solvePointsPerTeam($team, week()->previous(week()->start()), week()->previous(week()->end())) }}
                         </span>
                     </li>
                     <li class="list-group-item">

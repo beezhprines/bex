@@ -149,7 +149,7 @@ class OperatorController extends Controller
         $operator = Auth::user()->operator;
 
         $profit = $operator->getProfit(week()->start(), week()->end());
-        $lastWeekProfit = $operator->getProfit(week()->monday(isodate(strtotime(isodate() . ' -7 day'))), week()->sunday(isodate(strtotime(isodate() . ' -7 day'))));
+        $lastWeekProfit = $operator->getProfit(week()->previous(week()->start()), week()->previous(week()->end()));
         $points = $operator->getPoints($profit);
         $lastWeekPoints = $operator->getPoints($lastWeekProfit);
 
