@@ -222,6 +222,6 @@ class MasterController extends Controller
 
         note("info", "service:update", "Обновлены услуги мастера {$master->name}", Master::class, $master->id);
 
-        return back()->with(['success' => __('common.saved-success')]);
+        return redirect()->to(url()->previous() . "#master-{$master->id}")->with(['success' => __('common.saved-success')]);
     }
 }

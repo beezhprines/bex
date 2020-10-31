@@ -188,6 +188,7 @@ var betweenDates = function betweenDates(startDate, endDate) {
 
 (function ($) {
   $(document).on("scroll", function () {
+    // show/hide up button
     if ($(this).scrollTop() < $(window).height()) {
       $("#up-button").hide();
     } else {

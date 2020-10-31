@@ -185,7 +185,7 @@ class ManagerController extends Controller
 
     public function comissions(Request $request)
     {
-        access(["can-manager"]);
+        access(["can-manager", "can-owner", "can-host"]);
 
         $masters = Master::all();
         return view("managers.comissions", [

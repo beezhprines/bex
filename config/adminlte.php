@@ -85,7 +85,7 @@ return [
 
     "layout_topnav" => null,
     "layout_boxed" => null,
-    "layout_fixed_sidebar" => null,
+    "layout_fixed_sidebar" => true,
     "layout_fixed_navbar" => null,
     "layout_fixed_footer" => null,
 
@@ -405,6 +405,12 @@ return [
                     'icon' => 'fa fa-file-invoice-dollar',
                     "active" => ["finances/customOutcomes"]
                 ],
+                [
+                    "text" => "Комиссии",
+                    "route" => "managers.comissions",
+                    "icon" => "fa fa-coins",
+                    "active" => ["managers/comissions"]
+                ]
             ],
             "can"  => ["can-owner", "can-host"]
         ],

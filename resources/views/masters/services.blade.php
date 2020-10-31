@@ -23,7 +23,7 @@
 
 @section('content')
 @foreach($masters as $master)
-<div class="card card-secondary card-outline">
+<div id="master-{{ $master->id }}" class="card card-secondary card-outline id-scrollable">
     <div class="card-header">
         <div class="card-title">
             {{ $master->name }} -
