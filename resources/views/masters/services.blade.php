@@ -1,7 +1,7 @@
 @extends('adminlte::page')
 
 @section('content_header')
-<x-week-header header="Мастера">
+<x-week-header header="Услуги">
     <div class="btn-group dropleft">
         <button type="button" class="btn btn-tool btn-transparent btn-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <i class="fa fa-ellipsis-v"></i>
@@ -45,15 +45,6 @@
                         </form>
                     </li>
                     <li>
-                        <a class="dropdown-item" href="#" onclick="event.preventDefault(); document.getElementById('{{$master->id}}-auth-form').submit();">
-                            Войти в учетку
-                        </a>
-                        <form id="{{$master->id}}-auth-form" action="{{ route('masters.auth', ['master' => $master]) }}" method="post">
-                            @csrf
-                            @method("PUT")
-                        </form>
-                    </li>
-                    <li>
                         <a data-route="{{ route('services.store', ['master' => $master]) }}" class="dropdown-item add-service" href="#" data-toggle="modal" data-target="#addServiceModal">
                             Добавить услугу
                         </a>
@@ -62,39 +53,11 @@
             </div>
         </div>
     </div>
-    <form action="{{ route('masters.update', ['master' => $master]) }}" method="POST">
+    <form action="{{ route('masters.services.update', ['master' => $master]) }}" method="POST">
         @csrf
 
         <div class="card-body p-0">
-            <div class="row">
-                <div class="col-md-4 px-4 py-2">
-
-                    @include('users.user-form', ['user' => $master->user])
-
-                    <div class="form-group">
-                        <label>Команда</label>
-                        <select class="form-control selectpicker" name="team_id" data-live-search="true" data-size="10" required>
-                            @if(empty($team->team_id))
-                            <option>
-                                @lang('common.not-selected')
-                            </option>
-                            @endif
-                            @forelse($teams as $team)
-                            <option value="{{ $team->id }}" @if ( $team->id == $master->team_id) selected @endif>
-                                {{ $team->title }}
-                            </option>
-                            @empty
-                            <option>
-                                @lang('common.no-data')
-                            </option>
-                            @endforelse
-                        </select>
-                    </div>
-                </div>
-                <div class="col-md-8">
-                    @include("services.services-table-form", ["services" => $master->services])
-                </div>
-            </div>
+            @include("services.services-table-form", ["services" => $master->services])
         </div>
         <div class="card-footer text-right">
             <button type="submit" class="btn btn-warning btn-sm">Сохранить</button>

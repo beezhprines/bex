@@ -188,4 +188,40 @@ class MasterController extends Controller
 
         return back()->with(["error" => "Ошибка авторизации"]);
     }
+
+    public function services()
+    {
+        access(["can-manager"]);
+
+        $masters = Master::all();
+
+        return view("masters.services", [
+            "masters" => $masters
+        ]);
+    }
+
+    public function servicesUpdate(Request $request, Master $master)
+    {
+        access(["can-manager"]);
+
+        $data = $request->validate([
+            'services.*.comission' => 'required|numeric',
+            'services.*.conversion' => 'required|in:0,1',
+        ]);
+
+        foreach ($data['services'] as $serviceId => $serviceData) {
+            $service = Service::find($serviceId);
+
+            if (!empty($service)) {
+                $service->update([
+                    'comission' => $serviceData['comission'],
+                    'conversion' => $serviceData['conversion'],
+                ]);
+            }
+        }
+
+        note("info", "service:update", "Обновлены услуги мастера {$master->name}", Master::class, $master->id);
+
+        return back()->with(['success' => __('common.saved-success')]);
+    }
 }

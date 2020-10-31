@@ -306,6 +306,12 @@ return [
             "can"  => ["can-manager"]
         ],
         [
+            "text" => "Услуги",
+            "route" => "masters.services",
+            "icon" => "fa fa-hand-holding-water",
+            "can"  => ["can-manager"]
+        ],
+        [
             "text" => "Курсы валют",
             "route" => "managers.currencyRates",
             "icon" => "fa fa-ruble-sign",
