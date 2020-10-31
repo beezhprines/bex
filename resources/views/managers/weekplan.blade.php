@@ -34,35 +34,7 @@
                 </div>
             </div>
         </div>
-    </div>
-    <div class="col-md-4">
-        <div class="card card-success card-outline collapsed-card">
-            <div class="card-header">
-                <div class="card-title">
-                    Бонусы менеджеров
-                </div>
-                <div class="card-tools">
-                    <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-plus"></i></button>
-                </div>
-            </div>
-            <div class="card-body py-0 px-1">
-                <ul class="list-group list-group-flush">
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        <span>
-                            {{ $manager->name }}
-                            <span class="badge badge-primary">{{ $manager->premium_rate * 100 }}%</span>
-                        </span>
-                        <strong>
-                            {{ price($manager->getBonus(week()->start(), week()->end())) }}
-                        </strong>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="row">
-    <div class="col-md-8">
+
         <div class="card card-secondary card-outline">
             <div class="card-body p-0">
                 <div class="table-responsive">
@@ -102,6 +74,52 @@
                         </tbody>
                     </table>
                 </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card card-success card-outline collapsed-card">
+            <div class="card-header">
+                <div class="card-title">
+                    Бонусы менеджеров
+                </div>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-plus"></i></button>
+                </div>
+            </div>
+            <div class="card-body py-0 px-1">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <span>
+                            {{ $manager->name }}
+                            <span class="badge badge-primary">{{ $manager->premium_rate * 100 }}%</span>
+                        </span>
+                        <strong>
+                            {{ price($manager->getBonus(week()->start(), week()->end())) }}
+                        </strong>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="card card-warning card-outline">
+            <div class="card-header">
+                <div class="card-title">
+                    Бонусы операторов
+                </div>
+            </div>
+            <div class="card-body py-0 px-1">
+                <ul class="list-group list-group-flush">
+                    @foreach($operators as $operator)
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <span>
+                            {{ $operator->name }}
+                        </span>
+                        <strong>
+                            {{ $operator->getPoints($operator->getProfit(week()->start(), week()->end())) }}
+                        </strong>
+                    </li>
+                    @endforeach
+                </ul>
             </div>
         </div>
     </div>

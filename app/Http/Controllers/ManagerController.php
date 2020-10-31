@@ -11,6 +11,7 @@ use App\Models\CurrencyRate;
 use App\Models\Invoice;
 use App\Models\Manager;
 use App\Models\Master;
+use App\Models\Operator;
 use App\Models\Team;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -148,6 +149,7 @@ class ManagerController extends Controller
         $milestoneBonus = Manager::getMilestoneBonus($comission);
         $manager = Auth::user()->manager;
         $masters = Master::all();
+        $operators = Operator::all();
 
         return view("managers.weekplan", [
             "milestones" => $milestones,
@@ -155,7 +157,8 @@ class ManagerController extends Controller
             "managerBonusRate" => $managerBonusRate,
             "milestoneBonus" => $milestoneBonus,
             "masters" => $masters,
-            "manager" => $manager
+            "manager" => $manager,
+            "operators" => $operators,
         ]);
     }
 
