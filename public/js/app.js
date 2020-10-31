@@ -97,16 +97,16 @@
 var isoDateFormat = "YYYY-MM-DD",
     calendar = "#calendar",
     calendarInput = "#calendar-value",
-    $loader = $("#loader");
+    loader = "#loader";
 $.ajaxSetup({
   headers: {
     "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content")
   }
 });
 $(document).ajaxStart(function () {
-  $loader.show();
+  $(loader).show();
 }).ajaxStop(function () {
-  $loader.hide();
+  $(loader).hide();
 });
 /* DATEPICKER */
 

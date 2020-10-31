@@ -1,28 +1,24 @@
 @extends('adminlte::page')
 
 @section('content_header')
-<h4>
-    Мастера
-
-    <span class="float-right">
-        <div class="btn-group dropleft">
-            <button type="button" class="btn btn-tool btn-transparent btn-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <i class="fa fa-ellipsis-v"></i>
-            </button>
-            <div class="dropdown-menu">
-                <li>
-                    <a class="dropdown-item" href="#" onclick="event.preventDefault(); document.getElementById('all-load-form').submit();">
-                        Обновить всех
-                    </a>
-                    <form id="all-load-form" action="{{ route('masters.load.all') }}" method="POST">
-                        @csrf
-                        @method('PUT')
-                    </form>
-                </li>
-            </div>
+<x-week-header header="Мастера">
+    <div class="btn-group dropleft">
+        <button type="button" class="btn btn-tool btn-transparent btn-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <i class="fa fa-ellipsis-v"></i>
+        </button>
+        <div class="dropdown-menu">
+            <li>
+                <a class="dropdown-item" href="#" onclick="event.preventDefault(); document.getElementById('all-load-form').submit();">
+                    Обновить всех
+                </a>
+                <form id="all-load-form" action="{{ route('masters.load.all') }}" method="POST">
+                    @csrf
+                    @method('PUT')
+                </form>
+            </li>
         </div>
-    </span>
-</h4>
+    </div>
+</x-week-header>
 @stop
 
 @section('content')

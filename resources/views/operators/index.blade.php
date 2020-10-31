@@ -1,23 +1,20 @@
 @extends('adminlte::page')
 
 @section('content_header')
-<h4>
-    Операторы
-    <span class="float-right">
-        <div class="btn-group dropleft">
-            <button type="button" class="btn btn-tool btn-transparent btn-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <i class="fa fa-ellipsis-v"></i>
-            </button>
-            <div class="dropdown-menu">
-                <li>
-                    <a class="dropdown-item" href="#" data-toggle="modal" data-target="#create-modal">
-                        Добавить
-                    </a>
-                </li>
-            </div>
+<x-week-header header"Операторы">
+    <div class="btn-group dropleft">
+        <button type="button" class="btn btn-tool btn-transparent btn-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <i class="fa fa-ellipsis-v"></i>
+        </button>
+        <div class="dropdown-menu">
+            <li>
+                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#create-modal">
+                    Добавить
+                </a>
+            </li>
         </div>
-    </span>
-</h4>
+    </div>
+</x-week-header>
 @stop
 
 @section('content')

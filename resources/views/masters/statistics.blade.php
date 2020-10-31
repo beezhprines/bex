@@ -1,18 +1,7 @@
 @extends('adminlte::page')
 
 @section('content_header')
-<div class="row">
-    <div class="col-md-6">
-        <h4>
-            Статистика
-        </h4>
-    </div>
-    <div class="col-md-6">
-        <x-week-controls>
-            <x-week-range></x-week-range>
-        </x-week-controls>
-    </div>
-</div>
+<x-week-header header="Статистика"></x-week-header>
 @stop
 
 @section('content')

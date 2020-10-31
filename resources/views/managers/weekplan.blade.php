@@ -1,13 +1,21 @@
 @extends('adminlte::page')
 
 @section('content_header')
-<h4>
-    Недельный план
-
-    <span class="float-right">
-        <x-week-range></x-week-range>
-    </span>
-</h4>
+<x-week-header header="Недельный план">
+    <div class="btn-group dropleft">
+        <button type="button" class="btn btn-tool btn-transparent btn-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <i class="fa fa-ellipsis-v"></i>
+        </button>
+        <div class="dropdown-menu">
+            <a class="dropdown-item" href="#" onclick="event.preventDefault(); document.getElementById('loader').style.display = 'block'; document.getElementById('sync-form').submit();">
+                Обновить из журнала
+            </a>
+            <form id="sync-form" action="{{ route('managers.sync') }}" method="POST">
+                @csrf
+            </form>
+        </div>
+    </div>
+</x-week-header>
 @stop
 
 @section('content')

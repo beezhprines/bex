@@ -3,7 +3,7 @@
 let isoDateFormat = "YYYY-MM-DD",
     calendar = "#calendar",
     calendarInput = "#calendar-value",
-    $loader = $("#loader");
+    loader = "#loader";
 
 $.ajaxSetup({
     headers: {
@@ -13,10 +13,10 @@ $.ajaxSetup({
 
 $(document)
     .ajaxStart(function() {
-        $loader.show();
+        $(loader).show();
     })
     .ajaxStop(function() {
-        $loader.hide();
+        $(loader).hide();
     });
 
 /* DATEPICKER */

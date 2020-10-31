@@ -1,12 +1,7 @@
 @extends('adminlte::page')
 
 @section('content_header')
-<h4>
-    План продаж
-    <small class="float-right">
-        <x-week-range></x-week-range>
-    </small>
-</h4>
+<x-week-header header="План продаж"></x-week-header>
 @stop
 
 @section('content')

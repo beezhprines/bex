@@ -83,6 +83,7 @@ Route::middleware(["auth"])->group(function () {
         Route::put('/update/{manager}', [ManagerController::class, 'update'])->name('update');
         Route::delete('/{manager}', [ManagerController::class, 'destroy'])->name('destroy');
         Route::put('/auth/{manager}', [ManagerController::class, 'auth'])->name('auth');
+        Route::post('/sync', [ManagerController::class, 'sync'])->name('sync');
     });
 
     // contacts

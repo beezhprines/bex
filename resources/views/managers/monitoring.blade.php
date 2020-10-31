@@ -1,9 +1,7 @@
 @extends('adminlte::page')
 
 @section('content_header')
-<h4>
-    Мониторинг
-</h4>
+<x-week-header header="Мониторинг"></x-week-header>
 @stop
 
 @section('content')

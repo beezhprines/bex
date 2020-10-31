@@ -15,6 +15,7 @@ use App\Models\Operator;
 use App\Models\Team;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
 
 class ManagerController extends Controller
@@ -209,11 +210,13 @@ class ManagerController extends Controller
     {
         access(["can-manager"]);
 
-        $currencyCount = Currency::count();
+        $currencies = Currency::all();
+        $currencyCount = $currencies->count();
         $currencyRatesPaginator = CurrencyRate::orderByDesc("date")->paginate($currencyCount * 15);
         $currencyRatesGrouped = collect($currencyRatesPaginator->items())->groupBy("date");
 
         return view("managers.currency-rates", [
+            "currencies" => $currencies,
             "currencyRatesPaginator" => $currencyRatesPaginator,
             "currencyRatesGrouped" => $currencyRatesGrouped
         ]);
@@ -231,5 +234,20 @@ class ManagerController extends Controller
         }
 
         return back()->with(["error" => "Ошибка авторизации"]);
+    }
+
+    public function sync()
+    {
+        $startDate = week()->start();
+        $endDate = week()->end();
+
+        Artisan::call("load --all --startDate={$startDate} --endDate={$endDate}");
+
+        foreach (daterange($startDate, $endDate, true) as $date) {
+            $date = date_format($date, config("app.iso_date"));
+            Artisan::call("solve --all --date={$date}");
+        }
+
+        return back()->with(['success' => "Неделя обновлена из журнала"]);
     }
 }

@@ -32774,3 +32774,7 @@ a.text-muted:hover {
   width: 16px;
 }
 
+.card-title {
+  font-size: 1rem;
+}
+
