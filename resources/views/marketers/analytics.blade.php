@@ -133,13 +133,13 @@
             </div>
             <div class="card-body py-0 px-1">
                 <ul class="list-group list-group-flush">
-                    @foreach($currencyRates as $currencyRate)
+                    @foreach($currencies as $currency)
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         <span>
-                            {{ $currencyRate->currency->title}}
+                            {{ $currency->title }}
                         </span>
                         <strong>
-                            {{ $currencyRate->rate}}
+                            {{ $currencyRates[$currency->code]->rate ?? "-"}}
                         </strong>
                     </li>
                     @endforeach

@@ -131,7 +131,7 @@ class OperatorController extends Controller
     {
         access(["can-operator"]);
 
-        $teams = Auth::user()->teams;
+        $teams = Auth::user()->operator->teams;
         $team = $request->has('team') ? $teams->find($request->team) : $teams->first();
         $conversion = 0; // todo solve conversion
 

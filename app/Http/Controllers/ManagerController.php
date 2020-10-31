@@ -232,7 +232,7 @@ class ManagerController extends Controller
 
         if ($user->isOwner() || $user->isHost()) {
             Auth::login($manager->user);
-            return route("dashboard");
+            return redirect()->route("dashboard");
         }
 
         return back()->with(["error" => "Ошибка авторизации"]);

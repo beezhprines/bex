@@ -146,7 +146,8 @@ class MarketerController extends Controller
         $teams = Team::all();
 
         $currencyRates = [];
-        foreach (Currency::all() as $currency) {
+        $currencies = Currency::all();
+        foreach ($currencies as $currency) {
             $currencyRates[$currency->code] = CurrencyRate::findByCurrencyAndDate($currency, week()->last());
         }
 
@@ -154,7 +155,8 @@ class MarketerController extends Controller
             "teams" => $teams,
             "instagram" => $instagram,
             "vk" => $vk,
-            "currencyRates" => collect($currencyRates)
+            "currencyRates" => collect($currencyRates),
+            "currencies" => $currencies
         ]);
     }
 
@@ -235,7 +237,7 @@ class MarketerController extends Controller
 
         if ($user->isOwner() || $user->isHost()) {
             Auth::login($marketer->user);
-            return route("dashboard");
+            return redirect()->route("dashboard");
         }
 
         return back()->with(["error" => "Ошибка авторизации"]);
