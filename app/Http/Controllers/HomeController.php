@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
@@ -15,6 +17,20 @@ class HomeController extends Controller
      */
     public function dashboard()
     {
+        $user = User::find(Auth::id());
+
+        if ($user->isMaster()) {
+            return redirect()->route("masters.statistics");
+        } elseif ($user->isMarketer()) {
+            return redirect()->route("marketers.analytics");
+        } elseif ($user->isOperator()) {
+            return redirect()->route("operators.statistics");
+        } elseif ($user->isManager()) {
+            return redirect()->route("managers.weekplan");
+        } elseif ($user->isOwner() || $user->isHost()) {
+            return redirect()->route("finances.statistics");
+        }
+
         return view('dashboard');
     }
 

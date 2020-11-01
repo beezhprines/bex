@@ -235,6 +235,19 @@ return [
         [
             "text" => "Beauty Expert",
             "url"  => "/",
+            "submenu" => [
+                [
+                    "text" => "Стрела Академия",
+                    "url" => "http://sa.ezhprines.com"
+                ],
+            ],
+            "can"  => ["can-owner", "can-host"],
+            "topnav" => true
+        ],
+        [
+            "text" => "Beauty Expert",
+            "url"  => "/",
+            "can"  => ["can-master", "can-marketer", "can-operator", "can-manager"],
             "topnav" => true
         ],
 
