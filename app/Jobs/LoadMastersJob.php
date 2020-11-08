@@ -40,5 +40,7 @@ class LoadMastersJob implements ShouldQueue
         } else {
             $loadService->masters($yClientsService->getStaff());
         }
+
+        echo "Masters loaded\n";
     }
 }

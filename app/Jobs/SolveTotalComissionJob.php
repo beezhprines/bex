@@ -33,5 +33,6 @@ class SolveTotalComissionJob implements ShouldQueue
     public function handle()
     {
         Budget::solveComission($this->date);
+        echo "Total comission solved for date {$this->date}\n";
     }
 }

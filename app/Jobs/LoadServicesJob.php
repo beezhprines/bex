@@ -35,5 +35,6 @@ class LoadServicesJob implements ShouldQueue
     {
         $yClientsService->authorize();
         $loadService->services($yClientsService->getServices($this->staff_id));
+        echo "Services loaded\n";
     }
 }

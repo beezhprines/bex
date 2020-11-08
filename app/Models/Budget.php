@@ -351,7 +351,7 @@ class Budget extends Model
         foreach ($masters as $master) {
             $masterComissionBudget = $master->getBudget($endDate, $masterComissionBudgetType->id);
 
-            if ($masterComissionBudget->invoices->count() > 0) continue;
+            if (empty($masterComissionBudget) || $masterComissionBudget->invoices->count() > 0) continue;
 
             $totalComission = self::getComission($startDate, $endDate);
             $amount = $master->solvePenalty($endDate, $totalComission);

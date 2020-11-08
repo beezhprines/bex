@@ -32,5 +32,7 @@ class LoadCurrencyRatesJob implements ShouldQueue
     public function handle(CurrencyRateService $currencyRateService, LoadService $loadService)
     {
         $loadService->currencyRates($currencyRateService->getRates());
+        $date = isodate();
+        echo "Currency rates loaded for date {$date}\n";
     }
 }

@@ -33,5 +33,6 @@ class SolveMastersComissionJob implements ShouldQueue
     public function handle()
     {
         Budget::solveMastersComission($this->date);
+        echo "Masters comissions solved for date {$this->date}\n";
     }
 }

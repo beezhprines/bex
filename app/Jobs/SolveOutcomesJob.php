@@ -32,5 +32,6 @@ class SolveOutcomesJob implements ShouldQueue
     public function handle()
     {
         Budget::solveCustomOutcomes($this->date);
+        echo "Custom outcomes solved for date {$this->date}\n";
     }
 }

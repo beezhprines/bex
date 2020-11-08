@@ -32,5 +32,6 @@ class SolveManagersProfitJob implements ShouldQueue
     public function handle()
     {
         Budget::solveManagersBonus($this->date);
+        echo "Managers bonuses solved for date {$this->date}\n";
     }
 }

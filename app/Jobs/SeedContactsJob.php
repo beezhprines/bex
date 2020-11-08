@@ -36,5 +36,6 @@ class SeedContactsJob implements ShouldQueue
     public function handle(SeedService $seedService)
     {
         $seedService->contacts($this->startDate, $this->endDate, Team::all());
+        echo "Contacts seeded from {$this->startDate} till {$this->endDate}\n";
     }
 }
