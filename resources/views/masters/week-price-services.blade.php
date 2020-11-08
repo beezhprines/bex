@@ -32,6 +32,20 @@
                 </td>
             </tr>
             @endforeach
+
+            @php
+            $penalty = $master->getPenalty(week()->start(), week()->end());
+            @endphp
+            @if ($penalty != 0)
+            <tr>
+                <td class="texxt-bold">
+                    Пеня за неделю:
+                </td>
+                <td colspan="5">
+                    {{ price($penalty) }}
+                </td>
+            </tr>
+            @endif
         </tbody>
     </table>
 </div>

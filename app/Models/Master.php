@@ -80,14 +80,14 @@ class Master extends Model
         return Record::solveProfit($this->getRecords($startDate, $endDate));
     }
 
-    public function solvePenalty(string $endDate, float $totalComission)
+    public function solvePenalty(string $date, string $endDate, float $weekComission)
     {
         $penaltyPercent = floatval(Configuration::findByCode("master:penalty")->value);
         $maxPenaltyDays = intval(Configuration::findByCode("master:penalty:days")->value);
 
         // start if it's next wednesday
-        if (betweenDatesCount($endDate, isodate()) >= 3 && betweenDatesCount($endDate, isodate()) <= ($maxPenaltyDays + 3)) {
-            return round($totalComission * $penaltyPercent / 100);
+        if (betweenDatesCount($endDate, $date) >= 3 && betweenDatesCount($endDate, $date) <= ($maxPenaltyDays + 3)) {
+            return round($weekComission * $penaltyPercent / 100);
         }
         return null;
     }

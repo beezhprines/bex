@@ -350,18 +350,18 @@ class Budget extends Model
 
         foreach ($masters as $master) {
             $masterComissionBudget = $master->getBudget($endDate, $masterComissionBudgetType->id);
-
             if (empty($masterComissionBudget) || $masterComissionBudget->invoices->count() > 0) continue;
 
-            $totalComission = self::getComission($startDate, $endDate);
-            $amount = $master->solvePenalty($endDate, $totalComission);
+            $weekComission = $master->getComission($startDate, $endDate);
+            $amount = $master->solvePenalty($date, $endDate, $weekComission);
+            if (is_null($amount) || $amount == 0) continue;
 
-            $budget = self::findByDateAndType($date, $budgetType);
+            $budget = $master->getBudget($date, $budgetType->id);
 
             if (empty($budget)) {
                 $budget = self::create([
                     "amount" => $amount,
-                    "date" => $date,
+                    "date" => week()->previous($date),
                     "budget_type_id" => $budgetType->id
                 ]);
 
