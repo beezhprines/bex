@@ -122,3 +122,11 @@ function access(array $gates)
         abort(403);
     }
 }
+
+function betweenDatesCount(string $startDate, string $endDate)
+{
+    $origin = new DateTime($startDate);
+    $target = new DateTime($endDate);
+    $interval = $origin->diff($target);
+    return $interval->d;
+}

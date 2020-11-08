@@ -261,7 +261,7 @@ class Budget extends Model
             }
         }
 
-        note("info", "budget:solve:operator:profit", "Подсчитаны бонусы операторов на дату {$date}", seld::class);
+        note("info", "budget:solve:operator:profit", "Подсчитаны бонусы операторов на дату {$date}", self::class);
     }
 
     public static function getComission(string $startDate, string $endDate)
@@ -340,5 +340,39 @@ class Budget extends Model
         }
 
         return $comissions;
+    }
+
+    public static function solveMastersPenalty(string $date, string $startDate, string $endDate)
+    {
+        $budgetType = BudgetType::findByCode("master:penalty:income");
+        $masterComissionBudgetType = BudgetType::findByCode("master:comission:income");
+        $masters = Master::all();
+
+        foreach ($masters as $master) {
+            $masterComissionBudget = $master->getBudget($endDate, $masterComissionBudgetType->id);
+
+            if ($masterComissionBudget->invoices->count() > 0) continue;
+
+            $totalComission = self::getComission($startDate, $endDate);
+            $amount = $master->solvePenalty($endDate, $totalComission);
+
+            $budget = self::findByDateAndType($date, $budgetType);
+
+            if (empty($budget)) {
+                $budget = self::create([
+                    "amount" => $amount,
+                    "date" => $date,
+                    "budget_type_id" => $budgetType->id
+                ]);
+
+                $budget->masters()->attach($master);
+            } else {
+                $budget->update([
+                    "amount" => $amount
+                ]);
+            }
+        }
+
+        note("info", "budget:solve:master:penalty", "Подсчитаны пени мастеров на дату {$date}", self::class);
     }
 }

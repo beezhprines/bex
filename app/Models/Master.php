@@ -80,6 +80,34 @@ class Master extends Model
         return Record::solveProfit($this->getRecords($startDate, $endDate));
     }
 
+    public function solvePenalty(string $endDate, float $totalComission)
+    {
+        $penaltyPercent = floatval(Configuration::findByCode("master:penalty")->value);
+        $maxPenaltyDays = intval(Configuration::findByCode("master:penalty:days")->value);
+
+        // start if it's next wednesday
+        if (betweenDatesCount($endDate, isodate()) >= 3 && betweenDatesCount($endDate, isodate()) <= ($maxPenaltyDays + 3)) {
+            return round($totalComission * $penaltyPercent / 100);
+        }
+        return null;
+    }
+
+    public function getPenalty(string $startDate, string $endDate)
+    {
+        $budgetType = BudgetType::findByCode("master:penalty:income");
+
+        $amount = round(
+            $this->budgets
+                ->whereBetween("date", [$startDate, $endDate])
+                ->where("budget_type_id", $budgetType->id)
+                ->sum(function ($budget) {
+                    return $budget->amount;
+                })
+        );
+
+        return $amount == 0 ? 0 : $amount *  $budgetType->sign();
+    }
+
     public function getComission(string $startDate, string $endDate)
     {
         $budgetType = BudgetType::findByCode("master:comission:income");

@@ -147,6 +147,7 @@ class MasterController extends Controller
         access(["can-master"]);
 
         $master = Auth::user()->master;
+
         $budget = $master->getBudget(week()->end(), BudgetType::findByCode("master:comission:income")->id);
 
         return view("masters.statistics", [

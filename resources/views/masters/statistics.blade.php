@@ -16,6 +16,17 @@
                             {{ price($master->getComission(week()->start(), week()->end())) }}
                         </span>
                     </li>
+                    @php
+                    $penalty = $master->getPenalty(week()->start(), week()->end());
+                    @endphp
+                    @if ($penalty != 0)
+                    <li class="list-group-item">
+                        <b>Пеня за неделю:</b>
+                        <span class="float-right">
+                            {{ price($penalty) }}
+                        </span>
+                    </li>
+                    @endif
                     <li class="list-group-item text-center">
                         @if (!empty($budget))
                         <div class="row">

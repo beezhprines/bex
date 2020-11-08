@@ -75,6 +75,11 @@ class Solve extends Command
             return;
         }
 
+        if ($this->option('masters-penalty')) {
+            SolveMastersPenaltyJob::dispatchNow($date);
+            return;
+        }
+
         if ($this->option('masters-profit')) {
             SolveMastersProfitJob::dispatchNow($date);
             return;
