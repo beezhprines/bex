@@ -11,7 +11,7 @@ class Invoice extends Model
     use HasFactory, SoftDeletes, ModelBase;
 
     protected $fillable = [
-        'file', 'budget_id'
+        'file', 'budget_id', 'confirmed_date'
     ];
 
     public function budget()

@@ -1,7 +1,25 @@
 @extends('adminlte::page')
 
 @section('content_header')
-<x-week-header header="Статистика"></x-week-header>
+<x-week-header header="Статистика">
+    <div class="btn-group dropleft">
+        <button type="button" class="btn btn-tool btn-transparent btn-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <i class="fa fa-ellipsis-v"></i>
+        </button>
+        <div class="dropdown-menu">
+            <li>
+                <a class="dropdown-item" href="#" id="unloaded-invoices-btn">
+                    Должники
+                </a>
+            </li>
+            <li>
+                <a class="dropdown-item" href="#" id="unconfirmed-invoices-btn">
+                    Не подтвержденные
+                </a>
+            </li>
+        </div>
+    </div>
+</x-week-header>
 @stop
 
 @section('content')
@@ -61,7 +79,12 @@
 @endif
 
 @foreach($masters as $master)
-<div class="card card-outline card-secondary">
+<div id="filter" class="mb-2" style="display: none;">
+    <span class="badge badge-warning unloaded-invoice-badge" style="display: none;">Должники</span>
+    <span class="badge badge-warning unconfirmed-invoice-badge" style="display: none;">Не подтвержденные</span>
+    <a href="#" class="badge badge-primary clear-filter-btn">Очистить</a>
+</div>
+<div class="card card-outline card-secondary master">
     <div class="card-header">
         <div class="card-title">
             {{ $master->name }}
@@ -119,17 +142,33 @@
                         $budget = $master->getBudget(week()->end(), $masterComissionBudgetType->id);
                         @endphp
                         @if (!empty($budget))
-                        <div class="row">
-                            @forelse($budget->invoices as $invoice)
-                            <div class="col-4 mb-1">
-                                <img src="data:image/png;base64, {{ $invoice->file }}" class="invoice img-fluid" alt="invoice_{{ $invoice->id }}" />
+                        <form action="{{ route('invoices.confirm') }}" method="post">
+                            @csrf
+                            @method('PATCH')
+                            <div class="row">
+                                @forelse($budget->invoices as $invoice)
+                                <div class="col-4 mb-1">
+                                    <input type="hidden" name="invoices[]" value="{{ $invoice->id }}">
+                                    @if($invoice->confirmed_date)
+                                    <span class="badge badge-success confirmed">Подтвержден</span>
+                                    @endif
+                                    <img src="data:image/png;base64, {{ $invoice->file }}" class="invoice img-fluid" alt="invoice_{{ $invoice->id }}" />
+                                </div>
+                                @empty
+                                <div class="col-12 mb-1">
+                                    Чеки не загружены
+                                </div>
+                                @endforelse
                             </div>
-                            @empty
-                            <div class="col-12 mb-1">
-                                Чеки не загружены
+                            @if(!$budget->invoices->isEmpty())
+                            <span class="has-invoice"></span>
+                            <div class="form-group">
+                                <button class="btn btn-sm btn-warning">
+                                    Подтвердить
+                                </button>
                             </div>
-                            @endforelse
-                        </div>
+                            @endif
+                        </form>
                         @else
                         <span class="text-danger">
                             Не создан бюджет на дату {{ week()->end() }}
@@ -166,6 +205,31 @@
             var modal = $("#invoice-modal");
             modal.find(".content").html($(this).clone());
             modal.modal('show');
+        });
+
+        $("#unloaded-invoices-btn").on("click", function(e) {
+            e.preventDefault();
+            $('.master')
+                .filter(':has(span.has-invoice)')
+                .hide();
+            $("#filter").show();
+            $(".unloaded-invoice-badge").show();
+        });
+
+        $("#unconfirmed-invoices-btn").on("click", function(e) {
+            e.preventDefault();
+            $('.master')
+                .filter(':has(span.confirmed)')
+                .hide();
+            $("#filter").show();
+            $(".unconfirmed-invoice-badge").show();
+        });
+
+        $(".clear-filter-btn").on("click", function(e) {
+            e.preventDefault();
+            $('.master').show();
+            $("#filter .badge-warning").hide();
+            $("#filter").hide();
         });
     });
 </script>

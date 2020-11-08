@@ -119,4 +119,26 @@ class InvoiceController extends Controller
 
         return back()->with(['success' => __('common.saved-success')]);
     }
+
+    public function confirm(Request $request)
+    {
+        access(["can-owner", "can-host"]);
+
+        $data = $request->validate([
+            'invoices' => 'required|array',
+            'invoices.*' => 'required|exists:invoices,id'
+        ]);
+
+        foreach ($data["invoices"] as $invoiceId) {
+            $invoice = Invoice::find($invoiceId);
+
+            if (empty($invoice)) return back()->with(["error" => "Чек не найден"]);
+
+            $invoice->update([
+                "confirmed_date" => isodate()
+            ]);
+        }
+
+        return back()->with(["success" => "Чеки подтверждены"]);
+    }
 }

@@ -1,7 +1,7 @@
 @extends('adminlte::page')
 
 @section('content_header')
-<x-week-header header"Операторы">
+<x-week-header header="Операторы">
     <div class="btn-group dropleft">
         <button type="button" class="btn btn-tool btn-transparent btn-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <i class="fa fa-ellipsis-v"></i>

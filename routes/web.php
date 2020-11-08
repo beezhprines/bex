@@ -136,6 +136,7 @@ Route::middleware(["auth"])->group(function () {
     Route::prefix("invoices")->name("invoices.")->group(function () {
         Route::delete("/{invoice}", [InvoiceController::class, "destroy"])->name("destroy");
         Route::post("/store/many", [InvoiceController::class, "storeMany"])->name("store.many");
+        Route::patch("/confirm", [InvoiceController::class, "confirm"])->name("confirm");
     });
 
     // finances

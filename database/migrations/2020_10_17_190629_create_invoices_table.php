@@ -18,6 +18,7 @@ class CreateInvoicesTable extends Migration
             $table->id();
 
             $table->unsignedInteger('budget_id');
+            $table->date('confirmed_date')->nullable();
 
             $table->timestamps();
             $table->softDeletes();
