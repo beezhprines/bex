@@ -142,15 +142,15 @@ class ManagerController extends Controller
 
     public function weekplan(Request $request)
     {
-        access(["can-manager"]);
+        access(["can-manager", "can-owner", "can-host"]);
 
         $milestones = collect(json_decode(Configuration::findByCode("manager:milestones")->value, true));
         $comission = Budget::getComission(week()->start(), week()->end());
         $managerBonusRate = floatval(Configuration::findByCode("manager:profit")->value);
         $milestoneBonus = Manager::getMilestoneBonus($comission);
-        $manager = Auth::user()->manager;
         $masters = Master::all();
         $operators = Operator::all();
+        $managers = Manager::all();
 
         return view("managers.weekplan", [
             "milestones" => $milestones,
@@ -158,7 +158,7 @@ class ManagerController extends Controller
             "managerBonusRate" => $managerBonusRate,
             "milestoneBonus" => $milestoneBonus,
             "masters" => $masters,
-            "manager" => $manager,
+            "managers" => $managers,
             "operators" => $operators,
         ]);
     }

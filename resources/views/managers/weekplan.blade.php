@@ -97,6 +97,12 @@
             </div>
             <div class="card-body py-0 px-1">
                 <ul class="list-group list-group-flush">
+                    @foreach($managers as $manager)
+                    @if (
+                        (auth()->user()->isOwner() || auth()->user()->isHost())
+                        ||
+                        (auth()->user()->manager->id == $manager->id)
+                        )
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         <span>
                             {{ $manager->name }}
@@ -106,6 +112,8 @@
                             {{ price($manager->getBonus(week()->start(), week()->end())) }}
                         </strong>
                     </li>
+                    @endif
+                    @endforeach
                 </ul>
             </div>
         </div>

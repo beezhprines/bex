@@ -423,7 +423,13 @@ return [
                     "route" => "managers.comissions",
                     "icon" => "fa fa-coins",
                     "active" => ["managers/comissions"]
-                ]
+                ],
+                [
+                    "text" => "Недельный план",
+                    "route" => "managers.weekplan",
+                    "icon" => "fa fa-chart-line",
+                    "active" => ["managers/weekplan"]
+                ],
             ],
             "can"  => ["can-owner", "can-host"]
         ],

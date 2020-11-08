@@ -28,7 +28,7 @@ class HomeController extends Controller
         } elseif ($user->isManager()) {
             return redirect()->route("managers.weekplan");
         } elseif ($user->isOwner() || $user->isHost()) {
-            return redirect()->route("finances.statistics");
+            return redirect()->route("managers.weekplan");
         }
 
         return view('dashboard');
