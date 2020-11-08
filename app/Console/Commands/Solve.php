@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Jobs\SolveManagersProfitJob;
 use App\Jobs\SolveMastersComissionJob;
+use App\Jobs\SolveMastersPenaltyJob;
 use App\Jobs\SolveMastersProfitJob;
 use App\Jobs\SolveOperatorsProfitJob;
 use App\Jobs\SolveOutcomesJob;
@@ -21,6 +22,7 @@ class Solve extends Command
     {--total-comission : Solve total comission}
     {--masters-comission : Solve masters comission}
     {--masters-profit : Solve masters profit}
+    {--masters-penalty : Solve masters penlaty}
     {--custom-outcomes : Solve custom outcomes}
     {--managers-profit : Solve managers profit}
     {--operators-profit : Solve operators profit}
@@ -59,6 +61,7 @@ class Solve extends Command
             SolveTotalComissionJob::dispatchNow($date);
             SolveMastersComissionJob::dispatchNow($date);
             SolveMastersProfitJob::dispatchNow($date);
+            SolveMastersPenaltyJob::dispatchNow($date);
             SolveOutcomesJob::dispatchNow($date);
             SolveManagersProfitJob::dispatchNow($date);
             SolveOperatorsProfitJob::dispatchNow($date);
