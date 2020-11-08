@@ -116,7 +116,7 @@ class Team extends Model
         $contactTypes = ContactType::all();
         $contacts = collect();
         foreach ($contactTypes as $contactType) {
-            $contacts = $contacts->merge(Contact::getByDatesTypeTeam(week()->start(), week()->end(), $this, $contactType));
+            $contacts = $contacts->merge(Contact::getByDatesTypeTeam($startDate, $endDate, $this, $contactType));
         }
 
         return $contacts->groupBy("date");

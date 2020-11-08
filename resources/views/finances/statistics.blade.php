@@ -5,6 +5,61 @@
 @stop
 
 @section('content')
+
+@if ($total)
+<div class="card collapsed-card">
+    <div class="card-header">
+        <div class="card-title">Общая статистика</div>
+        <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-plus"></i>
+            </button>
+        </div>
+    </div>
+    <div class="card-body text-center py-1">
+        <div class="table-responsive">
+            <table class="table table-sm table-borderless m-0">
+                <tbody>
+                    <tr>
+                        <td>
+                            <div class="mb-1">Чистая прибыль</div>
+                            <h4>{{ price($total["profit"] ?? 0) }}</h4>
+                        </td>
+                        <td>
+                            <div class="mb-1">Общая сумма</div>
+                            <h4>{{ price($total["total"] ?? 0) }}</h4>
+                        </td>
+                        <td>
+                            <div class="mb-1">Доход с комиссий</div>
+                            <h4>{{ price($total["totalComission"] ?? 0) }}</h4>
+                        </td>
+                        <td>
+                            <div class="mb-1">Расходы недели</div>
+                            <h4>{{ price($total["customOutcomes"] ?? 0) }}</h4>
+                        </td>
+                        <td>
+                            <div class="mb-1">Рекл. Instagram</div>
+                            <h4>{{ price($total["instagramOutcomes"] ?? 0) }}</h4>
+                        </td>
+                        <td>
+                            <div class="mb-1">Рекл. ВК</div>
+                            <h4>{{ price($total["vkOutcomes"] ?? 0) }}</h4>
+                        </td>
+                        <td>
+                            <div class="mb-1">Бонусы менеджеров</div>
+                            <h4>{{ price($total["managerBonuses"] ?? 0) }}</h4>
+                        </td>
+                        <td>
+                            <div class="mb-1">Бонусы операторов</div>
+                            <h4>{{ price($total["operatorBonuses"] ?? 0) }}</h4>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+@endif
+
 @foreach($masters as $master)
 <div class="card card-outline card-secondary">
     <div class="card-header">
@@ -61,7 +116,7 @@
                     </li>
                     <li class="list-group-item text-center">
                         @php
-                        $budget = $master->getBudget(week()->end(), $budgetType->id);
+                        $budget = $master->getBudget(week()->end(), $masterComissionBudgetType->id);
                         @endphp
                         @if (!empty($budget))
                         <div class="row">

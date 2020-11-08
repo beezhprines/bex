@@ -51,11 +51,56 @@ class FinanceController extends Controller
 
         $masters = Master::all();
 
-        $budgetType =  BudgetType::findByCode("master:comission:income");
+        $masterComissionBudgetType =  BudgetType::findByCode("master:comission:income");
+
+        /* TOTAL STATISTICS */
+        $startWeek = week()->start();
+        $endWeek = week()->end();
+
+        $budgetType = BudgetType::findByCode("marketer:team:instagram:outcome");
+        $instagramOutcomes = Budget::getBetweenDatesAndType($startWeek, $endWeek, $budgetType)
+            ->sum(function ($budget) {
+                return $budget->amount ?? 0;
+            });
+
+        $budgetType = BudgetType::findByCode("marketer:team:vk:outcome");
+        $vkOutcomes = Budget::getBetweenDatesAndType($startWeek, $endWeek, $budgetType)
+            ->sum(function ($budget) {
+                return $budget->amount ?? 0;
+            });
+
+        $budgetType = BudgetType::findByCode("manager:bonus:outcome");
+        $managerBonuses = Budget::getBetweenDatesAndType($startWeek, $endWeek, $budgetType)
+            ->sum(function ($budget) {
+                return $budget->amount ?? 0;
+            }) * $budgetType->sign();
+
+        $budgetType = BudgetType::findByCode("operator:profit:outcome");
+        $operatorBonuses = Budget::getBetweenDatesAndType($startWeek, $endWeek, $budgetType)
+            ->sum(function ($budget) {
+                return $budget->amount ?? 0;
+            }) * $budgetType->sign();
+
+        $total = [
+            "totalComission" => Budget::getComission($startWeek, $endWeek),
+            "customOutcomes" => Budget::getCustomOutcomes($startWeek, $endWeek),
+            "instagramOutcomes" => $instagramOutcomes,
+            "vkOutcomes" => $vkOutcomes,
+            "managerBonuses" => $managerBonuses,
+            "operatorBonuses" => $operatorBonuses,
+        ];
+
+        $masterProfit = Budget::getMastersProfit($startWeek, $endWeek);
+
+        $total["total"] = $masterProfit + $total["totalComission"];
+        $total["profit"] = $total["totalComission"] - $total["customOutcomes"] - $total["instagramOutcomes"] - $total["vkOutcomes"] - $total["managerBonuses"] - $total["operatorBonuses"];
+
+        /* END TOTAL STATISTICS */
 
         return view("finances.statistics", [
             "masters" => $masters,
-            "budgetType" => $budgetType
+            "masterComissionBudgetType" => $masterComissionBudgetType,
+            "total" => $total
         ]);
     }
 }

@@ -185,6 +185,25 @@ class Budget extends Model
         }
     }
 
+    public static function getCustomOutcomes(string $startDate, string $endDate)
+    {
+        $budgetType = BudgetType::findByCode("custom:month:outcome");
+
+        $amount = self::getBetweenDatesAndType($startDate, $endDate, $budgetType)
+            ->sum(function ($budget) {
+                return $budget->amount ?? 0;
+            }) ?? 0;
+
+        $budgetType = BudgetType::findByCode("custom:week:outcome");
+
+        $amount += self::getBetweenDatesAndType($startDate, $endDate, $budgetType)
+            ->sum(function ($budget) {
+                return $budget->amount ?? 0;
+            }) ?? 0;
+
+        return $amount;
+    }
+
     public static function solveManagersBonus(string $date)
     {
         $budgetType =  BudgetType::findByCode("manager:bonus:outcome");
@@ -253,6 +272,20 @@ class Budget extends Model
             ->sum(function ($budget) {
                 return $budget->amount;
             });
+    }
+
+    public static function getMastersProfit(string $startDate, string $endDate)
+    {
+        $budgetType = BudgetType::findByCode("master:profit:outcome");
+
+        $amount = round(
+            self::getBetweenDatesAndType($startDate, $endDate, $budgetType)
+                ->sum(function ($budget) {
+                    return $budget->amount ?? 0;
+                })
+        );
+
+        return $amount == 0 ? 0 : $amount *  $budgetType->sign();
     }
 
     public static function getBetweenDatesAndType(string $startDate, string $endDate, BudgetType $budgetType)
