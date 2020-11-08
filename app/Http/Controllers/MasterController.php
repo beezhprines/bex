@@ -150,9 +150,15 @@ class MasterController extends Controller
 
         $budget = $master->getBudget(week()->end(), BudgetType::findByCode("master:comission:income")->id);
 
+        $penalty = $master->getPenalty(week()->start(), week()->end());
+
+        $comission = $master->getComission(week()->start(), week()->end());
+
         return view("masters.statistics", [
             "master" => $master,
-            "budget" => $budget
+            "comission" => $comission,
+            "budget" => $budget,
+            "penalty" => $penalty
         ]);
     }
 

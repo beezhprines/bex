@@ -112,6 +112,22 @@
                             {{ price($comission) }} KZT
                         </span>
                     </li>
+                    @php
+                    $penalty = $master->getPenalty(week()->start(), week()->end());
+                    @endphp
+                    @if ($penalty != 0)
+                    <li class="list-group-item">
+                        <b>
+                            Пеня за неделю:
+                            <div class="badge badge-warning">
+                                {{ ($penalty / $comission) * 100}} %
+                            </div>
+                        </b>
+                        <span class="float-right">
+                            {{ price($penalty) }}
+                        </span>
+                    </li>
+                    @endif
                     @if (! empty($master->currency()) && $master->currency()->code != "KZT")
                     <li class="list-group-item">
                         <b>
