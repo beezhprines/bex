@@ -55,7 +55,14 @@ class Service extends Model
     public static function seed(array $items)
     {
         foreach ($items as $item) {
-            if (empty($item["staff"][0]["id"] ?? null)) continue;
+            if (empty($item["staff"][0]["id"] ?? null)) {
+                $service = self::findByOriginId($item["id"] ?? 0);
+                if (!empty($service)){
+                    $service->master()->dissociate();
+                    $service->save();
+                }
+                continue;
+            };
 
             $staffId = $item["staff"][0]["id"];
             $item["seance_length"] = $item["staff"][0]["seance_length"] ?? null;

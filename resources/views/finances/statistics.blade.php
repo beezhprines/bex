@@ -102,15 +102,37 @@
             <div class="col-md-4">
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item">
-                        <b>
-                            Комиссия за неделю:
-                        </b>
-                        <span class="float-right">
+                        <div>
+                            <b>
+                                Комиссия за неделю:
+                            </b>
+                            <span class="float-right">
+                                @php
+                                $comission = $master->getComission(week()->start(), week()->end());
+                                @endphp
+                                {{ price($comission) }} KZT
+                            </span>
+                        </div>
+                        @if (! empty($master->currency()) && $master->currency()->code != "KZT")
+                        <div class="mt-1">
                             @php
-                            $comission = $master->getComission(week()->start(), week()->end());
+                            $avgRate = round($master->currency()->avgRate(week()->start(), week()->end()), 2);
                             @endphp
-                            {{ price($comission) }} KZT
-                        </span>
+                            <b>
+                                В валюте:
+                                <div class="badge badge-warning" title="Средняя валюта за текущую неделю">
+                                    {{ $avgRate }}
+                                </div>
+                            </b>
+                            <span class="float-right">
+                                @if (!empty($avgRate) && $avgRate != 0)
+                                {{ price($comission / $avgRate) }} {{ $master->currency()->code }}
+                                @else
+                                NaN
+                                @endif
+                            </span>
+                        </div>
+                        @endif
                     </li>
                     @php
                     $penalty = $master->getPenalty(week()->start(), week()->end());
@@ -120,21 +142,19 @@
                         <b>
                             Пеня за неделю:
                             <div class="badge badge-warning">
-                                {{ ($penalty / $comission) * 100}} %
+                                {{ round(($penalty / $comission) * 100)}} %
                             </div>
                         </b>
                         <span class="float-right">
-                            {{ price($penalty) }}
+                            {{ price($penalty) }} KZT
                         </span>
                     </li>
-                    @endif
-                    @if (! empty($master->currency()) && $master->currency()->code != "KZT")
                     <li class="list-group-item">
                         <b>
-                            Комиссия за неделю <small class="text-muted" title="Средний курс за неделю">({{ $master->currency()->avgRate(week()->start(), week()->end()) }})</small>
+                            Итого:
                         </b>
                         <span class="float-right">
-                            {{ price($comission / $master->currency()->avgRate(week()->start(), week()->end())) }} {{ $master->currency()->code }}
+                            {{ price($penalty + $comission) }} KZT
                         </span>
                     </li>
                     @endif

@@ -150,15 +150,24 @@ class MasterController extends Controller
 
         $budget = $master->getBudget(week()->end(), BudgetType::findByCode("master:comission:income")->id);
 
-        $penalty = $master->getPenalty(week()->start(), week()->end());
 
-        $comission = $master->getComission(week()->start(), week()->end());
+        $currency = $master->currency();
+        $avgRate = 1;
+        if (!empty($currency) && $currency->code != "KZT") {
+            $avgRate = round($currency->avgRate(week()->start(), week()->end()), 2);
+        }
+
+        $penalty = round($master->getPenalty(week()->start(), week()->end()) / $avgRate);
+
+        $comission = round($master->getComission(week()->start(), week()->end()) / $avgRate);
 
         return view("masters.statistics", [
             "master" => $master,
             "comission" => $comission,
             "budget" => $budget,
-            "penalty" => $penalty
+            "penalty" => $penalty,
+            "avgRate" => $avgRate,
+            "currency" => $currency
         ]);
     }
 

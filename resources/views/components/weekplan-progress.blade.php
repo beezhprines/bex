@@ -1,4 +1,5 @@
 <div class="progress-container position-relative">
+    @if (!$hideMilestones)
     <div class="milestones">
         @foreach($milestones as $milestone)
         @php
@@ -12,6 +13,7 @@
         </span>
         @endforeach
     </div>
+    @endif
     <div class="progress bg-warning">
         <div class="progress-bar progress-bar-striped progress-bar-animated bg-success pr-1 pt-1" role="progressbar" style="width:{{$progress}}%">
             <span class="profit">{{ price($profit) }}</span>

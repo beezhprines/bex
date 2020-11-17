@@ -13,7 +13,7 @@
                     <li class="list-group-item">
                         <b>Комиссия за неделю:</b>
                         <span class="float-right">
-                            {{ price($comission) }}
+                            {{ price($comission) }} {{ $currency->code }}
                         </span>
                     </li>
                     @if ($penalty != 0)
@@ -21,11 +21,19 @@
                         <b>
                             Пеня за неделю:
                             <div class="badge badge-warning">
-                                {{ ($penalty / $comission) * 100}} %
+                                {{ round(($penalty / $comission) * 100) }} %
                             </div>
                         </b>
                         <span class="float-right">
-                        {{ price($penalty) }}
+                        {{ price($penalty) }} {{ $currency->code }}
+                        </span>
+                    </li>
+                    <li class="list-group-item">
+                        <b>
+                            Итого:
+                        </b>
+                        <span class="float-right">
+                        {{ price($penalty + $comission) }} {{ $currency->code }}
                         </span>
                     </li>
                     @endif
@@ -59,19 +67,19 @@
                     <li class="list-group-item">
                         <b>Текущий месяц:</b>
                         <span class="float-right">
-                            {{ price($master->getProfit(date('Y-m-01'), date('Y-m-t'))) }}
+                            {{ price(round($master->getProfit(date('Y-m-01'), date('Y-m-t'))) / $avgRate) }} {{ $currency->code }}
                         </span>
                     </li>
                     <li class="list-group-item">
                         <b>За последние 12 недель:</b>
                         <span class="float-right">
-                            {{ price($master->getProfit(week()->monday(isodate(strtotime(isodate() . ' -84 day'))), week()->sunday(isodate()))) }}
+                            {{ price(round($master->getProfit(week()->monday(isodate(strtotime(isodate() . ' -84 day'))), week()->sunday(isodate()))) / $avgRate) }} {{ $currency->code }}
                         </span>
                     </li>
                     <li class="list-group-item">
                         <b>За все время:</b>
                         <span class="float-right">
-                            {{ price($master->getTotalProfit()) }}
+                            {{ price(round($master->getTotalProfit()) / $avgRate) }} {{ $currency->code }}
                         </span>
                     </li>
                 </ul>

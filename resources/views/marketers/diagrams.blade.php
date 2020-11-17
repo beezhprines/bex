@@ -9,7 +9,7 @@
     <div class="col-md-8">
         <div class="card card-warning card-outline">
             <div class="card-body">
-                <x-weekplan-progress :profit='$totalComission' :milestones='$milestones'></x-weekplan-progress>
+                <x-weekplan-progress :profit='$totalComission' :milestones='$milestones' :hideMilestones="true"></x-weekplan-progress>
             </div>
         </div>
     </div>
