@@ -425,6 +425,12 @@ return [
                     "active" => ["managers/comissions"]
                 ],
                 [
+                    "text" => "Выплаты",
+                    "route" => "finances.payments",
+                    "icon" => "fa fa-money-bill-alt",
+                    "active" => ["finances/payments"]
+                ],
+                [
                     "text" => "Недельный план",
                     "route" => "managers.weekplan",
                     "icon" => "fa fa-chart-line",

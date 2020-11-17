@@ -101,7 +101,6 @@ class Operator extends Model
             ->first();
     }
 
-
     public function updateWithRelations(array $data)
     {
         $userData = [
@@ -147,5 +146,23 @@ class Operator extends Model
         note("info", "operator:create", "Создан новый оператор {$operator->name}", self::class, $operator->id);
 
         return $operator;
+    }
+
+    public function isBonusPaid(string $startDate, string $endDate)
+    {
+        return $this->budgets->whereBetween("date", [$startDate, $endDate])
+            ->where("paid", false)->count() == 0;
+    }
+
+    public function payBudgets(string $startDate, string $endDate)
+    {
+        $budgets = $this->budgets()->whereBetween("date", [$startDate, $endDate])
+            ->where("paid", false)->get();
+
+        foreach ($budgets as $budget) {
+            $budget->update([
+                "paid" => true
+            ]);
+        };
     }
 }

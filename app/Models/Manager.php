@@ -5,14 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use phpDocumentor\Reflection\Types\This;
 
 class Manager extends Model
 {
     use HasFactory, SoftDeletes, ModelBase;
 
     protected $fillable = [
-        'premium_rate', 'user_id', 'name'
+        "premium_rate", "user_id", "name"
     ];
 
     public function user()
@@ -29,9 +28,9 @@ class Manager extends Model
     {
         return collect(json_decode(Configuration::findByCode("manager:milestones")->value, true))
             ->filter(function ($milestone) use ($totalComission) {
-                return $totalComission >= $milestone['profit'];
+                return $totalComission >= $milestone["profit"];
             })
-            ->last()['bonus'] ?? 0;
+            ->last()["bonus"] ?? 0;
     }
 
     public static function solveBonus(float $comission, float $premium_rate)
@@ -48,7 +47,7 @@ class Manager extends Model
 
     public function getBonus(string $startDate, string $endDate)
     {
-        return $this->budgets->whereBetween('date', [$startDate, $endDate])
+        return $this->budgets->whereBetween("date", [$startDate, $endDate])
             ->sum(function ($budget) {
                 return $budget->amount;
             }) * -1;
@@ -57,22 +56,22 @@ class Manager extends Model
     public function updateWithRelations(array $data)
     {
         $userData = [
-            'account' => $data['user']['account'],
-            'email' => $data['user']['email'],
-            'phone' => $data['user']['phone'],
+            "account" => $data["user"]["account"],
+            "email" => $data["user"]["email"],
+            "phone" => $data["user"]["phone"],
         ];
 
-        if (!empty($data['user']['password'])) {
-            $userData['password'] = bcrypt(trim($data['user']['password']));
-            $userData['open_password'] = $data['user']['password'];
+        if (!empty($data["user"]["password"])) {
+            $userData["password"] = bcrypt(trim($data["user"]["password"]));
+            $userData["open_password"] = $data["user"]["password"];
         }
 
         $user = $this->user->update($userData);
 
-        if (!empty($data['premium_rate'])) {
+        if (!empty($data["premium_rate"])) {
             $this->update([
-                'premium_rate' => floatval($data['premium_rate']) / 100,
-                'name' => $data['name'],
+                "premium_rate" => floatval($data["premium_rate"]) / 100,
+                "name" => $data["name"],
             ]);
         }
 
@@ -83,25 +82,43 @@ class Manager extends Model
 
     public static function createWithRelations(array $data)
     {
-        $role =  Role::findByCode('manager');
+        $role =  Role::findByCode("manager");
 
         $user = User::create([
-            'account' => $data['user']['account'],
-            'email' => $data['user']['email'],
-            'phone' => $data['user']['phone'],
-            'password' => $data['user']['password'],
-            'open_password' => $data['user']['password'],
-            'role_id' => $role->id
+            "account" => $data["user"]["account"],
+            "email" => $data["user"]["email"],
+            "phone" => $data["user"]["phone"],
+            "password" => $data["user"]["password"],
+            "open_password" => $data["user"]["password"],
+            "role_id" => $role->id
         ]);
 
         $manager = self::create([
             "user_id" => $user->id,
             "name" => $data["name"],
-            'premium_rate' => floatval($data['premium_rate']) / 100
+            "premium_rate" => floatval($data["premium_rate"]) / 100
         ]);
 
         note("info", "manager:create", "Создан новый менеджер {$manager->name}", self::class, $manager->id);
 
         return $manager;
+    }
+
+    public function isBonusPaid(string $startDate, string $endDate)
+    {
+        return $this->budgets->whereBetween("date", [$startDate, $endDate])
+            ->where("paid", false)->count() == 0;
+    }
+
+    public function payBudgets(string $startDate, string $endDate)
+    {
+        $budgets = $this->budgets()->whereBetween("date", [$startDate, $endDate])
+            ->where("paid", false)->get();
+
+        foreach ($budgets as $budget) {
+            $budget->update([
+                "paid" => true
+            ]);
+        };
     }
 }

@@ -129,7 +129,7 @@ Route::middleware(["auth"])->group(function () {
     // configurations
     Route::prefix("configurations")->name("configurations.")->group(function () {
         Route::get("/bonuses", [ConfigurationController::class, "bonuses"])->name("bonuses");
-        Route::put("/udpate/{configuration}", [ConfigurationController::class, "update"])->name("update");
+        Route::put("/update/{configuration}", [ConfigurationController::class, "update"])->name("update");
     });
 
     // invoices
@@ -144,5 +144,8 @@ Route::middleware(["auth"])->group(function () {
         Route::get("/statistics", [FinanceController::class, "statistics"])->name("statistics");
         Route::get("/customOutcomes", [FinanceController::class, "customOutcomes"])->name("customOutcomes");
         Route::post("/customOutcomes/update", [FinanceController::class, "updateCustomOutcomes"])->name("customOutcomes.update");
+        Route::get("/payments", [FinanceController::class, "payments"])->name("payments");
+        Route::put("/pay/budgets/manager/{manager}", [FinanceController::class, "payManagerBudgets"])->name("pay.manager.budgets");
+        Route::put("/pay/budgets/operator/{operator}", [FinanceController::class, "payOperatorBudgets"])->name("pay.operator.budgets");
     });
 });

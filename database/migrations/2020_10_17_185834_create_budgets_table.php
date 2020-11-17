@@ -13,20 +13,21 @@ class CreateBudgetsTable extends Migration
      */
     public function up()
     {
-        Schema::create('budgets', function (Blueprint $table) {
+        Schema::create("budgets", function (Blueprint $table) {
             $table->id();
 
-            $table->date('date');
-            $table->float('amount')->default(0)->comment('in KZT');
-            $table->json('json')->nullable()->comment('json object with different values');
+            $table->date("date");
+            $table->float("amount")->default(0)->comment("in KZT");
+            $table->json("json")->nullable()->comment("json object with different values");
+            $table->boolean("paid")->default(false);
 
-            $table->unsignedInteger('budget_type_id');
+            $table->unsignedInteger("budget_type_id");
 
             $table->timestamps();
             $table->softDeletes();
 
-            $table->index('date');
-            $table->index('budget_type_id');
+            $table->index("date");
+            $table->index("budget_type_id");
         });
     }
 
@@ -37,6 +38,6 @@ class CreateBudgetsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('budgets');
+        Schema::dropIfExists("budgets");
     }
 }

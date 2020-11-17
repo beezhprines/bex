@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Budget;
 use App\Models\BudgetType;
+use App\Models\Manager;
 use App\Models\Master;
+use App\Models\Operator;
 use Illuminate\Http\Request;
 
 class FinanceController extends Controller
@@ -102,5 +104,44 @@ class FinanceController extends Controller
             "masterComissionBudgetType" => $masterComissionBudgetType,
             "total" => $total
         ]);
+    }
+
+    public function payments()
+    {
+        $managers = Manager::all();
+        $operators = Operator::all();
+
+        return view("finances.payments", [
+            "managers" => $managers,
+            "operators" => $operators,
+        ]);
+    }
+
+    public function payManagerBudgets(Request $request, Manager $manager)
+    {
+        access(["can-owner", "can-host"]);
+
+        $data = $request->validate([
+            "startDate" => "required|date_format:Y-m-d",
+            "endDate" => "required|date_format:Y-m-d",
+        ]);
+
+        $manager->payBudgets($data["startDate"], $data["endDate"]);
+
+        return back()->with("success", __("common.saved-success"));
+    }
+
+    public function payOperatorBudgets(Request $request, Operator $operator)
+    {
+        access(["can-owner", "can-host"]);
+
+        $data = $request->validate([
+            "startDate" => "required|date_format:Y-m-d",
+            "endDate" => "required|date_format:Y-m-d",
+        ]);
+
+        $operator->payBudgets($data["startDate"], $data["endDate"]);
+
+        return back()->with("success", __("common.saved-success"));
     }
 }

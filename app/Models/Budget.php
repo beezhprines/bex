@@ -13,7 +13,7 @@ class Budget extends Model
     use HasFactory, SoftDeletes, ModelBase;
 
     protected $fillable = [
-        "date", "amount", "json", "budget_type_id"
+        "date", "amount", "json", "paid", "budget_type_id"
     ];
 
     public function budgetType()
