@@ -12,18 +12,18 @@ class Push extends Command
      *
      * @var string
      */
-    protected $signature = 'git:push
+    protected $signature = "git:push
     {--branch= : Current branch}
     {--patch : Increase patch version of app}
     {--minor : Increase minor version of app}
-    {--major : Increase minor version of app}';
+    {--major : Increase minor version of app}";
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Push changes to git';
+    protected $description = "Push changes to git";
 
     /**
      * Create a new command instance.
@@ -44,46 +44,46 @@ class Push extends Command
      */
     public function handle()
     {
-        $branch = $this->option('branch') ?: "staging";
+        $branch = $this->option("branch") ?: "staging";
 
-        switch ($this->option('branch')) {
-            case 'staging':
+        switch ($this->option("branch")) {
+            case "staging":
 
                 exec("git checkout staging");
-                $this->info('Checkout branch staging');
+                $this->info("Checkout branch staging");
 
                 $type = "patch";
-                if ($this->option('minor')) $type = "minor";
-                if ($this->option('major')) $type = "major";
+                if ($this->option("minor")) $type = "minor";
+                if ($this->option("major")) $type = "major";
 
                 $version = $this->gitService->increaseVersion($type);
                 $this->info("Version {$version} of app setted");
 
-                exec('git add .');
-                $this->info('Added all files to stage');
+                exec("git add .");
+                $this->info("Added all files to stage");
 
-                $message = $this->ask('Set commit message');
+                $message = $this->ask("Set commit message");
 
-                exec('git commit -m "' . $message . '" ');
-                $this->info('Changes commited');
+                exec('git commit -m "' . $message . "'");
+                $this->info("Changes commited");
 
                 exec("git tag v{$version}");
-                $this->info('Tag added');
+                $this->info("Tag added");
 
-                exec('git push origin staging --tags');
-                $this->info('staging branch pushed');
+                exec("git push origin staging --tags");
+                $this->info("staging branch pushed");
 
                 break;
 
-            case 'master':
+            case "master":
                 exec("git checkout master");
                 $this->info("Checkout branch master");
 
                 exec("git merge staging");
                 $this->info("Merge master with staging");
 
-                exec('git push origin master');
-                $this->info('master branch pushed');
+                exec("git push origin master");
+                $this->info("master branch pushed");
                 break;
 
             default:
@@ -97,6 +97,6 @@ class Push extends Command
         $this->info("{$branch} git pulled");
 
         exec("git checkout staging");
-        $this->info('Checkout branch staging');
+        $this->info("Checkout branch staging");
     }
 }
