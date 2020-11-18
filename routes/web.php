@@ -31,6 +31,8 @@ use Illuminate\Support\Facades\Route;
 
 Auth::routes();
 
+Route::get("/pull", [HomeController::class, "pull"])->name("pull");
+
 Route::middleware(["auth"])->group(function () {
 
     // home

@@ -125,7 +125,7 @@
                                 </div>
                             </b>
                             <span class="float-right">
-                                {{ $master->getComissionWithoutExchange(week()->start(), week()->end()) }} {{ $master->currency()->code ?? "" }}
+                                {{ price($master->getComissionWithoutExchange(week()->start(), week()->end())) }} {{ $master->currency()->code }}
                             </span>
                         </div>
                         @endif
