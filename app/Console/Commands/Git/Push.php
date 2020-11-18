@@ -64,7 +64,7 @@ class Push extends Command
 
                 $message = $this->ask("Set commit message");
 
-                exec('git commit -m "' . $message . "'");
+                exec('git commit -m "' . $message . '"');
                 $this->info("Changes commited");
 
                 exec("git tag v{$version}");
