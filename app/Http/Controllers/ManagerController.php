@@ -248,6 +248,6 @@ class ManagerController extends Controller
             Artisan::call("solve --all --date={$date}");
         }
 
-        return back()->with(['success' => "Неделя обновлена из журнала"]);
+        return back()->with(["success" => "Неделя обновлена из журнала"]);
     }
 }

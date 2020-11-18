@@ -12,7 +12,7 @@ class Currency extends Model
     use HasFactory, SoftDeletes, ModelBase;
 
     protected $fillable = [
-        'title', 'code'
+        "title", "code"
     ];
 
     public function countries()
@@ -27,9 +27,18 @@ class Currency extends Model
 
     public function avgRate(string $startDate, string $endDate)
     {
-        return CurrencyRate::whereBetween(DB::raw('DATE(date)'), array($startDate, $endDate))
-            ->where('currency_id', $this->id)
+        $nextMonday = week()->monday(week()->next($endDate));
+
+        if (isodate() >= $nextMonday) {
+            return CurrencyRate::where("date", $nextMonday)
+                ->where("currency_id", $this->id)
+                ->first()
+                ->rate;
+        }
+
+        return CurrencyRate::whereBetween(DB::raw("DATE(date)"), array($startDate, $endDate))
+            ->where("currency_id", $this->id)
             ->get()
-            ->avg('rate');
+            ->avg("rate");
     }
 }

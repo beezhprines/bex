@@ -124,6 +124,15 @@ class Master extends Model
         return $amount == 0 ? 0 : $amount *  $budgetType->sign();
     }
 
+    public function getComissionWithoutExchange(string $startDate, string $endDate)
+    {
+        return $this->getRecords($startDate, $endDate)->sum(function ($record) {
+            return $record->services->sum(function ($service) {
+                return $service->comission ?? 0;
+            });
+        });
+    }
+
     public function getProfit(string $startDate, string $endDate)
     {
         $budgetType = BudgetType::findByCode("master:profit:outcome");

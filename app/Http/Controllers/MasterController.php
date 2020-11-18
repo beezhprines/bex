@@ -159,7 +159,7 @@ class MasterController extends Controller
 
         $penalty = round($master->getPenalty(week()->start(), week()->end()) / $avgRate);
 
-        $comission = round($master->getComission(week()->start(), week()->end()) / $avgRate);
+        $comission = $master->getComissionWithoutExchange(week()->start(), week()->end());
 
         return view("masters.statistics", [
             "master" => $master,

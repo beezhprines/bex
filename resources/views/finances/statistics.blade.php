@@ -125,11 +125,7 @@
                                 </div>
                             </b>
                             <span class="float-right">
-                                @if (!empty($avgRate) && $avgRate != 0)
-                                {{ price($comission / $avgRate) }} {{ $master->currency()->code }}
-                                @else
-                                NaN
-                                @endif
+                                {{ $master->getComissionWithoutExchange(week()->start(), week()->end()) }} {{ $master->currency()->code ?? "" }}
                             </span>
                         </div>
                         @endif
