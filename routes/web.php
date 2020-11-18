@@ -14,6 +14,7 @@ use App\Http\Controllers\MasterController;
 use App\Http\Controllers\OperatorController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\TeamController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -147,5 +148,11 @@ Route::middleware(["auth"])->group(function () {
         Route::get("/payments", [FinanceController::class, "payments"])->name("payments");
         Route::put("/pay/budgets/manager/{manager}", [FinanceController::class, "payManagerBudgets"])->name("pay.manager.budgets");
         Route::put("/pay/budgets/operator/{operator}", [FinanceController::class, "payOperatorBudgets"])->name("pay.operator.budgets");
+    });
+
+    // users
+    Route::prefix("users")->name("users.")->group(function () {
+        Route::get("/profile", [UserController::class, "profile"])->name("profile");
+        Route::patch("/update/{user}", [UserController::class, "update"])->name("update");
     });
 });

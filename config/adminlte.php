@@ -398,6 +398,12 @@ return [
                     'icon' => 'fa fa-percentage',
                     "active" => ["configurations*"]
                 ],
+                [
+                    "text" => "Профиль",
+                    "route" => "users.profile",
+                    'icon' => 'fa fa-user-circle',
+                    "active" => ["users/profile"]
+                ]
             ],
             "can"  => ["can-owner", "can-host"]
         ],
