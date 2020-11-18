@@ -32,6 +32,7 @@ class Record extends Model
             ->where("attendance", $attendance)
             ->get();
     }
+
     public static function solveComission($records, bool $withTeamPremiumRate = false)
     {
         return $records->sum(function ($record) use ($withTeamPremiumRate) {
@@ -57,56 +58,69 @@ class Record extends Model
         });
     }
 
-    public static function seed($records, $date)
+    public static function seed($records)
     {
+        $date = "";
         foreach ($records as $item) {
             if (!isset($item["visit_attendance"]) || !in_array($item["visit_attendance"], [1, -1])) continue;
 
             // create or update record
             $record = self::createOrUpdate(self::peel($item));
 
-            // associate with its staff
-            if (!empty($item["staff_id"])) {
-                $master = Master::findByOriginId($item["staff_id"]);
+            // get date of record
+            if (empty($date)) $date = date_format(new DateTime($record->started_at), config("app.iso_date"));
 
-                if (!empty($master)) {
-                    $record->master()->associate($master);
+            if (empty($item["staff_id"])) continue;
 
-                    if (!empty($item["services"])) {
+            // find master
+            $master = Master::findByOriginId($item["staff_id"]);
 
-                        foreach ($item["services"] as $serviceData) {
-                            $service = $record->services->first();
+            if (empty($master)) continue;
 
-                            if (!empty($service) && $service->origin_id != $serviceData["id"]) {
-                                $record->services()->detach($service->id);
-                            }
+            // associate with existing master
+            $record->master()->associate($master);
 
-                            $service = Service::findByOriginId($serviceData["id"]);
+            if (empty($item["services"])) continue;
 
-                            if (!empty($service) && !empty($master->currency())) {
-                                // associate service with record and exchange comission
+            foreach ($item["services"] as $serviceData) {
+                // find associated service with record
+                $service = $record->services->first();
 
-                                $pivot = [
-                                    "comission" => CurrencyRate::exchange(
-                                        date_format(new DateTime($record->started_at), config("app.iso_date")),
-                                        $master->currency(),
-                                        $service->comission
-                                    ),
-                                    "profit" => !empty($service->price) ? CurrencyRate::exchange(
-                                        date_format(new DateTime($record->started_at), config("app.iso_date")),
-                                        $master->currency(),
-                                        $service->price - $service->comission
-                                    ) : 0
-                                ];
+                // if service was changed - we detach from associated record
+                if (!empty($service) && $service->origin_id != $serviceData["id"]) {
+                    $record->services()->detach($service->id);
+                }
 
-                                if ($record->services()->where("service_id", $service->id)->exists()) {
-                                    $record->services()->updateExistingPivot($service->id, $pivot);
-                                } else {
-                                    $record->services()->attach($service->id, $pivot);
-                                }
-                            }
-                        }
-                    }
+                // find current service in database
+                $service = Service::findByOriginId($serviceData["id"]);
+
+                // if service not found or master has no team, we skip exchange
+                if (empty($service) || empty($master->currency())) continue;
+
+                // if week is over - we get currency of next monday
+                $nextMonday = week()->monday(week()->next($date));
+                if (isodate() >= $nextMonday) {
+                    $date = $nextMonday;
+                }
+
+                // exchange to kzt
+                $pivot = [
+                    "comission" => CurrencyRate::exchange(
+                        $date,
+                        $master->currency(),
+                        $service->comission
+                    ),
+                    "profit" => !empty($service->price) ? CurrencyRate::exchange(
+                        $date,
+                        $master->currency(),
+                        $service->price - $service->comission
+                    ) : 0
+                ];
+
+                if ($record->services()->where("service_id", $service->id)->exists()) {
+                    $record->services()->updateExistingPivot($service->id, $pivot);
+                } else {
+                    $record->services()->attach($service->id, $pivot);
                 }
             }
 

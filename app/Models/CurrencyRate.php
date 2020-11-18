@@ -11,7 +11,7 @@ class CurrencyRate extends Model
     use HasFactory, SoftDeletes, ModelBase;
 
     protected $fillable = [
-        'date', 'rate', 'currency_id'
+        "date", "rate", "currency_id"
     ];
 
     public function currency()
@@ -24,24 +24,24 @@ class CurrencyRate extends Model
         if (empty($amount)) return $amount;
 
         return (self::firstWhere([
-            'date' => $date,
-            'currency_id' => $currency->id
+            "date" => $date,
+            "currency_id" => $currency->id
         ])->rate ?? 0) * $amount;
     }
 
     public static function findByCurrencyAndDate(Currency $currency, string $date)
     {
         return self::firstWhere([
-            'currency_id' => $currency->id,
-            'date' => $date
+            "currency_id" => $currency->id,
+            "date" => $date
         ]);
     }
 
     public static function seed(array $data)
     {
-        $date = date(config('app.iso_date'));
-        $rates = $data['rates'];
-        $kzt = $rates['KZT'];
+        $date = date(config("app.iso_date"));
+        $rates = $data["rates"];
+        $kzt = $rates["KZT"];
 
         $currencies = Currency::all();
 
@@ -52,16 +52,16 @@ class CurrencyRate extends Model
 
             if (empty($currencyRate)) {
                 $currencyRate = self::create([
-                    'description' => "Загружена валюта {$currency->code} на дату {$date}",
-                    'date' => $date,
-                    'currency_id' => $currency->id,
-                    'rate' => round($kzt / $rate, 2)
+                    "description" => "Загружена валюта {$currency->code} на дату {$date}",
+                    "date" => $date,
+                    "currency_id" => $currency->id,
+                    "rate" => round($kzt / $rate, 2)
                 ]);
             } else {
                 $amount = round($kzt / $rate, 2);
                 $currencyRate->update([
-                    'rate' => $amount,
-                    'description' => "Обновлена валюта {$currency->code} с {$currencyRate->rate} на {$amount} на дату {$date}",
+                    "rate" => $amount,
+                    "description" => "Обновлена валюта {$currency->code} с {$currencyRate->rate} на {$amount} на дату {$date}",
                 ]);
             }
         }

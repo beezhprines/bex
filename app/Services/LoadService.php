@@ -19,9 +19,9 @@ class LoadService
         Service::seed($items);
     }
 
-    public function records(array $items, string $date)
+    public function records(array $items)
     {
-        Record::seed($items, $date);
+        Record::seed($items);
     }
 
     public function currencyRates(array $items)

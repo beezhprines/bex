@@ -108,6 +108,8 @@ class FinanceController extends Controller
 
     public function payments()
     {
+        access(["can-owner", "can-host"]);
+
         $managers = Manager::all();
         $operators = Operator::all();
 

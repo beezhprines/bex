@@ -34,7 +34,7 @@ class LoadRecordsJob implements ShouldQueue
     public function handle(YClientsService $yClientsService, LoadService $loadService)
     {
         $yClientsService->authorize();
-        $loadService->records($yClientsService->getRecords($this->date), $this->date);
+        $loadService->records($yClientsService->getRecords($this->date));
         echo "Records loaded for date {$this->date}\n";
     }
 }
