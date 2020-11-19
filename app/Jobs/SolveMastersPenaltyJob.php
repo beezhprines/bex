@@ -32,10 +32,7 @@ class SolveMastersPenaltyJob implements ShouldQueue
      */
     public function handle()
     {
-        $startDate = week()->monday(week()->previous($this->date));
-        $endDate = week()->sunday(week()->previous($this->date));
-        Budget::solveMastersPenalty($this->date, $startDate, $endDate);
-
+        Budget::solveMastersPenalty($this->date);
         echo "Masters penalties solved for date {$this->date}\n";
     }
 }

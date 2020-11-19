@@ -342,8 +342,10 @@ class Budget extends Model
         return $comissions;
     }
 
-    public static function solveMastersPenalty(string $date, string $startDate, string $endDate)
+    public static function solveMastersPenalty(string $date)
     {
+        $endDate = week()->sunday($date);
+        $startDate = week()->monday($date);
         $budgetType = BudgetType::findByCode("master:penalty:income");
         $masterComissionBudgetType = BudgetType::findByCode("master:comission:income");
         $masters = Master::all();
@@ -353,7 +355,7 @@ class Budget extends Model
             if (empty($masterComissionBudget) || $masterComissionBudget->invoices->count() > 0) continue;
 
             $weekComission = $master->getComission($startDate, $endDate);
-            $amount = $master->solvePenalty($date, $endDate, $weekComission);
+            $amount = $master->solvePenalty($date, $weekComission);
             if (is_null($amount) || $amount == 0) continue;
 
             $budget = $master->getBudget($date, $budgetType->id);
