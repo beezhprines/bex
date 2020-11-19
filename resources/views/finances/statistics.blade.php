@@ -133,7 +133,7 @@
                     @php
                     $penalty = $master->getPenalty(week()->start(), week()->end());
                     @endphp
-                    @if ($penalty != 0)
+                    @if ($penalty != 0 && $comission != 0)
                     <li class="list-group-item">
                         <b>
                             Пеня за неделю:
