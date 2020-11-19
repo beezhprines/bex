@@ -97,21 +97,22 @@ class Record extends Model
                 // if service not found or master has no team, we skip exchange
                 if (empty($service) || empty($master->currency())) continue;
 
+                $currencyRateDate = $date;
                 // if week is over - we get currency of next monday
                 $nextMonday = week()->monday(week()->next($date));
                 if (isodate() >= $nextMonday) {
-                    $date = $nextMonday;
+                    $currencyRateDate = $nextMonday;
                 }
 
                 // exchange to kzt
                 $pivot = [
                     "comission" => CurrencyRate::exchange(
-                        $date,
+                        $currencyRateDate,
                         $master->currency(),
                         $service->comission
                     ),
                     "profit" => !empty($service->price) ? CurrencyRate::exchange(
-                        $date,
+                        $currencyRateDate,
                         $master->currency(),
                         $service->price - $service->comission
                     ) : 0
