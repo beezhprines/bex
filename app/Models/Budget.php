@@ -344,8 +344,8 @@ class Budget extends Model
 
     public static function solveMastersPenalty(string $date)
     {
-        $endDate = week()->sunday($date);
         $startDate = week()->monday($date);
+        $endDate = week()->sunday($date);
         $budgetType = BudgetType::findByCode("master:penalty:income");
         $masterComissionBudgetType = BudgetType::findByCode("master:comission:income");
         $masters = Master::all();
@@ -363,7 +363,7 @@ class Budget extends Model
             if (empty($budget)) {
                 $budget = self::create([
                     "amount" => $amount,
-                    "date" => week()->previous($date),
+                    "date" => $date,
                     "budget_type_id" => $budgetType->id
                 ]);
 

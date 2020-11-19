@@ -48,7 +48,6 @@ class Seed extends Command
      */
     public function handle(RestoreService $restoreService)
     {
-
         if (empty($this->option("startDate")) || empty($this->option("endDate"))) {
             $this->error("Start date or end date invalid");
             return;
@@ -64,12 +63,7 @@ class Seed extends Command
 
             Artisan::call("seed --all --startDate={$from} --endDate={$to}");
             Artisan::call("load --all --startDate={$from} --endDate={$to}");
-
-            foreach (daterange($from, $to, true) as $date) {
-                $date = date_format($date, config("app.iso_date"));
-
-                Artisan::call("solve --all --date={$date}");
-            }
+            Artisan::call("solve --all --startDate={$from} --endDate={$to}");
             return;
         }
 

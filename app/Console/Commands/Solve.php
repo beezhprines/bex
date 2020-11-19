@@ -57,7 +57,9 @@ class Solve extends Command
     {
         $dates = [];
         if (!empty($this->option("date"))) {
+
             $dates[] = $this->option("date");
+
         } elseif (!empty($this->option("startDate")) && !empty($this->option("endDate"))) {
 
             $from = $this->option("startDate");
@@ -77,10 +79,12 @@ class Solve extends Command
                 SolveTotalComissionJob::dispatchNow($date);
                 SolveMastersComissionJob::dispatchNow($date);
                 SolveMastersProfitJob::dispatchNow($date);
-                SolveMastersPenaltyJob::dispatchNow($date);
                 SolveOutcomesJob::dispatchNow($date);
                 SolveManagersProfitJob::dispatchNow($date);
                 SolveOperatorsProfitJob::dispatchNow($date);
+            }
+            foreach ($dates as $date) {
+                SolveMastersPenaltyJob::dispatchNow($date);
             }
             return;
         }

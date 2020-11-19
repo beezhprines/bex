@@ -242,11 +242,7 @@ class ManagerController extends Controller
         $endDate = week()->end();
 
         Artisan::call("load --all --startDate={$startDate} --endDate={$endDate}");
-
-        foreach (daterange($startDate, $endDate, true) as $date) {
-            $date = date_format($date, config("app.iso_date"));
-            Artisan::call("solve --all --date={$date}");
-        }
+        Artisan::call("solve --all --startDate={$startDate} --endDate={$endDate}");
 
         return back()->with(["success" => "Неделя обновлена из журнала"]);
     }
