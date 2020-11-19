@@ -84,7 +84,7 @@ class Master extends Model
     {
         $penaltyPercent = floatval(Configuration::findByCode("master:penalty")->value);
 
-        if (date("D", $date) != "Mon" && date("D", $date) != "Tue") {
+        if (date("D", strtotime($date)) != "Mon" && date("D", strtotime($date)) != "Tue") {
             return round($weekComission * $penaltyPercent / 100);
         }
         return null;
