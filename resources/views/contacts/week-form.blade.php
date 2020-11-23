@@ -19,7 +19,7 @@
                     </td>
                     @foreach($group as $contact)
                     <td>
-                        <input type="text" class="form-control form-control-sm" name="contacts[{{ $contact['self']->id }}][team][{{ $contact['team']->id }}][amount]" value="{{ $contact['amount'] }}" />
+                        <input type="text" class="form-control form-control-sm" name="contacts[{{ $contact['self']->id }}][team][{{ $contact['teamId'] }}][amount]" value="{{ $contact['amount'] }}" />
                     </td>
                     <td class="align-middle">
                         <span title="Прирост">

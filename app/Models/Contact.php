@@ -57,7 +57,7 @@ class Contact extends Model
                     return [
                         "self" => $contact,
                         "contact_type" => $contactType,
-                        "team" => $team,
+                        "teamId" => $team["id"],
                         "amount" => $team["amount"],
                         "date" => $contact->date
                     ];
