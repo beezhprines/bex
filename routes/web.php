@@ -40,6 +40,9 @@ Route::middleware(["auth"])->group(function () {
     Route::get("/calendar", [HomeController::class, "calendar"])->name("calendar");
     Route::post("/denied", [HomeController::class, "denied"])->name("denied");
 
+    // logs
+    Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
+
     // masters
     Route::prefix("masters")->name("masters.")->group(function () {
         Route::get("/statistics", [MasterController::class, "statistics"])->name("statistics");
