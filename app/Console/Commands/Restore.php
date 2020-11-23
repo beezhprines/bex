@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Storage;
 
 class Restore extends Command
 {
@@ -23,6 +24,9 @@ class Restore extends Command
 
     private $masterUrl;
     private $githash;
+    private $dbusername;
+    private $dbpasssword;
+    private $dbname;
 
     /**
      * Create a new command instance.
@@ -35,6 +39,9 @@ class Restore extends Command
 
         $this->masterUrl = env('APP_PRODUCTION_URL');
         $this->githash = env("GIT_HASH");
+        $this->dbusername = env("DB_USERNAME");
+        $this->dbpasssword = env("DB_PASSWORD");
+        $this->dbname = env("DB_DATABASE");
     }
 
     /**
@@ -44,10 +51,11 @@ class Restore extends Command
      */
     public function handle()
     {
-        $backup = Http::get("{$this->masterUrl}/db/backup", [
-            "githash" => $this->githash
-        ])->throw();
-
-        dd($backup);
+        $url = "{$this->masterUrl}/db/backup?githash={$this->githash}";
+        $contents = file_get_contents($url);
+        Storage::put("dshpyrk3_bex_prd_backup.sql", $contents);
+        $this->info("Master database downloaded to /storage/app/dshpyrk3_bex_prd_backup.sql");
+        exec('cmd.exe /c "mysql -u ' . $this->dbusername . ' -p' . $this->dbpasssword . ' ' . $this->dbname . ' < storage/app/dshpyrk3_bex_prd_backup.sql"');
+        $this->info("Bex database restored from dshpyrk3_bex_prd_backup.sql");
     }
 }
