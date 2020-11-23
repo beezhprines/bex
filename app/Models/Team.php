@@ -52,18 +52,52 @@ class Team extends Model
 
         $teams = self::all();
 
-        collect($dates)->each(function ($date) use ($teams, $budgetTypeInstagram, $budgetTypeVK) {
-            Budget::create([
-                "date" => $date,
-                "json" => $teams->map(function ($team) {
-                    return [
-                        "team_id" => $team->id,
-                        "amount" => 0
-                    ];
-                })->toJson(),
-                "budget_type_id" => $budgetTypeInstagram->id,
-            ]);
+        foreach ($dates as $date) {
+            $budget = Budget::findByDateAndType($date, $budgetTypeInstagram);
+            if (empty($budget)) {
+                Budget::create([
+                    "date" => $date,
+                    "json" => $teams->map(function ($team) {
+                        return [
+                            "team_id" => $team->id,
+                            "amount" => 0
+                        ];
+                    })->toJson(),
+                    "budget_type_id" => $budgetTypeInstagram->id,
+                ]);
+            } else {
+                $budget->update([
+                    "json" => $teams->map(function ($team) {
+                        return [
+                            "team_id" => $team->id,
+                            "amount" => 0
+                        ];
+                    })->toJson(),
+                ]);
+            }
 
+            $budget = Budget::findByDateAndType($date, $budgetTypeVK);
+            if (empty($budget)) {
+                Budget::create([
+                    "date" => $date,
+                    "json" => $teams->map(function ($team) {
+                        return [
+                            "team_id" => $team->id,
+                            "amount" => 0
+                        ];
+                    })->toJson(),
+                    "budget_type_id" => $budgetTypeVK->id,
+                ]);
+            } else {
+                $budget->update([
+                    "json" => $teams->map(function ($team) {
+                        return [
+                            "team_id" => $team->id,
+                            "amount" => 0
+                        ];
+                    })->toJson(),
+                ]);
+            }
             Budget::create([
                 "date" => $date,
                 "json" => $teams->map(function ($team) {
@@ -74,8 +108,7 @@ class Team extends Model
                 })->toJson(),
                 "budget_type_id" => $budgetTypeVK->id,
             ]);
-        });
-
+        }
         note("info", "budget:seed", "Созданы затраты на команду с {$startDate} по {$endDate}", Budget::class);
     }
 
