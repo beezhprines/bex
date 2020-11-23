@@ -5,6 +5,7 @@ use App\Services\MonthService;
 use App\Services\WeekService;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
 
 function isodate(string $date = null)
 {
@@ -56,34 +57,27 @@ function version()
 
 function note(string $level, string $code, string $message, string $model = null, int $model_id = null, string $description = null)
 {
-    switch (config('app.note_sence')) {
+    $context = [
+        "code" => $code,
+        "model" => $model,
+        "model_id" => $model_id,
+        "description" => $description,
+    ];
 
-        case 'LOW':
-            $allow = ['danger'];
+    switch ($level) {
+        case 'info':
+            Log::info($message, $context);
             break;
-
-        case 'MEDIUM':
-            $allow = ['danger', 'warning'];
+        case 'warning':
+            Log::warning($message, $context);
             break;
-
-        case 'HIGH':
-            $allow = ['danger', 'warning', 'info'];
+        case 'debug':
+            Log::debug($message, $context);
             break;
 
         default:
-            $allow = ['danger'];
+            # code...
             break;
-    }
-
-    if (in_array($level, $allow)) {
-        Note::create([
-            'level' => $level,
-            'code' => $code,
-            'message' => $message,
-            'description' => $description,
-            'model' => $model,
-            'model_id' => $model_id,
-        ]);
     }
 }
 

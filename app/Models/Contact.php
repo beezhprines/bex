@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class Contact extends Model
 {
@@ -51,12 +52,13 @@ class Contact extends Model
             ->where("contact_type_id", $contactType->id)
             ->get()
             ->map(function ($contact) use ($team, $contactType) {
-                $teams = collect(json_decode($contact->teams, true))->firstWhere("team_id", $team->id);
+                $team = collect(json_decode($contact->teams, true))->firstWhere("team_id", $team->id);
+                if (empty($team)) return [];
                 return [
                     "self" => $contact,
                     "contact_type" => $contactType,
                     "team" => $team,
-                    "amount" => $teams["amount"],
+                    "amount" => $team["amount"],
                     "date" => $contact->date
                 ];
             });
