@@ -73,6 +73,6 @@ class Restore extends Command
         Storage::put("dshpyrk3_bex_prd_backup.sql", $contents);
         $this->info("Master database downloaded to /storage/app/dshpyrk3_bex_prd_backup.sql");
         exec($restoreCommand);
-        $this->info("Bex database restored from dshpyrk3_bex_prd_backup.sql");
+        $this->info("{$this->dbname} database restored from dshpyrk3_bex_prd_backup.sql");
     }
 }
