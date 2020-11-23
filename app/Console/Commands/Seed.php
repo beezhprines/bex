@@ -56,17 +56,6 @@ class Seed extends Command
         $from = $this->option("startDate");
         $to = $this->option("endDate");
 
-        if ($this->option("restore")) {
-            Artisan::call("migrate:fresh --seed");
-
-            $restoreService->restore($from, $to);
-
-            Artisan::call("seed --all --startDate={$from} --endDate={$to}");
-            Artisan::call("load --all --startDate={$from} --endDate={$to}");
-            Artisan::call("solve --all --startDate={$from} --endDate={$to}");
-            return;
-        }
-
         if ($this->option("all")) {
             SeedContactsJob::dispatchNow($from, $to);
             SeedOutcomesJob::dispatchNow($from, $to, "team");
