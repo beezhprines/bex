@@ -30,20 +30,35 @@ class Contact extends Model
     {
         foreach (daterange($startDate, $endDate, true) as $date) {
             foreach (ContactType::all() as $contactType) {
-                self::create([
-                    "date" => $date,
+                $contact = self::firstWhere([
                     "contact_type_id" => $contactType->id,
-                    "teams" => $teams->map(function ($team) {
-                        return [
-                            "team_id" => $team->id,
-                            "amount" => 0
-                        ];
-                    })->toJson()
+                    "date" => $date
                 ]);
+                if (empty($contact)) {
+                    self::create([
+                        "date" => $date,
+                        "contact_type_id" => $contactType->id,
+                        "teams" => $teams->map(function ($team) {
+                            return [
+                                "team_id" => $team->id,
+                                "amount" => 0
+                            ];
+                        })->toJson()
+                    ]);
+                } else {
+                    $contact->update([
+                        "teams" => $teams->map(function ($team) {
+                            return [
+                                "team_id" => $team->id,
+                                "amount" => 0
+                            ];
+                        })->toJson()
+                    ]);
+                }
             }
         }
 
-        note("info", "contact:seed", "Созданы контакты с {$startDate} по {$endDate}", self::class);
+        note("info", "contact:seed", "Созданы/обновлены контакты с {$startDate} по {$endDate}", self::class);
     }
 
     public static function getByDatesTypeTeam(string $startDate, string $endDate, Team $team, ContactType $contactType)
