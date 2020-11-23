@@ -3,7 +3,6 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 
 class Restore extends Command
@@ -13,7 +12,8 @@ class Restore extends Command
      *
      * @var string
      */
-    protected $signature = 'db:restore';
+    protected $signature = 'db:restore
+    {--env= : Environment}';
 
     /**
      * The console command description.
@@ -51,11 +51,28 @@ class Restore extends Command
      */
     public function handle()
     {
+
+        if (empty($this->option("env"))) {
+            $this->error("Environment not provided");
+            return;
+        }
+        switch ($this->option("env")) {
+            case 'local':
+                $restoreCommand = 'cmd.exe /c "mysql -u ' . $this->dbusername . ' -p' . $this->dbpasssword . ' ' . $this->dbname . ' < storage/app/dshpyrk3_bex_prd_backup.sql"';
+                break;
+            case 'staging':
+                $restoreCommand = 'mysql -u ' . $this->dbusername . ' -p' . $this->dbpasssword . ' ' . $this->dbname . ' < storage/app/dshpyrk3_bex_prd_backup.sql';
+                break;
+
+            default:
+                $restoreCommand = "";
+                break;
+        }
         $url = "{$this->masterUrl}/db/backup?githash={$this->githash}";
         $contents = file_get_contents($url);
         Storage::put("dshpyrk3_bex_prd_backup.sql", $contents);
         $this->info("Master database downloaded to /storage/app/dshpyrk3_bex_prd_backup.sql");
-        exec('cmd.exe /c "mysql -u ' . $this->dbusername . ' -p' . $this->dbpasssword . ' ' . $this->dbname . ' < storage/app/dshpyrk3_bex_prd_backup.sql"');
+        exec($restoreCommand);
         $this->info("Bex database restored from dshpyrk3_bex_prd_backup.sql");
     }
 }
