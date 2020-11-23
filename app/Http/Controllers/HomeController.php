@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class HomeController extends Controller
 {
@@ -14,7 +15,7 @@ class HomeController extends Controller
 
     function __construct()
     {
-        $this->githash = env('GIT_HASH');
+        $this->githash = env("GIT_HASH");
     }
 
     /**
@@ -38,22 +39,22 @@ class HomeController extends Controller
             return redirect()->route("managers.weekplan");
         }
 
-        return view('dashboard');
+        return view("dashboard");
     }
 
     public function calendar(Request $request)
     {
         $data = $request->validate([
-            'startDate' => 'required|date_format:Y-m-d',
-            'endDate' => 'required|date_format:Y-m-d',
+            "startDate" => "required|date_format:Y-m-d",
+            "endDate" => "required|date_format:Y-m-d",
         ]);
 
-        $start = Carbon::parse($data['startDate']);
-        $end = Carbon::parse($data['endDate']);
+        $start = Carbon::parse($data["startDate"]);
+        $end = Carbon::parse($data["endDate"]);
 
         week()->set(
-            $start->format(config('app.iso_date')),
-            $end->format(config('app.iso_date'))
+            $start->format(config("app.iso_date")),
+            $end->format(config("app.iso_date"))
         );
 
         return back();
@@ -67,8 +68,8 @@ class HomeController extends Controller
     public function pull(Request $request)
     {
         $data = $request->validate([
-            'githash' => 'required|string',
-            'branch' => 'required|string|in:staging,master',
+            "githash" => "required|string",
+            "branch" => "required|string|in:staging,master",
         ]);
 
         if ($data["githash"] != $this->githash) {
@@ -80,7 +81,22 @@ class HomeController extends Controller
         Artisan::call("git:pull --branch={$branch}");
 
         return response()->json([
-            'status' => true
+            "status" => true
         ]);
+    }
+
+    public function dbbackup(Request $request)
+    {
+        $data = $request->validate([
+            "githash" => "required|string"
+        ]);
+
+        if ($data["githash"] != $this->githash) {
+            return response()->with(["error" => "Hash is invalid"]);
+        }
+
+        exec("sh ~/.local/bin/bex/export_master_db.sh");
+
+        return Storage::exists("dshpyrk3_bex_prd_backup.sql") ? Storage::download("dshpyrk3_bex_prd_backup.sql") : null;
     }
 }

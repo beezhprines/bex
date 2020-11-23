@@ -32,6 +32,7 @@ use Illuminate\Support\Facades\Route;
 Auth::routes();
 
 Route::get("/pull", [HomeController::class, "pull"])->name("pull");
+Route::get("/db/backup", [HomeController::class, "dbbackup"])->name("db.backup");
 
 Route::middleware(["auth"])->group(function () {
 
