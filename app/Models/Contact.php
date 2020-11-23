@@ -53,14 +53,15 @@ class Contact extends Model
             ->get()
             ->map(function ($contact) use ($team, $contactType) {
                 $team = collect(json_decode($contact->teams, true))->firstWhere("team_id", $team->id);
-                if (empty($team)) return [];
-                return [
-                    "self" => $contact,
-                    "contact_type" => $contactType,
-                    "team" => $team,
-                    "amount" => $team["amount"],
-                    "date" => $contact->date
-                ];
+                if (!empty($team)) {
+                    return [
+                        "self" => $contact,
+                        "contact_type" => $contactType,
+                        "team" => $team,
+                        "amount" => $team["amount"],
+                        "date" => $contact->date
+                    ];
+                }
             });
     }
 
