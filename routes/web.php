@@ -41,7 +41,7 @@ Route::middleware(["auth"])->group(function () {
     Route::post("/denied", [HomeController::class, "denied"])->name("denied");
 
     // logs
-    Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
+    Route::get("logs", "\Rap2hpoutre\LaravelLogViewer\LogViewerController@index")->middleware("can:can-host");
 
     // masters
     Route::prefix("masters")->name("masters.")->group(function () {
