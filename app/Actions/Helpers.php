@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\Note;
 use App\Services\MonthService;
 use App\Services\WeekService;
 use Illuminate\Support\Facades\Storage;
