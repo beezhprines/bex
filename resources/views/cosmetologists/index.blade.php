@@ -61,35 +61,27 @@
             </div>
             <form action="{{ route('cosmetologists.update', ['cosmetologist' => $cosmetologist]) }}" method="POST">
                 @csrf
-                <div class="card-body p-0">
-                    <div class="row">
-                        <div class="col-md-8 px-4 py-2">
+                <div class="card-body">
+                    @include('users.user-form', ['user' => $cosmetologist->user, 'avatar' => $cosmetologist->avatar])
 
-                            @include('users.user-form', ['user' => $cosmetologist->user])
-
-                            <div class="form-group">
-                                <label>Команда</label>
-                                <select class="form-control selectpicker" name="team_id" data-live-search="true" data-size="10" required>
-                                    @if(empty($team->team_id))
-                                    <option>
-                                        @lang('common.not-selected')
-                                    </option>
-                                    @endif
-                                    @forelse($teams as $team)
-                                    <option value="{{ $team->id }}" @if ( $team->id == $cosmetologist->team_id) selected @endif>
-                                        {{ $team->title }}
-                                    </option>
-                                    @empty
-                                    <option>
-                                        @lang('common.no-data')
-                                    </option>
-                                    @endforelse
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <img src="{{ $cosmetologist->avatar }}" class="rounded mx-auto d-block mt-4" alt="{{ $cosmetologist->name }}">
-                        </div>
+                    <div class="form-group">
+                        <label>Команда</label>
+                        <select class="form-control selectpicker" name="team_id" data-live-search="true" data-size="10" required>
+                            @if(empty($team->team_id))
+                            <option>
+                                @lang('common.not-selected')
+                            </option>
+                            @endif
+                            @forelse($teams as $team)
+                            <option value="{{ $team->id }}" @if ( $team->id == $cosmetologist->team_id) selected @endif>
+                                {{ $team->title }}
+                            </option>
+                            @empty
+                            <option>
+                                @lang('common.no-data')
+                            </option>
+                            @endforelse
+                        </select>
                     </div>
                 </div>
                 <div class="card-footer text-right">

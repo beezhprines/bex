@@ -40,7 +40,7 @@
 </div>
 
 <div class="row">
-    <div class="col-md-8">
+    <div class="col-md-6">
         @foreach($marketers as $marketer)
         <div class="card card-secondary card-outline">
             <div class="card-header">
@@ -82,6 +82,7 @@
                 ])
             </div>
         </div>
-        @endforeach</div>
+        @endforeach
+    </div>
 </div>
 @stop

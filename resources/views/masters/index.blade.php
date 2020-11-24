@@ -69,7 +69,7 @@
             <div class="row">
                 <div class="col-md-4 px-4 py-2">
 
-                    @include('users.user-form', ['user' => $master->user])
+                    @include('users.user-form', ['user' => $master->user, 'avatar' => $master->avatar])
 
                     <div class="form-group">
                         <label>Команда</label>
