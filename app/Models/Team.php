@@ -59,6 +59,7 @@ class Team extends Model
 
         foreach ($dates as $date) {
             $date = date_format($date, config("app.iso_date"));
+
             $budget = Budget::findByDateAndType($date, $budgetTypeInstagram);
             if (empty($budget)) {
                 Budget::create([
@@ -70,15 +71,6 @@ class Team extends Model
                         ];
                     })->toJson(),
                     "budget_type_id" => $budgetTypeInstagram->id,
-                ]);
-            } else {
-                $budget->update([
-                    "json" => $teams->map(function ($team) {
-                        return [
-                            "team_id" => $team->id,
-                            "amount" => 0
-                        ];
-                    })->toJson(),
                 ]);
             }
 
@@ -93,15 +85,6 @@ class Team extends Model
                         ];
                     })->toJson(),
                     "budget_type_id" => $budgetTypeVK->id,
-                ]);
-            } else {
-                $budget->update([
-                    "json" => $teams->map(function ($team) {
-                        return [
-                            "team_id" => $team->id,
-                            "amount" => 0
-                        ];
-                    })->toJson(),
                 ]);
             }
         }

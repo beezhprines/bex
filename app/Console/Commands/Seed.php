@@ -4,9 +4,7 @@ namespace App\Console\Commands;
 
 use App\Jobs\SeedContactsJob;
 use App\Jobs\SeedOutcomesJob;
-use App\Services\RestoreService;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Artisan;
 
 class Seed extends Command
 {
@@ -46,7 +44,7 @@ class Seed extends Command
      *
      * @return int
      */
-    public function handle(RestoreService $restoreService)
+    public function handle()
     {
         if (empty($this->option("startDate")) || empty($this->option("endDate"))) {
             $this->error("Start date or end date invalid");

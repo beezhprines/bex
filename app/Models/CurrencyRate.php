@@ -52,7 +52,6 @@ class CurrencyRate extends Model
 
             if (empty($currencyRate)) {
                 $currencyRate = self::create([
-                    "description" => "Загружена валюта {$currency->code} на дату {$date}",
                     "date" => $date,
                     "currency_id" => $currency->id,
                     "rate" => round($kzt / $rate, 2)
@@ -61,7 +60,6 @@ class CurrencyRate extends Model
                 $amount = round($kzt / $rate, 2);
                 $currencyRate->update([
                     "rate" => $amount,
-                    "description" => "Обновлена валюта {$currency->code} с {$currencyRate->rate} на {$amount} на дату {$date}",
                 ]);
             }
         }
