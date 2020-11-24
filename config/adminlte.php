@@ -343,6 +343,12 @@ return [
                     "active" => ["masters"]
                 ],
                 [
+                    "text" => "Косметологи",
+                    "route" => "cosmetologists.index",
+                    "icon" => "fa fa-user-tag",
+                    "active" => ["cosmetologists"]
+                ],
+                [
                     "text" => "Операторы",
                     "route" => "operators.index",
                     'icon' => 'fa fa-headset',

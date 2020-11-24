@@ -3,6 +3,7 @@
 use App\Http\Controllers\CityController;
 use App\Http\Controllers\ConfigurationController;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\CosmetologistController;
 use App\Http\Controllers\CountryController;
 use App\Http\Controllers\CurrencyController;
 use App\Http\Controllers\FinanceController;
@@ -55,6 +56,16 @@ Route::middleware(["auth"])->group(function () {
         Route::put("/load/{master}", [MasterController::class, "load"])->name("load");
         Route::put("/auth/{master}", [MasterController::class, "auth"])->name("auth");
     });
+
+    // cosmetologists
+    Route::prefix("cosmetologists")->name("cosmetologists.")->group(function () {
+        Route::get("/", [CosmetologistController::class, "index"])->name("index");
+        Route::post("/update/{cosmetologist}", [CosmetologistController::class, "update"])->name("update");
+        Route::put("/load/all", [CosmetologistController::class, "loadAll"])->name("load.all");
+        Route::put("/load/{cosmetologist}", [CosmetologistController::class, "load"])->name("load");
+        Route::put("/auth/{cosmetologist}", [CosmetologistController::class, "auth"])->name("auth");
+    });
+
 
     // marketers
     Route::prefix("marketers")->name("marketers.")->group(function () {
