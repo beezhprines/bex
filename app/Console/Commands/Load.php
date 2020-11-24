@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Jobs\LoadCosmetologistsJob;
 use App\Jobs\LoadCurrencyRatesJob;
 use App\Jobs\LoadMastersJob;
 use App\Jobs\LoadRecordsJob;
@@ -17,6 +18,7 @@ class Load extends Command
      */
     protected $signature = "load
     {--masters : Load masters}
+    {--cosmetologists : Load cosmetologists}
     {--services : Load services}
     {--records : Load records}
     {--rates : Load currency rates}
@@ -50,6 +52,7 @@ class Load extends Command
     {
         if ($this->option("all")) {
             LoadMastersJob::dispatchNow();
+            LoadCosmetologistsJob::dispatchNow();
             LoadServicesJob::dispatchNow();
             LoadCurrencyRatesJob::dispatchNow();
             if ($this->option("startDate") && $this->option("endDate")) {
@@ -66,6 +69,11 @@ class Load extends Command
 
         if ($this->option("masters")) {
             LoadMastersJob::dispatchNow();
+            return;
+        }
+
+        if ($this->option("cosmetologists")) {
+            LoadCosmetologistsJob::dispatchNow();
             return;
         }
 

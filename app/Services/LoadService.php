@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Cosmetologist;
 use App\Models\CurrencyRate;
 use App\Models\Master;
 use App\Models\Record;
@@ -12,6 +13,11 @@ class LoadService
     public function masters(array $items)
     {
         Master::seed($items);
+    }
+
+    public function cosmetologists(array $items)
+    {
+        Cosmetologist::seed($items);
     }
 
     public function services(array $items)
