@@ -54,6 +54,11 @@ class User extends Authenticatable
         return $this->hasOne(Master::class);
     }
 
+    public function cosmetologist()
+    {
+        return $this->hasOne(Cosmetologist::class);
+    }
+
     public function operator()
     {
         return $this->hasOne(Operator::class);

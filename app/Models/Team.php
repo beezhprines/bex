@@ -29,6 +29,11 @@ class Team extends Model
         return $this->hasMany(Master::class);
     }
 
+    public function cosmetologists()
+    {
+        return $this->hasMany(Cosmetologist::class);
+    }
+
     public function currency()
     {
         return $this->city->country->currency ?? null;
