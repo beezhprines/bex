@@ -61,6 +61,7 @@ Route::middleware(["auth"])->group(function () {
     Route::prefix("cosmetologists")->name("cosmetologists.")->group(function () {
         Route::get("/", [CosmetologistController::class, "index"])->name("index");
         Route::post("/update/{cosmetologist}", [CosmetologistController::class, "update"])->name("update");
+        Route::put("/update/comissions", [CosmetologistController::class, "updateComissions"])->name("update.comissions");
         Route::put("/load/all", [CosmetologistController::class, "loadAll"])->name("load.all");
         Route::put("/load/{cosmetologist}", [CosmetologistController::class, "load"])->name("load");
         Route::put("/auth/{cosmetologist}", [CosmetologistController::class, "auth"])->name("auth");
@@ -97,6 +98,7 @@ Route::middleware(["auth"])->group(function () {
         Route::get("/diagrams", [ManagerController::class, "diagrams"])->name("diagrams");
         Route::get("/monitoring", [ManagerController::class, "monitoring"])->name("monitoring");
         Route::get("/comissions", [ManagerController::class, "comissions"])->name("comissions");
+        Route::get("/cosmetologists", [ManagerController::class, "cosmetologists"])->name("cosmetologists");
         Route::get("/currencyRates", [ManagerController::class, "currencyRates"])->name("currencyRates");
         Route::get("/", [ManagerController::class, "index"])->name("index");
         Route::post("/store", [ManagerController::class, "store"])->name("store");

@@ -6,6 +6,7 @@ use App\Models\Budget;
 use App\Models\Configuration;
 use App\Models\Contact;
 use App\Models\ContactType;
+use App\Models\Cosmetologist;
 use App\Models\Currency;
 use App\Models\CurrencyRate;
 use App\Models\Invoice;
@@ -245,5 +246,16 @@ class ManagerController extends Controller
         Artisan::call("solve --all --startDate={$startDate} --endDate={$endDate}");
 
         return back()->with(["success" => "Неделя обновлена из журнала"]);
+    }
+
+    public function cosmetologists()
+    {
+        access(["can-manager"]);
+
+        $cosmetologists = Cosmetologist::all();
+
+        return view("managers.cosmetologists", [
+            "cosmetologists" => $cosmetologists
+        ]);
     }
 }

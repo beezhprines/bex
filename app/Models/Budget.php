@@ -36,6 +36,11 @@ class Budget extends Model
         return $this->belongsToMany(Master::class)->withTimestamps();
     }
 
+    public function cosmetologists()
+    {
+        return $this->belongsToMany(Cosmetologist::class)->withTimestamps();
+    }
+
     public function operators()
     {
         return $this->belongsToMany(Operator::class)->withTimestamps();
@@ -49,6 +54,11 @@ class Budget extends Model
     public function master()
     {
         return $this->masters->first();
+    }
+
+    public function cosmetologist()
+    {
+        return $this->cosmetologists->first();
     }
 
     public static function seedCustomOutcomes(string $startDate, string $endDate)
@@ -155,6 +165,27 @@ class Budget extends Model
         }
 
         note("info", "budget:solve:master:profit", "Подсчитана выручка мастеров на дату {$date}", Budget::class);
+    }
+
+    public static function solveCosmetologistComission(string $date, float $amount, Cosmetologist $cosmetologist)
+    {
+        $budgetType = BudgetType::findByCode("cosmetologist:comission:income");
+
+        $budget = $cosmetologist->getBudget($date, $budgetType->id);
+
+        if (empty($budget)) {
+            $budget = self::create([
+                "amount" => $amount,
+                "date" => $date,
+                "budget_type_id" => $budgetType->id,
+            ]);
+
+            $budget->cosmetologists()->attach($cosmetologist);
+        } else {
+            $budget->update([
+                "amount" => $amount
+            ]);
+        }
     }
 
     public static function solveCustomOutcomes(string $date)

@@ -121,4 +121,21 @@ class Cosmetologist extends Model
 
         return $cosmetologist;
     }
+
+
+    public function getComission(string $startDate, string $endDate)
+    {
+        $budgetType = BudgetType::findByCode("cosmetologist:comission:income");
+
+        $amount = round(
+            $this->budgets
+                ->whereBetween("date", [$startDate, $endDate])
+                ->where("budget_type_id", $budgetType->id)
+                ->sum(function ($budget) {
+                    return $budget->amount ?? 0;
+                })
+        );
+
+        return $amount == 0 ? 0 : $amount *  $budgetType->sign();
+    }
 }

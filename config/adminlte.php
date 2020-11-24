@@ -301,6 +301,12 @@ return [
             "can"  => ["can-manager"]
         ],
         [
+            "text" => "Косметологи",
+            "route" => "managers.cosmetologists",
+            "icon" => "fa fa-user-tag",
+            "can"  => ["can-manager"]
+        ],
+        [
             "text" => "Диаграммы",
             "route" => "managers.diagrams",
             "icon" => "fa fa-chart-pie",

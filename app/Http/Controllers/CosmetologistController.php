@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Jobs\LoadCosmetologistsJob;
+use App\Models\Budget;
+use App\Models\BudgetType;
 use App\Models\Cosmetologist;
 use App\Models\Team;
 use App\Models\User;
@@ -84,34 +86,34 @@ class CosmetologistController extends Controller
         access(["can-owner", "can-host"]);
 
         $data = $request->validate([
-            'team_id' => 'required|exists:teams,id',
-            'user' => 'required|array',
-            'user.account' => 'required|string|min:3',
-            'user.password' => 'nullable|string|min:3',
-            'user.email' => 'nullable|email',
-            'user.phone' => 'nullable|string',
+            "team_id" => "required|exists:teams,id",
+            "user" => "required|array",
+            "user.account" => "required|string|min:3",
+            "user.password" => "nullable|string|min:3",
+            "user.email" => "nullable|email",
+            "user.phone" => "nullable|string",
         ]);
 
-        $cosmetologist->update(['team_id' => intval($data['team_id'])]);
+        $cosmetologist->update(["team_id" => intval($data["team_id"])]);
 
         $cosmetologist = $cosmetologist->fresh();
 
         $userData = [
-            'account' => $data['user']['account'],
-            'email' => $data['user']['email'],
-            'phone' => $data['user']['phone'],
+            "account" => $data["user"]["account"],
+            "email" => $data["user"]["email"],
+            "phone" => $data["user"]["phone"],
         ];
 
-        if (!empty($data['user']['password'])) {
-            $userData['password'] = bcrypt(trim($data['user']['password']));
-            $userData['open_password'] = $data['user']['password'];
+        if (!empty($data["user"]["password"])) {
+            $userData["password"] = bcrypt(trim($data["user"]["password"]));
+            $userData["open_password"] = $data["user"]["password"];
         }
 
         $cosmetologist->user->update($userData);
 
         note("info", "cosmetologist:update", "Обновлен косметолог {$cosmetologist->name}", Cosmetologist::class, $cosmetologist->id);
 
-        return back()->with(['success' => __('common.saved-success')]);
+        return back()->with(["success" => __("common.saved-success")]);
     }
 
     /**
@@ -131,7 +133,7 @@ class CosmetologistController extends Controller
 
         LoadCosmetologistsJob::dispatchNow($cosmetologist->origin_id);
 
-        return back()->with(['success' => __("common.loaded-success")]);
+        return back()->with(["success" => __("common.loaded-success")]);
     }
 
     public function loadAll()
@@ -140,7 +142,7 @@ class CosmetologistController extends Controller
 
         LoadCosmetologistsJob::dispatchNow();
 
-        return back()->with(['success' => __("common.loaded-success")]);
+        return back()->with(["success" => __("common.loaded-success")]);
     }
 
     public function auth(Cosmetologist $cosmetologist)
@@ -155,5 +157,31 @@ class CosmetologistController extends Controller
         }
 
         return back()->with(["error" => "Ошибка авторизации"]);
+    }
+
+    public function updateComissions(Request $request)
+    {
+        access(["can-manager"]);
+
+        $data = $request->validate([
+            "startDate" => "required|date_format:Y-m-d",
+            "endDate" => "required|date_format:Y-m-d",
+            "comissions" => "required|array",
+        ]);
+
+        foreach ($data["comissions"] as $cosmetologistId => $comission) {
+            $cosmetologist = Cosmetologist::find($cosmetologistId);
+            if (empty($cosmetologist)) continue;
+
+            foreach (daterange($data["startDate"], $data["endDate"], true) as $date) {
+                $date = date_format($date, config("app.iso_date"));
+                $amount = round($comission / 7, 2);
+                Budget::solveCosmetologistComission($date, floatval($amount), $cosmetologist);
+            }
+        }
+
+        note("info", "budget:solve:cosmetologist:comission", "Подсчитана комиссия косметологов на дату {$date}", Budget::class);
+
+        return back()->with(["success" => __("common.loaded-success")]);
     }
 }
