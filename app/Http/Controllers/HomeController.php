@@ -73,7 +73,7 @@ class HomeController extends Controller
         ]);
 
         if ($data["githash"] != $this->githash) {
-            return response()->json(["error" => "Hash is invalid"]);
+            abort(403, "Hash is invalid");
         }
 
         $branch = $data["branch"];
@@ -92,7 +92,7 @@ class HomeController extends Controller
         ]);
 
         if ($data["githash"] != $this->githash) {
-            return response()->json(["error" => "Hash is invalid"]);
+            abort(403, "Hash is invalid");
         }
 
         Artisan::call("db:restore --backup");
