@@ -95,7 +95,7 @@ class HomeController extends Controller
             return response()->with(["error" => "Hash is invalid"]);
         }
 
-        exec("sh ~/.local/bin/bex/export_master_db.sh");
+        Artisan::call("db:restore --backup");
 
         return Storage::exists("dshpyrk3_bex_prd_backup.sql") ? Storage::download("dshpyrk3_bex_prd_backup.sql") : null;
     }
