@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Services\LoadService;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Storage;
 
@@ -49,7 +50,7 @@ class Restore extends Command
      *
      * @return int
      */
-    public function handle()
+    public function handle(LoadService $loadService)
     {
 
         if (empty($this->option("env"))) {
@@ -68,11 +69,23 @@ class Restore extends Command
                 $restoreCommand = "";
                 break;
         }
+
         $url = "{$this->masterUrl}/db/backup?githash={$this->githash}";
-        $contents = file_get_contents($url);
-        Storage::put("dshpyrk3_bex_prd_backup.sql", $contents);
-        $this->info("Master database downloaded to /storage/app/dshpyrk3_bex_prd_backup.sql");
-        exec($restoreCommand);
-        $this->info("{$this->dbname} database restored from dshpyrk3_bex_prd_backup.sql");
+
+        $this->info("Starting download from {$this->masterUrl}/db/backup");
+
+        $path = storage_path("\app\dshpyrk3_bex_prd_backup.sql");
+
+        $response = $loadService->download($url, $path, $this->output);
+
+        if ($response["code"] ?? 0 == 200) {
+            $this->info("\nSuccess downloaded to $path");
+
+            exec($restoreCommand);
+
+            $this->info("{$this->dbname} database restored from $path");
+        } else {
+            $this->error("Error occured");
+        }
     }
 }

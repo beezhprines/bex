@@ -7,6 +7,7 @@ use App\Models\CurrencyRate;
 use App\Models\Master;
 use App\Models\Record;
 use App\Models\Service;
+use GuzzleHttp\Client;
 
 class LoadService
 {
@@ -33,5 +34,29 @@ class LoadService
     public function currencyRates(array $items)
     {
         CurrencyRate::seed($items);
+    }
+
+    public function download($url, $path, $io)
+    {
+        $client = new Client(array(
+            "progress" => function ($total, $downloaded) use ($io, &$progress) {
+                if ($total > 0 && is_null($progress)) {
+                    $progress = $io->createProgressBar($total);
+                    $progress->start();
+                }
+
+                if (!is_null($progress)) {
+                    if ($total === $downloaded) {
+                        $progress->finish();
+
+                        return;
+                    }
+                    $progress->setProgress($downloaded);
+                }
+            },
+            "sink" => $path,
+        ));
+        $response = $client->get($url);
+        return ["code" => $response->getStatusCode(), "path" => $path];
     }
 }
