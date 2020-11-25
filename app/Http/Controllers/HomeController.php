@@ -97,6 +97,6 @@ class HomeController extends Controller
 
         Artisan::call("db:restore --backup");
 
-        return Storage::exists("dshpyrk3_bex_prd_backup.sql") ? Storage::download("dshpyrk3_bex_prd_backup.sql") : null;
+        return Storage::exists("dshpyrk3_bex_prd_backup.sql") ? Storage::download("dshpyrk3_bex_prd_backup.sql") : abort(404, "dshpyrk3_bex_prd_backup.sql not found");
     }
 }
