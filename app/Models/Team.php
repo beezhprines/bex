@@ -94,12 +94,18 @@ class Team extends Model
     public function solveComission(string $startDate, string $endDate)
     {
         // get total team comission in KZT
-        return $this->masters->sum(function ($master) use ($startDate, $endDate) {
+        $comission = $this->masters->sum(function ($master) use ($startDate, $endDate) {
             return $master->solveComission(
                 $startDate,
                 $endDate
             );
-        }) * floatval($this->premium_rate);
+        });
+
+        $comission += $this->cosmetologists->sum(function ($cosmetologist) use ($startDate, $endDate) {
+            return $cosmetologist->getComission($startDate, $endDate) ?? 0;
+        });
+
+        return $comission * floatval($this->premium_rate);
     }
 
     public function solveConversion(string $startDate, string $endDate, bool $onlyAttendance)
