@@ -54,7 +54,7 @@ class Restore extends Command
     public function handle(LoadService $loadService)
     {
         if (!empty($this->option("backup"))) {
-            exec("/usr/local/bin/mysqldump --defaults-file=~/.local/bin/bex/.dshpyrk3_bex_prd.cnf dshpyrk3_bex_prd > ~/bex/public_html/master/storage/app/dshpyrk3_bex_prd_backup.sql");
+            exec('/usr/local/bin/mysqldump --defaults-file=~/.local/bin/bex/.dshpyrk3_bex_prd.cnf dshpyrk3_bex_prd > ~/bex/public_html/master/storage/app/dshpyrk3_bex_prd_backup.sql');
             return;
         }
 
