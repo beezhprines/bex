@@ -5,7 +5,6 @@ namespace App\Console\Commands;
 use App\Services\LoadService;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\Storage;
 
 class Restore extends Command
 {
@@ -15,7 +14,7 @@ class Restore extends Command
      * @var string
      */
     protected $signature = 'db:restore
-    {--backup: Make database backup}
+    {--backup : Make database backup}
     {--env= : Environment}';
 
     /**
@@ -54,7 +53,7 @@ class Restore extends Command
      */
     public function handle(LoadService $loadService)
     {
-        if ($this->option("backup")) {
+        if (!empty($this->option("backup"))) {
             exec("sh ~/.local/bin/bex/export_master_db.sh");
             return;
         }
@@ -63,6 +62,7 @@ class Restore extends Command
             $this->error("Environment not provided");
             return;
         }
+
         switch ($this->option("env")) {
             case 'local':
                 $restoreCommand = 'cmd.exe /c "mysql -u ' . $this->dbusername . ' -p' . $this->dbpasssword . ' ' . $this->dbname . ' < storage/app/dshpyrk3_bex_prd_backup.sql"';
