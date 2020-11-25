@@ -83,8 +83,12 @@ class FinanceController extends Controller
                 return $budget->amount ?? 0;
             }) * $budgetType->sign();
 
+        $totalComission = Budget::getComission($startWeek, $endWeek);
+        $cosmetologistsComission = Budget::getCosmetologistComission($startWeek, $endWeek);
+        $totalComission += $cosmetologistsComission;
+
         $total = [
-            "totalComission" => Budget::getComission($startWeek, $endWeek),
+            "totalComission" => $totalComission,
             "customOutcomes" => Budget::getCustomOutcomes($startWeek, $endWeek),
             "instagramOutcomes" => $instagramOutcomes,
             "vkOutcomes" => $vkOutcomes,

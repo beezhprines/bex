@@ -167,6 +167,18 @@ class Budget extends Model
         note("info", "budget:solve:master:profit", "Подсчитана выручка мастеров на дату {$date}", Budget::class);
     }
 
+    public static function getCosmetologistComission(string $startDate, string $endDate)
+    {
+        $budgetType = BudgetType::findByCode("cosmetologist:comission:income");
+
+        $amount = self::getBetweenDatesAndType($startDate, $endDate, $budgetType)
+            ->sum(function ($budget) {
+                return $budget->amount ?? 0;
+            }) ?? 0;
+
+        return $amount;
+    }
+
     public static function solveCosmetologistComission(string $date, float $amount, Cosmetologist $cosmetologist)
     {
         $budgetType = BudgetType::findByCode("cosmetologist:comission:income");
