@@ -73,7 +73,7 @@ class HomeController extends Controller
         ]);
 
         if ($data["githash"] != $this->githash) {
-            return response()->with(["error" => "Hash is invalid"]);
+            return response()->json(["error" => "Hash is invalid"]);
         }
 
         $branch = $data["branch"];
@@ -92,11 +92,15 @@ class HomeController extends Controller
         ]);
 
         if ($data["githash"] != $this->githash) {
-            return response()->with(["error" => "Hash is invalid"]);
+            return response()->json(["error" => "Hash is invalid"]);
         }
 
         Artisan::call("db:restore --backup");
 
-        return Storage::exists("dshpyrk3_bex_prd_backup.sql") ? Storage::download("dshpyrk3_bex_prd_backup.sql") : abort(404, "dshpyrk3_bex_prd_backup.sql not found");
+        if (!Storage::exists("dshpyrk3_bex_prd_backup.sql")) {
+            abort(404, "dshpyrk3_bex_prd_backup.sql not found");
+        }
+
+        return  Storage::download("dshpyrk3_bex_prd_backup.sql");
     }
 }
