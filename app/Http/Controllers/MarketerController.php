@@ -145,10 +145,12 @@ class MarketerController extends Controller
         $vk = collect(json_decode(Budget::findByDateAndType(week()->last(), $budgetTypeVK)->json, true));
         $teams = Team::all();
 
+        $nextMonday = week()->monday(week()->next(week()->last()));
+        $currencyRateDate = (isodate() < $nextMonday) ? week()->last() : $nextMonday;
         $currencyRates = [];
         $currencies = Currency::all();
         foreach ($currencies as $currency) {
-            $currencyRates[$currency->code] = CurrencyRate::findByCurrencyAndDate($currency, week()->last());
+            $currencyRates[$currency->code] = CurrencyRate::findByCurrencyAndDate($currency, $currencyRateDate);
         }
 
         return view("marketers.analytics", [
@@ -156,7 +158,8 @@ class MarketerController extends Controller
             "instagram" => $instagram,
             "vk" => $vk,
             "currencyRates" => collect($currencyRates),
-            "currencies" => $currencies
+            "currencies" => $currencies,
+            "currencyRateDate" => $currencyRateDate
         ]);
     }
 

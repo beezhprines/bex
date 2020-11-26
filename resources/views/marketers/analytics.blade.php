@@ -123,7 +123,7 @@
         <div class="card card-secondary card-outline">
             <div class="card-header">
                 <div class="card-title">
-                    Курсы валют на {{ viewdate(week()->last()) }}
+                    Курсы валют на {{ viewdate($currencyRateDate) }}
                 </div>
             </div>
             <div class="card-body py-0 px-1">

@@ -14,7 +14,6 @@ class Restore extends Command
      * @var string
      */
     protected $signature = 'db:restore
-    {--backup : Make database backup}
     {--env= : Environment}';
 
     /**
@@ -53,10 +52,6 @@ class Restore extends Command
      */
     public function handle(LoadService $loadService)
     {
-        if (!empty($this->option("backup"))) {
-            return;
-        }
-
         if (empty($this->option("env"))) {
             $this->error("Environment not provided");
             return;
