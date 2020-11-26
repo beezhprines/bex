@@ -24,7 +24,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $filePath = storage_path("\app\schedule_" . isodate() . ".txt");
+        $filePath = storage_path() . "/app/schedule_" . isodate() . ".txt";
 
         $yesterday = date(config("app.iso_date"), strtotime("-1 days"));
         $lastWeekStart = date(config("app.iso_date"), strtotime("monday previous week"));

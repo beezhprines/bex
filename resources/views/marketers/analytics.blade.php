@@ -15,7 +15,7 @@
             </div>
             <div class="card-body p-0">
                 <div class="table-responsive">
-                    <form action="{{ route('marketers.saveTeamOutcomes') }}" method="POST">
+                    <form id="team-outcomes-form" action="{{ route('marketers.saveTeamOutcomes') }}" method="POST">
                         @csrf
                         <input type="hidden" name="date" value="{{ week()->last() }}">
                         <table class="table table-sm table-striped">
@@ -75,71 +75,75 @@
                                 @endforeach
                             </tbody>
                         </table>
-
-                        <div class="form-group px-4">
-                            <input type="submit" class="btn btn-sm btn-warning" value="{{ __('common.save') }}">
-                        </div>
                     </form>
                 </div>
             </div>
         </div>
     </div>
     <div class="col-md-4">
-        <div class="card card-secondary card-outline">
-            <div class="card-header">
-                <div class="card-title">
-                    Итого
+        <div class="position-fixed">
+            <div class="card card-secondary card-outline">
+                <div class="card-header">
+                    <div class="card-title">
+                        Итого
+                    </div>
                 </div>
-            </div>
-            <div class="card-body py-0 px-1">
-                <ul class="list-group list-group-flush">
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        <span>
-                            Расходы мастеров Instagram
-                        </span>
-                        <strong>
-                            {{
+                <div class="card-body py-0 px-1">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <span>
+                                Расходы мастеров Instagram
+                            </span>
+                            <strong>
+                                {{
                                 $instagram->sum(function($item){
                                     return $item["amount"];
                                 })
                             }}
-                        </strong>
-                    </li>
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        <span>
-                            Расходы мастеров Vkontakte
-                        </span>
-                        <strong>
-                            {{
+                            </strong>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <span>
+                                Расходы мастеров Vkontakte
+                            </span>
+                            <strong>
+                                {{
                                 $vk->sum(function($item){
                                     return $item["amount"];
                                 })
                             }}
-                        </strong>
-                    </li>
-                </ul>
-            </div>
-        </div>
-        <div class="card card-secondary card-outline">
-            <div class="card-header">
-                <div class="card-title">
-                    Курсы валют на {{ viewdate($currencyRateDate) }}
+                            </strong>
+                        </li>
+                    </ul>
                 </div>
             </div>
-            <div class="card-body py-0 px-1">
-                <ul class="list-group list-group-flush">
-                    @foreach($currencies as $currency)
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        <span>
-                            {{ $currency->title }}
-                        </span>
-                        <strong>
-                            {{ $currencyRates[$currency->code]->rate ?? "-"}}
-                        </strong>
-                    </li>
-                    @endforeach
-                </ul>
+            <div class="card card-secondary card-outline">
+                <div class="card-header">
+                    <div class="card-title">
+                        Курсы валют на {{ viewdate($currencyRateDate) }}
+                    </div>
+                </div>
+                <div class="card-body py-0 px-1">
+                    <ul class="list-group list-group-flush">
+                        @foreach($currencies as $currency)
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <span>
+                                {{ $currency->title }}
+                            </span>
+                            <strong>
+                                {{ $currencyRates[$currency->code]->rate ?? "-"}}
+                            </strong>
+                        </li>
+                        @endforeach
+                    </ul>
+                </div>
             </div>
+            <div class="card">
+                <div class="card-body text-center p-0">
+                    <button id="team-outcomes-submit" class="btn btn-warning btn-block">{{ __('common.save') }}</button>
+                </div>
+            </div>
+
         </div>
     </div>
 </div>
@@ -173,6 +177,9 @@
 
         $(".exchange").on("change", function() {
             exchange($(this));
+        });
+        $("#team-outcomes-submit").on("click", function() {
+            $("#team-outcomes-form").submit();
         });
     })(jQuery);
 </script>
