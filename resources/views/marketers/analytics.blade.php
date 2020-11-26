@@ -25,7 +25,7 @@
                                 <th class="text-center">Vkontakte</th>
                             </thead>
                             <tbody>
-                                @foreach($teams->orderBy("city_id") as $team)
+                                @foreach($teams->sortBy("city_id") as $team)
                                 <tr>
                                     <td class="align-middle">
                                         {{ $team->title }}
