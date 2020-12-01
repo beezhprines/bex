@@ -13,8 +13,7 @@ class Restore extends Command
      *
      * @var string
      */
-    protected $signature = 'db:restore
-    {--env= : Environment}';
+    protected $signature = 'db:restore';
 
     /**
      * The console command description.
@@ -28,6 +27,7 @@ class Restore extends Command
     private $dbusername;
     private $dbpasssword;
     private $dbname;
+    private $env;
 
     /**
      * Create a new command instance.
@@ -38,11 +38,12 @@ class Restore extends Command
     {
         parent::__construct();
 
-        $this->masterUrl = env('APP_PRODUCTION_URL');
+        $this->masterUrl = env("APP_PRODUCTION_URL");
         $this->githash = env("GIT_HASH");
         $this->dbusername = env("DB_USERNAME");
         $this->dbpasssword = env("DB_PASSWORD");
         $this->dbname = env("DB_DATABASE");
+        $this->env = env("APP_ENV");
     }
 
     /**
@@ -57,7 +58,7 @@ class Restore extends Command
             return;
         }
 
-        switch ($this->option("env")) {
+        switch ($this->env) {
             case 'local':
                 $restoreCommand = 'cmd.exe /c "mysql -u ' . $this->dbusername . ' -p' . $this->dbpasssword . ' ' . $this->dbname . ' < storage/app/dshpyrk3_bex_prd_backup.sql"';
                 break;
@@ -74,7 +75,7 @@ class Restore extends Command
 
         $this->info("Starting download from {$this->masterUrl}/db/backup");
 
-        $path = storage_path("\app\dshpyrk3_bex_prd_backup.sql");
+        $path = storage_path() . "\app\dshpyrk3_bex_prd_backup.sql";
 
         $response = $loadService->download($url, $path, $this->output);
 
