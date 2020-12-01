@@ -118,8 +118,8 @@ class Record extends Model
                     ) : 0
                 ];
 
-                if ($record->services()->where("service_id", $service->id)->exists()) {
-                    $record->services()->updateExistingPivot($service->id, $pivot);
+                if ($record->services()->withTrashed()->where("service_id", $service->id)->exists()) {
+                    $record->services()->withTrashed()->updateExistingPivot($service->id, $pivot);
                 } else {
                     $record->services()->attach($service->id, $pivot);
                 }

@@ -50,18 +50,13 @@ class CurrencyRate extends Model
 
             $currencyRate = self::findByCurrencyAndDate($currency, $date);
 
-            if (empty($currencyRate)) {
-                $currencyRate = self::create([
-                    "date" => $date,
-                    "currency_id" => $currency->id,
-                    "rate" => round($kzt / $rate, 2)
-                ]);
-            } else {
-                $amount = round($kzt / $rate, 2);
-                $currencyRate->update([
-                    "rate" => $amount,
-                ]);
-            }
+            if (!empty($currencyRate)) continue;
+
+            $currencyRate = self::create([
+                "date" => $date,
+                "currency_id" => $currency->id,
+                "rate" => round($kzt / $rate, 2)
+            ]);
         }
 
         note("info", "currencyRate:seed", "Загружены валюты на дату {$date}", CurrencyRate::class);

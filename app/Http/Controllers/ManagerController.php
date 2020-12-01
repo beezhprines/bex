@@ -242,8 +242,18 @@ class ManagerController extends Controller
         $startDate = week()->start();
         $endDate = week()->end();
 
-        Artisan::call("load --all --startDate={$startDate} --endDate={$endDate}");
-        Artisan::call("solve --all --startDate={$startDate} --endDate={$endDate}");
+        Artisan::call("load --masters");
+        Artisan::call("load --cosmetologists");
+        Artisan::call("load --services");
+        Artisan::call("load --records --startDate={$startDate} --endDate={$endDate}");
+
+        Artisan::call("solve --total-comission --startDate={$startDate} --endDate={$endDate}");
+        Artisan::call("solve --masters-comission --startDate={$startDate} --endDate={$endDate}");
+        Artisan::call("solve --masters-profit --startDate={$startDate} --endDate={$endDate}");
+        Artisan::call("solve --custom-outcomes --startDate={$startDate} --endDate={$endDate}");
+        Artisan::call("solve --managers-profit --startDate={$startDate} --endDate={$endDate}");
+        Artisan::call("solve --operators-profit --startDate={$startDate} --endDate={$endDate}");
+        Artisan::call("solve --masters-penalty --startDate={$startDate} --endDate={$endDate}");
 
         return back()->with(["success" => "Неделя обновлена из журнала"]);
     }

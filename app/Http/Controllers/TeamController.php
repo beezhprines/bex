@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\City;
+use App\Models\Contact;
 use App\Models\Operator;
 use App\Models\Team;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class TeamController extends Controller
 {
@@ -50,6 +52,23 @@ class TeamController extends Controller
         access(["can-owner", "can-host"]);
 
         $team = Team::create($request->all());
+
+        $startDate = week()->monday(isodate());
+        $endDate = week()->sunday(isodate());
+
+        $contacts = Contact::whereBetween(DB::raw("DATE(date)"), array($startDate, $endDate))
+            ->get();
+
+        foreach ($contacts as $contact) {
+            $teams = json_decode($contact->teams, 1);
+            $teams[] = [
+                "amount" => 0,
+                "team_id" => $team->id
+            ];
+            $contact->update([
+                "teams" => json_encode($teams)
+            ]);
+        }
 
         note("info", "team:create", "Создана команда {$team->title}", Team::class, $team->id);
 
