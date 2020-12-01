@@ -53,11 +53,6 @@ class Restore extends Command
      */
     public function handle(LoadService $loadService)
     {
-        if (empty($this->option("env"))) {
-            $this->error("Environment not provided");
-            return;
-        }
-
         switch ($this->env) {
             case 'local':
                 $restoreCommand = 'cmd.exe /c "mysql -u ' . $this->dbusername . ' -p' . $this->dbpasssword . ' ' . $this->dbname . ' < storage/app/dshpyrk3_bex_prd_backup.sql"';
