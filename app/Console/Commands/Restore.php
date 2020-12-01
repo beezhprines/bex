@@ -56,13 +56,16 @@ class Restore extends Command
         switch ($this->env) {
             case 'local':
                 $restoreCommand = 'cmd.exe /c "mysql -u ' . $this->dbusername . ' -p' . $this->dbpasssword . ' ' . $this->dbname . ' < storage/app/dshpyrk3_bex_prd_backup.sql"';
+                $path = storage_path() . "\app\dshpyrk3_bex_prd_backup.sql";
                 break;
             case 'staging':
                 $restoreCommand = 'mysql -u ' . $this->dbusername . ' -p' . $this->dbpasssword . ' ' . $this->dbname . ' < storage/app/dshpyrk3_bex_prd_backup.sql';
+                $path = storage_path() . "/app/dshpyrk3_bex_prd_backup.sql";
                 break;
 
             default:
                 $restoreCommand = "";
+                $path = "";
                 break;
         }
 
@@ -70,7 +73,6 @@ class Restore extends Command
 
         $this->info("Starting download from {$this->masterUrl}/db/backup");
 
-        $path = storage_path() . "\app\dshpyrk3_bex_prd_backup.sql";
 
         $response = $loadService->download($url, $path, $this->output);
 
