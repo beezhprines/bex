@@ -12,6 +12,7 @@
             </a>
             <form id="sync-form" action="{{ route('managers.sync') }}" method="POST">
                 @csrf
+                <input type="hidden" name="day" value="{{ request()->query('day') }}">
             </form>
         </div>
     </div>
@@ -99,10 +100,10 @@
                 <ul class="list-group list-group-flush">
                     @foreach($managers as $manager)
                     @if (
-                        (auth()->user()->isOwner() || auth()->user()->isHost())
-                        ||
-                        (auth()->user()->manager->id == $manager->id)
-                        )
+                    (auth()->user()->isOwner() || auth()->user()->isHost())
+                    ||
+                    (auth()->user()->manager->id == $manager->id)
+                    )
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         <span>
                             {{ $manager->name }}
@@ -151,6 +152,15 @@
                 fontWeight: 'bold',
                 top: '6px'
             });
+
+        let day = parseInt('{{ request()->query("day") ?? 0}}');
+
+        if (day > 0 && day < 7) {
+            $('#loader').css({
+                display: 'block'
+            });
+            $('#sync-form').submit();
+        }
     });
 </script>
 @stop

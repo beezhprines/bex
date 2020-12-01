@@ -237,25 +237,42 @@ class ManagerController extends Controller
         return back()->with(["error" => "Ошибка авторизации"]);
     }
 
-    public function sync()
+    public function sync(Request $request)
     {
-        $startDate = week()->start();
-        $endDate = week()->end();
+        $day = 0;
+        if ($request->has("day")) {
+            $day = intval($request->day);
+        }
 
-        Artisan::call("load --masters");
-        Artisan::call("load --cosmetologists");
-        Artisan::call("load --services");
-        Artisan::call("load --records --startDate={$startDate} --endDate={$endDate}");
+        $weekdates = daterange(week()->start(), week()->end(), true);
+        $date = week()->start();
 
-        Artisan::call("solve --total-comission --startDate={$startDate} --endDate={$endDate}");
-        Artisan::call("solve --masters-comission --startDate={$startDate} --endDate={$endDate}");
-        Artisan::call("solve --masters-profit --startDate={$startDate} --endDate={$endDate}");
-        Artisan::call("solve --custom-outcomes --startDate={$startDate} --endDate={$endDate}");
-        Artisan::call("solve --managers-profit --startDate={$startDate} --endDate={$endDate}");
-        Artisan::call("solve --operators-profit --startDate={$startDate} --endDate={$endDate}");
-        Artisan::call("solve --masters-penalty --startDate={$startDate} --endDate={$endDate}");
+        foreach ($weekdates as $key => $weekdate) {
+            $date = date_format($weekdate, config("app.iso_date"));
+            if ($key == $day) break;
+        }
 
-        return back()->with(["success" => "Неделя обновлена из журнала"]);
+        if ($day == 0) {
+            Artisan::call("load --masters");
+            Artisan::call("load --cosmetologists");
+            Artisan::call("load --services");
+        }
+
+        Artisan::call("load --records --startDate={$date} --endDate={$date}");
+        Artisan::call("solve --total-comission --date={$date}");
+        Artisan::call("solve --masters-comission --date={$date}");
+        Artisan::call("solve --masters-profit --date={$date}");
+        Artisan::call("solve --custom-outcomes --date={$date}");
+        Artisan::call("solve --managers-profit --date={$date}");
+        Artisan::call("solve --operators-profit --date={$date}");
+        Artisan::call("solve --masters-penalty --date={$date}");
+
+        if ($day >= 6) {
+            return redirect()->route("managers.weekplan")->with(["success" => "Неделя обновлена из журнала"]);
+        } else {
+            $day = $day + 1;
+            return redirect()->route("managers.weekplan", ["day" => $day])->with(["info" => "Идет обновление недели ({$day}/7). Пожалуйста, подождите"]);
+        }
     }
 
     public function cosmetologists()
