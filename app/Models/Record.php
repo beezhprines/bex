@@ -58,39 +58,33 @@ class Record extends Model
         });
     }
 
-    public static function seed($records)
+    public static function seed($items, string $date)
     {
-        $date = "";
-        foreach ($records as $item) {
+        // clean all records for given date
+        $records = self::whereDate("started_at", $date)->get();
+        foreach ($records as $record) {
+            $record->services()->detach();
+            $record->forceDelete();
+        }
+
+        // add new records
+        foreach ($items as $item) {
             if (!isset($item["visit_attendance"]) || !in_array($item["visit_attendance"], [1, -1])) continue;
+
+            if (empty($item["staff_id"])) continue;
+            if (empty($item["services"])) continue;
+
+            // find master
+            $master = Master::findByOriginId($item["staff_id"]);
+            if (empty($master)) continue;
 
             // create or update record
             $record = self::createOrUpdate(self::peel($item));
 
-            // get date of record
-            if (empty($date)) $date = date_format(new DateTime($record->started_at), config("app.iso_date"));
-
-            if (empty($item["staff_id"])) continue;
-
-            // find master
-            $master = Master::findByOriginId($item["staff_id"]);
-
-            if (empty($master)) continue;
-
             // associate with existing master
             $record->master()->associate($master);
 
-            if (empty($item["services"])) continue;
-
             foreach ($item["services"] as $serviceData) {
-                // find associated service with record
-                $service = $record->services->first();
-
-                // if service was changed - we detach from associated record
-                if (!empty($service) && $service->origin_id != $serviceData["id"]) {
-                    $record->services()->detach($service->id);
-                }
-
                 // find current service in database
                 $service = Service::findByOriginId($serviceData["id"]);
 
@@ -118,11 +112,7 @@ class Record extends Model
                     ) : 0
                 ];
 
-                if ($record->services()->withTrashed()->where("service_id", $service->id)->exists()) {
-                    $record->services()->withTrashed()->updateExistingPivot($service->id, $pivot);
-                } else {
-                    $record->services()->attach($service->id, $pivot);
-                }
+                $record->services()->attach($service->id, $pivot);
             }
 
             $record->save();
