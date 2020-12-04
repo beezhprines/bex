@@ -49,46 +49,42 @@ class Team extends Model
         return $this->belongsToMany(Budget::class)->withTimestamps();
     }
 
-    public static function seedOutcomes(string $startDate, string $endDate)
+    public static function seedOutcomes(string $date)
     {
         $budgetTypeInstagram = BudgetType::findByCode("marketer:team:instagram:outcome");
         $budgetTypeVK = BudgetType::findByCode("marketer:team:vk:outcome");
-        $dates = daterange($startDate, $endDate, true);
 
         $teams = self::all();
 
-        foreach ($dates as $date) {
-            $date = date_format($date, config("app.iso_date"));
-
-            $budget = Budget::findByDateAndType($date, $budgetTypeInstagram);
-            if (empty($budget)) {
-                Budget::create([
-                    "date" => $date,
-                    "json" => $teams->map(function ($team) {
-                        return [
-                            "team_id" => $team->id,
-                            "amount" => 0
-                        ];
-                    })->toJson(),
-                    "budget_type_id" => $budgetTypeInstagram->id,
-                ]);
-            }
-
-            $budget = Budget::findByDateAndType($date, $budgetTypeVK);
-            if (empty($budget)) {
-                Budget::create([
-                    "date" => $date,
-                    "json" => $teams->map(function ($team) {
-                        return [
-                            "team_id" => $team->id,
-                            "amount" => 0
-                        ];
-                    })->toJson(),
-                    "budget_type_id" => $budgetTypeVK->id,
-                ]);
-            }
+        $budget = Budget::findByDateAndType($date, $budgetTypeInstagram);
+        if (empty($budget)) {
+            Budget::create([
+                "date" => $date,
+                "json" => $teams->map(function ($team) {
+                    return [
+                        "team_id" => $team->id,
+                        "amount" => 0
+                    ];
+                })->toJson(),
+                "budget_type_id" => $budgetTypeInstagram->id,
+            ]);
         }
-        note("info", "budget:seed", "Созданы затраты на команду с {$startDate} по {$endDate}", Budget::class);
+
+        $budget = Budget::findByDateAndType($date, $budgetTypeVK);
+        if (empty($budget)) {
+            Budget::create([
+                "date" => $date,
+                "json" => $teams->map(function ($team) {
+                    return [
+                        "team_id" => $team->id,
+                        "amount" => 0
+                    ];
+                })->toJson(),
+                "budget_type_id" => $budgetTypeVK->id,
+            ]);
+        }
+
+        note("info", "budget:seed", "Созданы затраты на команду на дату {$date}", Budget::class);
     }
 
     public function solveComission(string $startDate, string $endDate)

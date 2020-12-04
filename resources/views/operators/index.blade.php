@@ -57,7 +57,7 @@
                         </form>
                     </li>
                     <li>
-                        <a class="dropdown-item" href="#" onclick="event.preventDefault(); document.getElementById('{{$operator->id}}-form').submit();">
+                        <a class="dropdown-item" href="#" onclick="if (confirm('Уверены?')){event.preventDefault(); document.getElementById('{{$operator->id}}-form').submit();}">
                             Удалить
                         </a>
                         <form id="{{$operator->id}}-form" action="{{ route('operators.destroy', ['operator' => $operator->id]) }}" method="post">

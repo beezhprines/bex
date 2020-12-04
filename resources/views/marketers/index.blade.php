@@ -63,7 +63,7 @@
                                 </form>
                             </li>
                             <li>
-                                <a class="dropdown-item" href="#" onclick="event.preventDefault(); document.getElementById('{{$marketer->id}}-form').submit();">
+                                <a class="dropdown-item" href="#" onclick="if (confirm('Уверены?')){event.preventDefault(); document.getElementById('{{$marketer->id}}-form').submit();}">
                                     Удалить
                                 </a>
                                 <form id="{{$marketer->id}}-form" action="{{ route('marketers.destroy', ['marketer' => $marketer->id]) }}" method="post">

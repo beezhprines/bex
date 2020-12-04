@@ -81,7 +81,7 @@
         </div>
     </div>
     <div class="col-md-4">
-        <div class="position-fixed">
+        <div class="position-fixed" style="min-width:300px">
             <div class="card card-secondary card-outline">
                 <div class="card-header">
                     <div class="card-title">

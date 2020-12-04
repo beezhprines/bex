@@ -141,8 +141,8 @@ class MarketerController extends Controller
         $budgetTypeInstagram = BudgetType::findByCode("marketer:team:instagram:outcome");
         $budgetTypeVK = BudgetType::findByCode("marketer:team:vk:outcome");
 
-        $instagram = collect(json_decode(Budget::findByDateAndType(week()->last(), $budgetTypeInstagram)->json, true));
-        $vk = collect(json_decode(Budget::findByDateAndType(week()->last(), $budgetTypeVK)->json, true));
+        $instagram = collect(json_decode(Budget::findByDateAndType(week()->end(), $budgetTypeInstagram)->json, true));
+        $vk = collect(json_decode(Budget::findByDateAndType(week()->end(), $budgetTypeVK)->json, true));
         $teams = Team::all();
 
         $nextMonday = week()->monday(week()->next(week()->last()));
@@ -168,7 +168,6 @@ class MarketerController extends Controller
         access(["can-marketer"]);
 
         $data = $request->validate([
-            "date" => "required|date",
             "teams" => "required|array",
             "teams.*.id" => "required|exists:teams,id",
             "teams.*.instagram" => "nullable|numeric",
@@ -183,7 +182,7 @@ class MarketerController extends Controller
         $teams = collect($data["teams"]);
 
         foreach ($budgetTypes as $key => $budgetType) {
-            $budget = Budget::findByDateAndType($data["date"], $budgetType);
+            $budget = Budget::findByDateAndType(week()->end(), $budgetType);
 
             $json = $teams->map(function ($team) use ($key) {
                 return [
@@ -200,7 +199,7 @@ class MarketerController extends Controller
                 $budget = Budget::create([
                     "amount" => $amount,
                     "json" => json_encode(array_values($json->toArray())),
-                    "date" => $data["date"],
+                    "date" => week()->end(),
                     "budget_type_id" => $budgetType->id
                 ]);
             } else {

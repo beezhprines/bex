@@ -38,8 +38,8 @@ class SeedOutcomesJob implements ShouldQueue
     {
         switch ($this->type) {
             case 'team':
-                $seedService->teamOutcomes($this->startDate, $this->endDate);
-                echo "Team outcomes seeded from {$this->startDate} till {$this->endDate}\n";
+                $seedService->teamOutcomes($this->endDate);
+                echo "Team outcomes seeded for date {$this->endDate}\n";
                 break;
 
             case 'custom':

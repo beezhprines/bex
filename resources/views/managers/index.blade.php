@@ -62,7 +62,7 @@
                                 </form>
                             </li>
                             <li>
-                                <a class="dropdown-item" href="#" onclick="event.preventDefault(); document.getElementById('{{$manager->id}}-form').submit();">
+                                <a class="dropdown-item" href="#" onclick="if (confirm('Уверены?')){event.preventDefault(); document.getElementById('{{$manager->id}}-form').submit();}">
                                     Удалить
                                 </a>
                                 <form id="{{$manager->id}}-form" action="{{ route('managers.destroy', ['manager' => $manager->id]) }}" method="post">
