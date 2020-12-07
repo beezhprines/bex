@@ -267,6 +267,10 @@ class ManagerController extends Controller
         Artisan::call("solve --operators-profit --date={$date}");
         Artisan::call("solve --masters-penalty --date={$date}");
 
+        $user = Auth::user();
+
+        note("info", "manager:sync", "{$user->account} выполнил обновление из журнала на дату {$date}");
+
         if ($day >= 6) {
             return redirect()->route("managers.weekplan")->with(["success" => "Неделя обновлена из журнала"]);
         } else {
