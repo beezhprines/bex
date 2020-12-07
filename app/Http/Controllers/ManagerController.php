@@ -252,23 +252,24 @@ class ManagerController extends Controller
             if ($key == $day) break;
         }
 
-        if ($day == 0) {
-            Artisan::call("load --masters");
-            Artisan::call("load --cosmetologists");
-            Artisan::call("load --services");
+        if (isodate() >= $date) {
+            if ($day == 0) {
+                Artisan::call("load --masters");
+                Artisan::call("load --cosmetologists");
+                Artisan::call("load --services");
+            }
+
+            Artisan::call("load --records --startDate={$date} --endDate={$date}");
+            Artisan::call("solve --total-comission --date={$date}");
+            Artisan::call("solve --masters-comission --date={$date}");
+            Artisan::call("solve --masters-profit --date={$date}");
+            Artisan::call("solve --custom-outcomes --date={$date}");
+            Artisan::call("solve --managers-profit --date={$date}");
+            Artisan::call("solve --operators-profit --date={$date}");
+            Artisan::call("solve --masters-penalty --date={$date}");
         }
 
-        Artisan::call("load --records --startDate={$date} --endDate={$date}");
-        Artisan::call("solve --total-comission --date={$date}");
-        Artisan::call("solve --masters-comission --date={$date}");
-        Artisan::call("solve --masters-profit --date={$date}");
-        Artisan::call("solve --custom-outcomes --date={$date}");
-        Artisan::call("solve --managers-profit --date={$date}");
-        Artisan::call("solve --operators-profit --date={$date}");
-        Artisan::call("solve --masters-penalty --date={$date}");
-
         $user = Auth::user();
-
         note("info", "manager:sync", "{$user->account} выполнил обновление из журнала на дату {$date}");
 
         if ($day >= 6) {
