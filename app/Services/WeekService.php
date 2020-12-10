@@ -88,4 +88,9 @@ class WeekService
             ]
         ]);
     }
+
+    public function before(int $days, string $date)
+    {
+        return date(config('app.iso_date'), strtotime($date . " -{$days} day"));
+    }
 }

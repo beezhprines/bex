@@ -110,14 +110,14 @@ class Manager extends Model
             ->where("paid", false)->count() == 0;
     }
 
-    public function payBudgets(string $startDate, string $endDate)
+    public function payBudgets(string $startDate, string $endDate, bool $paid)
     {
         $budgets = $this->budgets()->whereBetween("date", [$startDate, $endDate])
-            ->where("paid", false)->get();
+            ->where("paid", !$paid)->get();
 
         foreach ($budgets as $budget) {
             $budget->update([
-                "paid" => true
+                "paid" => $paid
             ]);
         };
     }

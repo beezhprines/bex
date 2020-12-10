@@ -13,7 +13,7 @@
                     <x-weekplan-progress :profit='$points' :milestones='$milestones'></x-weekplan-progress>
                 </div>
                 <div>
-                    Итого: <strong>{{ $profit }}</strong>
+                    Итого: <strong>{{ $profit }}</strong> KZT
                 </div>
             </div>
         </div>

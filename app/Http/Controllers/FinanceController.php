@@ -130,9 +130,10 @@ class FinanceController extends Controller
         $data = $request->validate([
             "startDate" => "required|date_format:Y-m-d",
             "endDate" => "required|date_format:Y-m-d",
+            "action" => "required|in:0,1",
         ]);
 
-        $manager->payBudgets($data["startDate"], $data["endDate"]);
+        $manager->payBudgets($data["startDate"], $data["endDate"], $data["action"] == 1);
 
         return back()->with("success", __("common.saved-success"));
     }
@@ -144,9 +145,10 @@ class FinanceController extends Controller
         $data = $request->validate([
             "startDate" => "required|date_format:Y-m-d",
             "endDate" => "required|date_format:Y-m-d",
+            "action" => "required|in:0,1",
         ]);
 
-        $operator->payBudgets($data["startDate"], $data["endDate"]);
+        $operator->payBudgets($data["startDate"], $data["endDate"], $data["action"] == 1);
 
         return back()->with("success", __("common.saved-success"));
     }

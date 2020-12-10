@@ -35,19 +35,18 @@
                                     KZT
                                 </td>
                                 <td class="text-center">
-                                    @if ($manager->isBonusPaid(week()->start(), week()->end()))
-                                    <span class="btn btn-success btn-sm">Оплачено</span>
-                                    @else
-                                    <form action="{{ route('finances.pay.manager.budgets', ['manager' => $manager]) }}" method="post">
+                                    @php
+                                    $isPaid = $manager->isBonusPaid(week()->start(), week()->end());
+                                    @endphp
+                                    <form action="{{ route('finances.pay.manager.budgets', ['manager' => $manager, 'action' => !$isPaid]) }}" method="post">
                                         @csrf
                                         @method('PUT')
                                         <input type="hidden" name="startDate" value="{{ week()->start() }}">
                                         <input type="hidden" name="endDate" value="{{ week()->end() }}">
-                                        <button type="submit" class="btn btn-warning btn-sm">
-                                            Оплатить
+                                        <button type="submit" class="btn @if ($isPaid) btn-success @else btn-warning   @endif btn-sm">
+                                            {{ $isPaid ? 'Оплачено' : 'Оплатить' }}
                                         </button>
                                     </form>
-                                    @endif
                                 </td>
                             </tr>
                             @endforeach
@@ -88,19 +87,18 @@
                                     KZT
                                 </td>
                                 <td class="text-center">
-                                    @if ($operator->isBonusPaid(week()->start(), week()->end()))
-                                    <span class="btn btn-success btn-sm">Оплачено</span>
-                                    @else
-                                    <form action="{{ route('finances.pay.operator.budgets', ['operator' => $operator]) }}" method="post">
+                                    @php
+                                    $isPaid = $operator->isBonusPaid(week()->start(), week()->end());
+                                    @endphp
+                                    <form action="{{ route('finances.pay.operator.budgets', ['operator' => $operator, 'action' => !$isPaid]) }}" method="post">
                                         @csrf
                                         @method('PUT')
                                         <input type="hidden" name="startDate" value="{{ week()->start() }}">
                                         <input type="hidden" name="endDate" value="{{ week()->end() }}">
-                                        <button type="submit" class="btn btn-warning btn-sm">
-                                            Оплатить
+                                        <button type="submit" class="btn @if ($isPaid) btn-success @else btn-warning   @endif btn-sm">
+                                            {{ $isPaid ? 'Оплачено' : 'Оплатить' }}
                                         </button>
                                     </form>
-                                    @endif
                                 </td>
                             </tr>
                             @endforeach
