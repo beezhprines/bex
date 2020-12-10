@@ -64,7 +64,8 @@
             <div class="card-body p-0">
                 @include("contacts.week-form", [
                 "contactTypes" => $contactTypes,
-                "contacts" => $team->contacts(week()->start(), week()->end())
+                "contacts" => $team->contacts(week()->start(), week()->end()),
+                "last" => $team->contacts(week()->previous(week()->end()), week()->previous(week()->end()))->first()
                 ])
             </div>
         </div>

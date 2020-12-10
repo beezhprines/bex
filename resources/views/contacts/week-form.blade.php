@@ -17,17 +17,24 @@
                     <td class="align-middle">
                         {{ week()->weekTitles(date("D", strtotime($date))) }}
                     </td>
-                    @foreach($group as $contact)
+                    @foreach($group as $key => $contact)
                     <td>
                         <input type="text" class="form-control form-control-sm" name="contacts[{{ $contact['self']->id }}][team][{{ $contact['teamId'] }}][amount]" value="{{ $contact['amount'] }}" />
                     </td>
                     <td class="align-middle">
                         <span title="Прирост">
-                            0
+                            @if ($contact['amount'] > 0 && isset($last) && isset($last[$key]['amount']))
+                                {{ $contact['amount'] - $last[$key]['amount'] }}
+                            @else
+                                0
+                            @endif
                         </span>
                     </td>
-                @endforeach
+                    @endforeach
                 </tr>
+                @php
+                $last = $group;
+                @endphp
                 @endforeach
             </tbody>
         </table>

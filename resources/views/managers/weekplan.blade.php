@@ -56,7 +56,7 @@
                             <th class="text-center">
                                 Бонусы за неделю (KZT)
                             </th>
-                            <th>
+                            <th class="text-center">
                                 Количество услуг
                             </th>
                         </thead>
