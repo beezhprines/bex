@@ -45,14 +45,21 @@
                             </span>
                             @endif
                         </td>
+                        @php
+                            $recordsWeekCount = 0;
+                        @endphp
                         @foreach(week()->range() as $day => $date)
                         <td class="text-center p-1">
-                            @php $date = date_format($date, config('app.iso_date')); @endphp
-                            {{ $service->getRecordsBetweenDates($date, $date)->count() }}
+                            @php
+                                $date = date_format($date, config('app.iso_date'));
+                                $recordsCount = $service->getRecordsBetweenDates($date, $date)->count();
+                                $recordsWeekCount += $recordsCount;
+                            @endphp
+                            {{ $recordsCount }}
                         </td>
                         @endforeach
                         <td class="text-center">
-                            {{ $service->recordsWeek }}
+                            {{ $recordsWeekCount }}
                         </td>
                     </tr>
                     @endforeach

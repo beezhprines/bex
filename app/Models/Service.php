@@ -37,8 +37,6 @@ class Service extends Model
             ->where('attendance', $attendance)
             ->get();
 
-        $this->recordsWeek += $records->count();
-
         return $records;
     }
 
