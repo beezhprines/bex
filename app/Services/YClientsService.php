@@ -131,7 +131,7 @@ class YClientsService
             "price_max" => floatval($data['price']),
             "discount" => 0,
             "comment" => "Услуга создана из CRM",
-            "weight" => 6,
+            "weight" => 0,
             "active" => 1,
             "staff" => [
                 [

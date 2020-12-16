@@ -147,6 +147,8 @@ class ManagerController extends Controller
 
         $milestones = collect(json_decode(Configuration::findByCode("manager:milestones")->value, true));
         $comission = Budget::getComission(week()->start(), week()->end());
+        $cosmetologistsComission = Budget::getCosmetologistComission(week()->start(), week()->end());
+        $comission += $cosmetologistsComission;
         $managerBonusRate = floatval(Configuration::findByCode("manager:profit")->value);
         $milestoneBonus = Manager::getMilestoneBonus($comission);
         $masters = Master::all();
