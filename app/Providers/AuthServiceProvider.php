@@ -43,6 +43,12 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('can-manager', function ($user) {
             return $user->isManager();
         });
+        Gate::define('can-recruiter', function ($user) {
+            return $user->isRecruiter();
+        });
+        Gate::define('can-chief-operator', function ($user) {
+            return $user->isChiefOperator();
+        });
         Gate::define('can-owner', function ($user) {
             return $user->isOwner();
         });

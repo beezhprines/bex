@@ -247,7 +247,7 @@ return [
         [
             "text" => "Beauty Expert",
             "url"  => "/",
-            "can"  => ["can-master", "can-marketer", "can-operator", "can-manager"],
+            "can"  => ["can-master", "can-marketer", "can-operator", "can-manager", "can-chief-operator", "can-recruiter"],
             "topnav" => true
         ],
 
@@ -278,13 +278,13 @@ return [
             "text" => "Статистика",
             "route" => "operators.statistics",
             "icon" => "fa fa-list-alt",
-            "can"  => ["can-operator"]
+            "can"  => ["can-operator", "can-chief-operator"]
         ],
         [
             "text" => "План продаж",
             "route" => "operators.salesplan",
             "icon" => "fa fa-chart-line",
-            "can"  => ["can-operator"]
+            "can"  => ["can-operator", "can-chief-operator"]
         ],
 
         // managers pages
@@ -292,7 +292,7 @@ return [
             "text" => "Недельный план",
             "route" => "managers.weekplan",
             "icon" => "fa fa-chart-line",
-            "can"  => ["can-manager"]
+            "can"  => ["can-manager", "can-recruiter"]
         ],
         [
             "text" => "Статистика",
@@ -316,13 +316,13 @@ return [
             "text" => "Мониторинг",
             "route" => "managers.monitoring",
             "icon" => "fa fa-binoculars",
-            "can"  => ["can-manager"]
+            "can"  => ["can-manager", "can-recruiter"]
         ],
         [
             "text" => "Комиссии",
             "route" => "managers.comissions",
             "icon" => "fa fa-coins",
-            "can"  => ["can-manager"]
+            "can"  => ["can-manager", "can-recruiter"]
         ],
         [
             "text" => "Услуги",

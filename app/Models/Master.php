@@ -245,7 +245,7 @@ class Master extends Model
 
     public function solveOperatorsPoints(string $startDate, string $endDate)
     {
-        return $this->operator()->solvePointsPerMaster($this, $startDate, $endDate);
+        return optional($this->operator())->solvePointsPerMaster($this, $startDate, $endDate);
     }
 
     public function solveManagerBonus(float $masterComission, float $comission, float $managerBonus)

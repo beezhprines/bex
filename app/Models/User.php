@@ -94,6 +94,16 @@ class User extends Authenticatable
         return $this->role->code == "manager";
     }
 
+    public function isRecruiter()
+    {
+        return $this->role->code == "recruiter";
+    }
+
+    public function isChiefOperator()
+    {
+        return $this->role->code == "chief-operator";
+    }
+
     public function isOwner()
     {
         return $this->role->code == "owner";

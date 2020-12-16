@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Master;
 use App\Models\Operator;
+use App\Models\Team;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -21,7 +23,7 @@ class OperatorController extends Controller
         $operators = Operator::all();
 
         return view("operators.index", [
-            'operators' => $operators
+            "operators" => $operators
         ]);
     }
 
@@ -46,17 +48,17 @@ class OperatorController extends Controller
         access(["can-owner", "can-host"]);
 
         $data = $request->validate([
-            'name' => 'required|string|min:3',
-            'user' => 'required|array',
-            'user.account' => 'required|string|min:3',
-            'user.password' => 'nullable|string|min:3',
-            'user.email' => 'nullable|email',
-            'user.phone' => 'nullable|string'
+            "name" => "required|string|min:3",
+            "user" => "required|array",
+            "user.account" => "required|string|min:3",
+            "user.password" => "nullable|string|min:3",
+            "user.email" => "nullable|email",
+            "user.phone" => "nullable|string"
         ]);
 
         $operator = Operator::createWithRelations($data);
 
-        return back()->with(['success' => __('common.saved-success')]);
+        return back()->with(["success" => __("common.saved-success")]);
     }
 
     /**
@@ -93,17 +95,17 @@ class OperatorController extends Controller
         access(["can-owner", "can-host"]);
 
         $data = $request->validate([
-            'name' => 'required|string|min:3',
-            'user' => 'required|array',
-            'user.account' => 'required|string|min:3',
-            'user.password' => 'nullable|string|min:3',
-            'user.email' => 'nullable|email',
-            'user.phone' => 'nullable|string'
+            "name" => "required|string|min:3",
+            "user" => "required|array",
+            "user.account" => "required|string|min:3",
+            "user.password" => "nullable|string|min:3",
+            "user.email" => "nullable|email",
+            "user.phone" => "nullable|string"
         ]);
 
         $operator = $operator->updateWithRelations($data);
 
-        return back()->with(['success' => __('common.saved-success')]);
+        return back()->with(["success" => __("common.saved-success")]);
     }
 
     /**
@@ -124,49 +126,60 @@ class OperatorController extends Controller
 
         note("info", "operator:delete", "Удален оператор {$operatorName}", Operator::class, $operatorId);
 
-        return back()->with(['success' => __('common.deleted-success')]);
+        return back()->with(["success" => __("common.deleted-success")]);
     }
 
     public function statistics(Request $request)
     {
-        access(["can-operator"]);
-
-        $teams = Auth::user()->operator->teams;
-        $team = $request->has('team') ? $teams->find($request->team) : $teams->first();
+        access(["can-operator", "can-chief-operator"]);
+        $user = User::find(Auth::id());
+        $teams = $user->isOperator() ? $user->operator->teams : Team::all();
+        $team = $request->has("team") ? $teams->find($request->team) : $teams->first();
         $conversion = 0; // todo solve conversion
 
         return view("operators.statistics", [
-            'team' => $team,
-            'teams' => $teams,
-            'conversion' => $conversion
+            "team" => $team,
+            "teams" => $teams,
+            "conversion" => $conversion
         ]);
     }
 
     public function salesplan()
     {
-        access(["can-operator"]);
+        access(["can-operator", "can-chief-operator"]);
 
-        $operator = Auth::user()->operator;
+        $user = User::find(Auth::id());
 
-        $profit = $operator->getProfit(week()->start(), week()->end());
-        $lastWeekProfit = $operator->getProfit(week()->previous(week()->start()), week()->previous(week()->end()));
-        $points = $operator->getPoints($profit);
-        $lastWeekPoints = $operator->getPoints($lastWeekProfit);
+        if ($user->isOperator()) {
+            $operator = $user->operator;
+            $profit = $operator->getProfit(week()->start(), week()->end());
+            $lastWeekProfit = $operator->getProfit(week()->previous(week()->start()), week()->previous(week()->end()));
+            $points = $operator->getPoints($profit);
+            $lastWeekPoints = $operator->getPoints($lastWeekProfit);
+
+            $masters = $user->operator->teams->map(function ($team) {
+                return $team->masters;
+            })->collapse();
+        } else if ($user->isChiefOperator()) {
+            $profit = Operator::getTotalProfit(week()->start(), week()->end());
+            $lastWeekProfit = Operator::getTotalProfit(week()->previous(week()->start()), week()->previous(week()->end()));
+            $points = Operator::getTotalPoints($profit);
+            $lastWeekPoints = Operator::getTotalPoints($lastWeekProfit);
+
+            $masters = Master::all();
+        } else {
+            abort(500);
+        }
 
         $milestones = collect([
-            ['profit' => $lastWeekPoints, 'bonus' => 'Прошлая нед']
+            ["profit" => $lastWeekPoints, "bonus" => "Прошлая нед"]
         ]);
 
-        $masters = $operator->teams->map(function ($team) {
-            return $team->masters;
-        })->collapse();
-
         return view("operators.salesplan", [
-            'operator' => $operator,
-            'points' => $points,
-            'milestones' => $milestones,
-            'profit' => $profit,
-            'masters' => $masters
+            "points" => $points,
+            "milestones" => $milestones,
+            "profit" => $profit,
+            "masters" => $masters
         ]);
     }
 

@@ -41,12 +41,17 @@ class Operator extends Model
         return round($profit / ($this->profitCoef() * $this->pointValue()));
     }
 
-    private function profitCoef()
+    public static function getTotalPoints(float $profit)
+    {
+        return round($profit / (self::profitCoef() * self::pointValue()));
+    }
+
+    private static function profitCoef()
     {
         return floatval(Configuration::findByCode("operator:profit")->value);
     }
 
-    private function pointValue()
+    private static function pointValue()
     {
         return floatval(Configuration::findByCode("operator:point")->value);
     }
@@ -85,6 +90,22 @@ class Operator extends Model
             $this->budgets
                 ->whereBetween("date", [$startDate, $endDate])
                 ->where("budget_type_id", $budgetType->id)
+                ->sum(function ($budget) {
+                    return $budget->amount;
+                })
+        );
+
+        return $amount == 0 ? 0 : $amount *  $budgetType->sign();
+    }
+
+    public static function getTotalProfit(string $startDate, string $endDate)
+    {
+        $budgetType = BudgetType::findByCode("operator:profit:outcome");
+
+        $amount = round(
+            Budget::whereBetween("date", [$startDate, $endDate])
+                ->where("budget_type_id", $budgetType->id)
+                ->get()
                 ->sum(function ($budget) {
                     return $budget->amount;
                 })

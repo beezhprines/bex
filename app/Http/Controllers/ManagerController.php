@@ -143,7 +143,7 @@ class ManagerController extends Controller
 
     public function weekplan(Request $request)
     {
-        access(["can-manager", "can-owner", "can-host"]);
+        access(["can-manager", "can-owner", "can-host", "can-recruiter"]);
 
         $milestones = collect(json_decode(Configuration::findByCode("manager:milestones")->value, true));
         $comission = Budget::getComission(week()->start(), week()->end());
@@ -188,7 +188,7 @@ class ManagerController extends Controller
 
     public function comissions(Request $request)
     {
-        access(["can-manager", "can-owner", "can-host"]);
+        access(["can-manager", "can-owner", "can-host", "can-recruiter"]);
 
         $masters = Master::all();
         return view("managers.comissions", [
@@ -198,7 +198,7 @@ class ManagerController extends Controller
 
     public function monitoring()
     {
-        access(["can-manager"]);
+        access(["can-manager", "can-recruiter"]);
 
         $comissions = Budget::getComissionsPerWeek();
         $masters = Invoice::getMastersNotLoadedInvoiceForWeek(week()->end());

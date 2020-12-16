@@ -114,6 +114,8 @@
                         <span>
                             {{ $manager->name }}
                             <span class="badge badge-primary">{{ $manager->premium_rate * 100 }}%</span>
+                            <br>
+                            <small>{{ $manager->user->role->title }}</small>
                         </span>
                         <strong>
                             {{ price($manager->getBonus(week()->start(), week()->end())) }}

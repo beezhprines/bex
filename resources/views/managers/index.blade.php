@@ -44,7 +44,7 @@
         <div class="card card-secondary card-outline">
             <div class="card-header">
                 <div class="card-title">
-                    {{ $manager->name }}
+                    {{ $manager->name }} - {{ $manager->user->role->title }}
                 </div>
                 <div class="card-tools">
                     <div class="btn-group dropleft">
