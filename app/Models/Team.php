@@ -49,6 +49,11 @@ class Team extends Model
         return $this->belongsToMany(Budget::class)->withTimestamps();
     }
 
+    public function contacts()
+    {
+        return $this->hasMany(Contact::class);
+    }
+
     public static function seedOutcomes(string $date)
     {
         $budgetTypeInstagram = BudgetType::findByCode("marketer:team:instagram:outcome");
@@ -123,16 +128,5 @@ class Team extends Model
             });
 
         return $contactDifference == 0 ? 0 : round($recordsCount / $contactDifference * 100, 2);
-    }
-
-    public function contacts(string $startDate, string $endDate)
-    {
-        $contactTypes = ContactType::all();
-        $contacts = collect();
-        foreach ($contactTypes as $contactType) {
-            $contacts = $contacts->merge(Contact::getByDatesTypeTeam($startDate, $endDate, $this, $contactType));
-        }
-
-        return $contacts->groupBy("date");
     }
 }

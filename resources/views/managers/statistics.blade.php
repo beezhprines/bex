@@ -41,13 +41,13 @@
                     <li class="list-group-item">
                         <b>Конверсия записей</b>
                         <span class="float-right">
-                            {{ $team->solveConversion(week()->previous(week()->end()), week()->end(), true) }}%
+                            {{ $team->solveConversion(week()->previous(week()->end()), week()->end(), false) }}%
                         </span>
                     </li>
                     <li class="list-group-item">
                         <b>Конверсия пришедших</b>
                         <span class="float-right">
-                            {{ $team->solveConversion(week()->previous(week()->end()), week()->end(), false) }}%
+                            {{ $team->solveConversion(week()->previous(week()->end()), week()->end(), true) }}%
                         </span>
                     </li>
                 </ul>
