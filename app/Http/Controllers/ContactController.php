@@ -89,28 +89,16 @@ class ContactController extends Controller
 
         $data = $request->validate([
             "contacts" => "required|array",
-            "contacts.*.team" => "required|array"
+            "contacts.*.amount" => "required|numeric"
         ]);
 
-        foreach ($data["contacts"] as $contactId => $teamData) {
-            $contact = Contact::find($contactId);
+        foreach ($data["contacts"] as $id => $item) {
+            $contact = Contact::find($id);
 
-            if (empty($contact)) return back()->with(["error" => "Контакт не найден"]);
-
-            $teams = json_decode($contact->teams, true);
-
-            foreach ($teamData as $items) {
-                foreach ($items as $teamId => $amount) {
-                    foreach ($teams as $key => $team) {
-                        if ($team["team_id"] == $teamId) {
-                            $teams[$key]["amount"] = intval($amount["amount"]);
-                        }
-                    }
-                }
-            }
+            if (empty($contact)) continue;
 
             $contact->update([
-                "teams" => json_encode($teams)
+                "amount" => $item["amount"]
             ]);
         }
 

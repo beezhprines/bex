@@ -41,21 +41,22 @@
                     <li class="list-group-item">
                         <b>Конверсия записей</b>
                         <span class="float-right">
-                            {{ $team->solveConversion(week()->previous(week()->end()), week()->end(), false) }}%
+                            {{ $team->solveConversion(week()->start(), week()->end(), "records") }}%
                         </span>
                     </li>
                     <li class="list-group-item">
                         <b>Конверсия пришедших</b>
                         <span class="float-right">
-                            {{ $team->solveConversion(week()->previous(week()->end()), week()->end(), true) }}%
+                            {{ $team->solveConversion(week()->start(), week()->end(), "attendance_records") }}%
                         </span>
                     </li>
                 </ul>
             </div>
         </div>
+
         <div class="card card-warning card-outline">
             <div class="card-header">
-                <strong>Контакты</strong>
+                <strong>Контакты на текущую неделю</strong>
                 <div class="card-tools">
                     <!-- Collapse Button -->
                     <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
@@ -64,8 +65,8 @@
             <div class="card-body p-0">
                 @include("contacts.week-form", [
                 "contactTypes" => $contactTypes,
-                "contacts" => $team->contacts(week()->start(), week()->end()),
-                "last" => $team->contacts(week()->previous(week()->end()), week()->previous(week()->end()))->first()
+                "contacts" => $team->contacts()->where("date", week()->end())->get(),
+                "previousWeekContacts" => $team->contacts()->where("date", week()->previous(week()->end()))->get(),
                 ])
             </div>
         </div>

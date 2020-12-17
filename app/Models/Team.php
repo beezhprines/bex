@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\DB;
 
 class Team extends Model
 {
@@ -109,24 +110,54 @@ class Team extends Model
         return $comission * floatval($this->premium_rate);
     }
 
-    public function solveConversion(string $startDate, string $endDate, bool $onlyAttendance)
+    public function getContactsIncrease(string $date)
     {
-        // get attendance records
-        $recordsCount = $this->masters->sum(function ($master) use ($startDate, $endDate, $onlyAttendance) {
-            $count = $master->getRecords($startDate, $endDate, true, true)->count();
-            if (!$onlyAttendance) {
-                $count += $master->getRecords($startDate, $endDate, false, true)->count();
+        $amount = 0;
+        $contactTypes = ContactType::all();
+
+        foreach ($contactTypes as $contactType) {
+            if ($contactType->code == "phone") {
+                $prevDate = week()->previous($date);
+                $currentAmount = $this->contacts()->firstWhere(["date" => $date, "contact_type_id" => $contactType->id])->amount ?? 0;
+                $prevAmount = $this->contacts()->firstWhere(["date" => $prevDate, "contact_type_id" => $contactType->id])->amount ?? 0;
+                $amount += $currentAmount - $prevAmount;
+            } else {
+                $amount += $this->contacts()->firstWhere(["date" => $date, "contact_type_id" => $contactType->id])->amount ?? 0;
             }
-            return $count;
+        }
+
+        return $amount;
+    }
+
+    public function getRecords(string $startDate, string $endDate, bool $attendanceOnly)
+    {
+        return $this->masters->sum(function ($master) use ($startDate, $endDate, $attendanceOnly) {
+            $amount = $master->getRecords($startDate, $endDate, true, true)->count();
+            if (!$attendanceOnly) {
+                $amount += $master->getRecords($startDate, $endDate, false, true)->count();
+            }
+            return $amount;
         });
+    }
 
-        // get new contacts
-        $team = $this;
-        $contactDifference = ContactType::all()
-            ->sum(function ($contactType) use ($startDate, $endDate, $team) {
-                return Contact::getDifference($startDate, $endDate, $team, $contactType);
-            });
+    public function solveConversion(string $startDate, string $endDate, string $type)
+    {
+        $contacts = $this->getContactsIncrease($endDate);
 
-        return $contactDifference == 0 ? 0 : round($recordsCount / $contactDifference * 100, 2);
+        switch ($type) {
+            case 'records':
+                $records = $this->getRecords($startDate, $endDate, false);
+                break;
+
+            case 'attendance_records':
+                $records = $this->getRecords($startDate, $endDate, true);
+                break;
+
+            default:
+                abort(500, "Bad conversion type");
+                break;
+        }
+
+        return $records != 0 ? round($contacts / $records * 100) : 0;
     }
 }
