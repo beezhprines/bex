@@ -20,6 +20,12 @@
                 Обновление запрещено
             </a>
             @endif
+            <a class="dropdown-item" href="#" onclick="event.preventDefault(); document.getElementById('loader').style.display = 'block'; document.getElementById('cache-clear-form').submit();">
+                Очистить кэш
+            </a>
+            <form id="cache-clear-form" action="{{ route('cache.clear') }}" method="POST">
+                @csrf
+            </form>
         </div>
     </div>
 </x-week-header>

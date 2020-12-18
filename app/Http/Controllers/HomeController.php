@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use ResponseCache;
 
 class HomeController extends Controller
 {
@@ -103,6 +104,12 @@ class HomeController extends Controller
             abort(404, "dshpyrk3_bex_prd_backup.sql not found");
         }
 
-        return  Storage::download("dshpyrk3_bex_prd_backup.sql");
+        return Storage::download("dshpyrk3_bex_prd_backup.sql");
+    }
+
+    public function cacheClear()
+    {
+        ResponseCache::clear();
+        return back()->with(["success" => "Кэш очищен"]);
     }
 }

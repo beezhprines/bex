@@ -41,6 +41,7 @@ Route::middleware(["auth"])->group(function () {
     Route::get("/", [HomeController::class, "dashboard"])->name("dashboard");
     Route::get("/calendar", [HomeController::class, "calendar"])->name("calendar");
     Route::post("/denied", [HomeController::class, "denied"])->name("denied");
+    Route::post("/cache/clear", [HomeController::class, "cacheClear"])->name("cache.clear");
 
     // logs
     Route::get("logs", "\Rap2hpoutre\LaravelLogViewer\LogViewerController@index")->middleware("can:can-host");
