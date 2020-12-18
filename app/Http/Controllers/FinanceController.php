@@ -84,8 +84,6 @@ class FinanceController extends Controller
             }) * $budgetType->sign();
 
         $totalComission = Budget::getComission($startWeek, $endWeek);
-        $cosmetologistsComission = Budget::getCosmetologistComission($startWeek, $endWeek);
-        $totalComission += $cosmetologistsComission;
 
         $total = [
             "totalComission" => $totalComission,

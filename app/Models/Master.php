@@ -252,4 +252,20 @@ class Master extends Model
     {
         return $comission != 0 ?  $masterComission / $comission * $managerBonus : 0;
     }
+
+    public function getUnexpectedComission(string $startDate, string $endDate)
+    {
+        $budgetType = BudgetType::findByCode("master:unexpected:income");
+
+        $amount = round(
+            $this->budgets
+                ->whereBetween("date", [$startDate, $endDate])
+                ->where("budget_type_id", $budgetType->id)
+                ->sum(function ($budget) {
+                    return $budget->amount ?? 0;
+                })
+        );
+
+        return $amount == 0 ? 0 : $amount *  $budgetType->sign();
+    }
 }

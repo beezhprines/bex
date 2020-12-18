@@ -55,6 +55,7 @@ Route::middleware(["auth"])->group(function () {
         Route::put("/load/all", [MasterController::class, "loadAll"])->name("load.all");
         Route::put("/load/{master}", [MasterController::class, "load"])->name("load");
         Route::put("/auth/{master}", [MasterController::class, "auth"])->name("auth");
+        Route::put("/update/comissions", [MasterController::class, "updateUnexpectedComissions"])->name("update.comissions");
     });
 
     // cosmetologists
@@ -99,6 +100,7 @@ Route::middleware(["auth"])->group(function () {
         Route::get("/monitoring", [ManagerController::class, "monitoring"])->name("monitoring");
         Route::get("/comissions", [ManagerController::class, "comissions"])->name("comissions");
         Route::get("/cosmetologists", [ManagerController::class, "cosmetologists"])->name("cosmetologists");
+        Route::get("/masters", [ManagerController::class, "masters"])->name("masters");
         Route::get("/currencyRates", [ManagerController::class, "currencyRates"])->name("currencyRates");
         Route::get("/", [ManagerController::class, "index"])->name("index");
         Route::post("/store", [ManagerController::class, "store"])->name("store");

@@ -307,6 +307,12 @@ return [
             "can"  => ["can-manager"]
         ],
         [
+            "text" => "Мастера",
+            "route" => "managers.masters",
+            "icon" => "fa fa-user-tag",
+            "can"  => ["can-manager"]
+        ],
+        [
             "text" => "Диаграммы",
             "route" => "managers.diagrams",
             "icon" => "fa fa-chart-pie",

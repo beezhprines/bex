@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Jobs\LoadMastersJob;
 use App\Jobs\LoadServicesJob;
+use App\Models\Budget;
 use App\Models\BudgetType;
 use App\Models\Master;
 use App\Models\Service;
@@ -239,5 +240,32 @@ class MasterController extends Controller
         note("info", "service:update", "Обновлены услуги мастера {$master->name}", Master::class, $master->id);
 
         return redirect()->to(url()->previous() . "#master-{$master->id}")->with(['success' => __('common.saved-success')]);
+    }
+
+    public function updateUnexpectedComissions(Request $request)
+    {
+        access(["can-manager"]);
+
+        $data = $request->validate([
+            "startDate" => "required|date_format:Y-m-d",
+            "endDate" => "required|date_format:Y-m-d",
+            "comissions" => "required|array",
+        ]);
+
+        foreach ($data["comissions"] as $masterId => $comission) {
+            $master = Master::find($masterId);
+            if (empty($master)) continue;
+
+            foreach (daterange($data["startDate"], $data["endDate"], true) as $date) {
+                $date = date_format($date, config("app.iso_date"));
+                $amount = round($comission / 7, 2);
+
+                Budget::solveUnexpectedMasterComission($date, $amount, $master);
+            }
+        }
+
+        note("info", "budget:solve:master:unexpected", "Подсчитана дополнительная комиссия мастеров на дату {$date}", Budget::class);
+
+        return back()->with(["success" => __("common.loaded-success")]);
     }
 }

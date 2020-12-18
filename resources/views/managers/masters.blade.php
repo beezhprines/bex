@@ -1,7 +1,7 @@
 @extends('adminlte::page')
 
 @section('content_header')
-<x-week-header header="Косметологи"></x-week-header>
+<x-week-header header="Мастера"></x-week-header>
 @stop
 
 @section('content')
@@ -10,31 +10,31 @@
         <div class="card card-outline card-secondary">
             <div class="card-header">
                 <div class="card-title">
-                    Комиссии косметологов за неделю
+                    Дополнительные комиссии мастеров за неделю
                 </div>
             </div>
             <div class="card-body p-0">
                 <div class="table-responsive">
-                    <form action="{{ route('cosmetologists.update.comissions') }}" method="post">
+                    <form action="{{ route('masters.update.comissions') }}" method="post">
                         @csrf
                         @method("PUT")
                         <table class="table table-sm table-striped">
                             <thead>
                                 <th>
-                                    Косметолог
+                                    Мастер
                                 </th>
                                 <th>
                                     Комиссия
                                 </th>
                             </thead>
                             <tbody>
-                                @foreach($cosmetologists as $cosmetologist)
+                                @foreach($masters as $master)
                                 <tr>
                                     <td class="align-middle">
-                                        {{ $cosmetologist->name }}
+                                        {{ $master->name }}
                                     </td>
                                     <td>
-                                        <input type="text" class="form-control form-control-sm" name="comissions[{{$cosmetologist->id}}]" placeholder="Комиссия в тенге" required value="{{ $cosmetologist->getComission(week()->start(), week()->end()) }}" />
+                                        <input type="text" class="form-control form-control-sm" name="comissions[{{$master->id}}]" placeholder="Комиссия в тенге" required value="{{ $master->getUnexpectedComission(week()->start(), week()->end()) }}" />
                                     </td>
                                 </tr>
                                 @endforeach

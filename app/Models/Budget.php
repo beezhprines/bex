@@ -90,7 +90,14 @@ class Budget extends Model
     {
         $budgetType = BudgetType::findByCode("total:comission:income");
 
+        // get master records for date
         $amount = Record::solveComission(Record::get($date, $date)) * $budgetType->sign();
+
+        // get cosmetologists comission for date
+        $amount += self::getCosmetologistComission($date, $date);
+
+        // get unexpected master comissions for date
+        $amount += self::getUnexpectedMasterComission($date, $date);
 
         $budget = self::findByDateAndType($date, $budgetType);
 
@@ -193,6 +200,39 @@ class Budget extends Model
             ]);
 
             $budget->cosmetologists()->attach($cosmetologist);
+        } else {
+            $budget->update([
+                "amount" => $amount
+            ]);
+        }
+    }
+
+    public static function getUnexpectedMasterComission(string $startDate, string $endDate)
+    {
+        $budgetType = BudgetType::findByCode("master:unexpected:income");
+
+        $amount = self::getBetweenDatesAndType($startDate, $endDate, $budgetType)
+            ->sum(function ($budget) {
+                return $budget->amount ?? 0;
+            }) ?? 0;
+
+        return $amount;
+    }
+
+    public static function solveUnexpectedMasterComission(string $date, float $amount, Master $master)
+    {
+        $budgetType = BudgetType::findByCode("master:unexpected:income");
+
+        $budget = $master->getBudget($date, $budgetType->id);
+
+        if (empty($budget)) {
+            $budget = Budget::create([
+                "amount" => $amount,
+                "date" => $date,
+                "budget_type_id" => $budgetType->id
+            ]);
+
+            $budget->masters()->attach($master);
         } else {
             $budget->update([
                 "amount" => $amount
