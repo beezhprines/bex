@@ -21,6 +21,8 @@ class FeatureSeeder extends Seeder
         Contact::truncate();
 
         Artisan::call("migrate");
+        $today = isodate();
+        Artisan::call("seed --contacts --startDate=2020-11-30 --endDate={$today}");
 
         $newBudgetType =
             [
