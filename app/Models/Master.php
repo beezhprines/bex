@@ -70,6 +70,18 @@ class Master extends Model
         return $records;
     }
 
+    public function getRecordByService(string $startDate, string $endDate)
+    {
+        $records = collect();
+        foreach ($this->services as $service) {
+            foreach (daterange($startDate, $endDate, true) as $date) {
+                $date = date_format($date, config('app.iso_date'));
+                $records = $records->merge($service->getRecordsBetweenDates($date, $date));
+            }
+        }
+        return $records;
+    }
+
     public function solveComission(string $startDate, string $endDate)
     {
         return Record::solveComission($this->getRecords($startDate, $endDate));

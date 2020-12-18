@@ -55,15 +55,18 @@
                 <div class="table-responsive">
                     <table class="table table-sm table-striped">
                         <thead>
-                            <th>Мастер</th>
-                            <th class="text-center">
+                            <th class="align-middle">Мастер</th>
+                            <th class="text-center align-middle">
                                 Комиссия за неделю (KZT)
                             </th>
-                            <th class="text-center">
+                            <th class="text-center align-middle">
                                 Бонусы за неделю (KZT)
                             </th>
-                            <th class="text-center">
-                                Количество услуг
+                            <th class="text-center align-middle">
+                                Количество услуг <br>
+                                <small class="text-muted">
+                                    по записям (по услугам)
+                                </small>
                             </th>
                         </thead>
                         <tbody>
@@ -82,7 +85,14 @@
                                     {{ price($master->solveManagerBonus($masterComission, $comission, $managerBonus)) }}
                                 </td>
                                 <td class="text-center">
-                                    {{ $master->getRecords(week()->start(), week()->end())->count() }}
+                                    @php
+                                    $recordsCount = $master->getRecords(week()->start(), week()->end())->count();
+                                    $recordsCountByservice = $master->getRecordByService(week()->start(), week()->end())->count();
+                                    @endphp
+                                    <span class="@if ($recordsCount != $recordsCountByservice) bg-danger @endif">
+                                        {{ $recordsCount }}
+                                        ({{ $recordsCountByservice }})
+                                    </span>
                                 </td>
                             </tr>
                             @endforeach
