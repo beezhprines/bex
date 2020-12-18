@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use Carbon\Carbon;
+use ResponseCache;
 
 class WeekService
 {
@@ -87,6 +88,8 @@ class WeekService
                 'range' => $range
             ]
         ]);
+
+        ResponseCache::clear();
     }
 
     public function before(int $days, string $date)

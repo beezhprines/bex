@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Marketer extends Model
 {
-    use HasFactory, SoftDeletes, ModelBase;
+    use HasFactory, SoftDeletes, ModelBase, ClearsResponseCache;
 
     protected $fillable = [
         'user_id', 'name'

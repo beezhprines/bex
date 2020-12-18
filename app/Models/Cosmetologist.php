@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Cosmetologist extends Model
 {
-    use HasFactory, SoftDeletes, ModelBase;
+    use HasFactory, SoftDeletes, ModelBase, ClearsResponseCache;
 
     private static string $password = "1234qwer";
 

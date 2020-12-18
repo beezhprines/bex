@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Contact extends Model
 {
-    use HasFactory, SoftDeletes, ModelBase;
+    use HasFactory, SoftDeletes, ModelBase, ClearsResponseCache;
 
     protected $fillable = [
         "date", "team_id", "contact_type_id", "amount"

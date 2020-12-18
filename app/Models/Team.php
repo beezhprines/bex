@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 
 class Team extends Model
 {
-    use HasFactory, SoftDeletes, ModelBase;
+    use HasFactory, SoftDeletes, ModelBase, ClearsResponseCache;
 
     protected $fillable = [
         "title", "premium_rate", "operator_id", "city_id"

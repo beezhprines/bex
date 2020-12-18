@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 
 class Service extends Model
 {
-    use HasFactory, SoftDeletes, ModelBase;
+    use HasFactory, SoftDeletes, ModelBase, ClearsResponseCache;
 
     protected $fillable = [
         'origin_id', 'title', 'price', 'comission', 'conversion', 'seance_length', 'master_id', 'deleted_at'

@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\DB;
 
 class Budget extends Model
 {
-    use HasFactory, SoftDeletes, ModelBase;
+    use HasFactory, SoftDeletes, ModelBase, ClearsResponseCache;
 
     protected $fillable = [
         "date", "amount", "json", "paid", "budget_type_id"

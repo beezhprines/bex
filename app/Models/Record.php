@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\DB;
 
 class Record extends Model
 {
-    use HasFactory, SoftDeletes, ModelBase;
+    use HasFactory, SoftDeletes, ModelBase, ClearsResponseCache;
 
     protected $fillable = [
         "origin_id", "started_at", "duration", "comment", "attendance", "master_id"

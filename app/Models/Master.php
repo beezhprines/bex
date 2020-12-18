@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 
 class Master extends Model
 {
-    use HasFactory, SoftDeletes, ModelBase;
+    use HasFactory, SoftDeletes, ModelBase, ClearsResponseCache;
 
     private static string $password = "1234qwer";
 
