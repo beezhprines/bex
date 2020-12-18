@@ -13,7 +13,10 @@ class DropContactsTable extends Migration
      */
     public function up()
     {
-        Schema::drop('contacts');
+        if (Schema::hasTable('contacts')) {
+
+            Schema::drop('contacts');
+        }
     }
 
     /**
