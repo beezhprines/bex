@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ChartController;
 use App\Http\Controllers\CityController;
 use App\Http\Controllers\ConfigurationController;
 use App\Http\Controllers\ContactController;
@@ -176,5 +177,10 @@ Route::middleware(["auth"])->group(function () {
     Route::prefix("users")->name("users.")->group(function () {
         Route::get("/profile", [UserController::class, "profile"])->name("profile");
         Route::patch("/update/{user}", [UserController::class, "update"])->name("update");
+    });
+
+    // charts
+    Route::prefix("charts")->name("charts.")->group(function () {
+        Route::get("/chats", [ChartController::class, "chats"])->name("chats");
     });
 });
