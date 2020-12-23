@@ -20,7 +20,7 @@ class CosmetologistController extends Controller
      */
     public function index()
     {
-        access(["can-owner", "can-host"]);
+        access(["can-owner", "can-host", "can-manager"]);
 
         $cosmetologists = Cosmetologist::all();
         $teams = Team::all();
@@ -83,7 +83,7 @@ class CosmetologistController extends Controller
      */
     public function update(Request $request, Cosmetologist $cosmetologist)
     {
-        access(["can-owner", "can-host"]);
+        access(["can-owner", "can-host", "can-manager"]);
 
         $data = $request->validate([
             "team_id" => "required|exists:teams,id",

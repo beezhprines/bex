@@ -287,59 +287,118 @@ return [
             "can"  => ["can-operator", "can-chief-operator"]
         ],
 
-        // managers pages
-        [
-            "text" => "Недельный план",
-            "route" => "managers.weekplan",
-            "icon" => "fa fa-chart-line",
-            "can"  => ["can-manager", "can-recruiter"]
-        ],
+        // managers pages,
         [
             "text" => "Статистика",
-            "route" => "managers.statistics",
             "icon" => "fa fa-list-alt",
+            "submenu" => [
+                [
+                    "text" => "Недельный план",
+                    "route" => "managers.weekplan",
+                    "icon" => "fa fa-chart-line",
+                    "active" => ["managers/weekplan"],
+                    "can"  => ["can-manager", "can-recruiter"]
+                ],
+                [
+                    "text" => "Статистика",
+                    "route" => "managers.statistics",
+                    "icon" => "fa fa-list-alt",
+                    "active" => ["managers/statistics"],
+                    "can"  => ["can-manager"]
+                ],
+            ],
             "can"  => ["can-manager"]
         ],
         [
-            "text" => "Косметологи",
-            "route" => "managers.cosmetologists",
-            "icon" => "fa fa-user-tag",
-            "can"  => ["can-manager"]
-        ],
-        [
-            "text" => "Мастера",
-            "route" => "managers.masters",
-            "icon" => "fa fa-user-tag",
-            "can"  => ["can-manager"]
-        ],
-        [
-            "text" => "Диаграммы",
-            "route" => "managers.diagrams",
-            "icon" => "fa fa-chart-pie",
+            "text" => "Комиссии",
+            "icon" => "fa fa-coins",
+            "submenu" => [
+                [
+                    "text" => "Косметологи",
+                    "route" => "managers.cosmetologists",
+                    "icon" => "fa fa-user-tag",
+                    "active" => ["managers/cosmetologists"],
+                    "can"  => ["can-manager"]
+                ],
+                [
+                    "text" => "Мастера",
+                    "route" => "managers.masters",
+                    "icon" => "fa fa-user-tag",
+                    "active" => ["managers/masters"],
+                    "can"  => ["can-manager"]
+                ],
+                [
+                    "text" => "Комиссии",
+                    "route" => "managers.comissions",
+                    "active" => ["managers/comissions"],
+                    "icon" => "fa fa-coins",
+                    "can"  => ["can-manager", "can-recruiter"]
+                ],
+            ],
             "can"  => ["can-manager"]
         ],
         [
             "text" => "Мониторинг",
-            "route" => "managers.monitoring",
             "icon" => "fa fa-binoculars",
-            "can"  => ["can-manager", "can-recruiter"]
-        ],
-        [
-            "text" => "Комиссии",
-            "route" => "managers.comissions",
-            "icon" => "fa fa-coins",
-            "can"  => ["can-manager", "can-recruiter"]
-        ],
-        [
-            "text" => "Услуги",
-            "route" => "masters.services",
-            "icon" => "fa fa-hand-holding-water",
+            "submenu" => [
+                [
+                    "text" => "Диаграммы",
+                    "route" => "managers.diagrams",
+                    "icon" => "fa fa-chart-pie",
+                    "active" => ["managers/diagrams"],
+                    "can"  => ["can-manager"]
+                ],
+                [
+                    "text" => "Мониторинг",
+                    "route" => "managers.monitoring",
+                    "icon" => "fa fa-binoculars",
+                    "active" => ["managers/monitoring"],
+                    "can"  => ["can-manager", "can-recruiter"]
+                ],
+                [
+                    "text" => "Курсы валют",
+                    "route" => "managers.currencyRates",
+                    "icon" => "fa fa-ruble-sign",
+                    "active" => ["managers/currencyRates"],
+                    "can"  => ["can-manager"]
+                ],
+            ],
             "can"  => ["can-manager"]
         ],
+
         [
-            "text" => "Курсы валют",
-            "route" => "managers.currencyRates",
-            "icon" => "fa fa-ruble-sign",
+            "text" => "Настройки",
+            "icon" => "fa fa-cog",
+            "submenu" => [
+                [
+                    "text" => "Мастера",
+                    "route" => "masters.index",
+                    "icon" => "fa fa-user-tag",
+                    "active" => ["masters"],
+                    "can" => ["can-manager"]
+                ],
+                [
+                    "text" => "Косметологи",
+                    "route" => "cosmetologists.index",
+                    "icon" => "fa fa-user-tag",
+                    "active" => ["cosmetologists"],
+                    "can" => ["can-manager"]
+                ],
+                [
+                    "text" => "Команды",
+                    "route" => "teams.index",
+                    'icon' => 'fa fa-users',
+                    "active" => ["teams"],
+                    "can" => ["can-manager"]
+                ],
+                [
+                    "text" => "Города",
+                    "route" => "cities.index",
+                    'icon' => 'fa fa-city',
+                    "active" => ["cities"],
+                    "can" => ["can-manager"]
+                ],
+            ],
             "can"  => ["can-manager"]
         ],
 
@@ -352,19 +411,22 @@ return [
                     "text" => "Мастера",
                     "route" => "masters.index",
                     "icon" => "fa fa-user-tag",
-                    "active" => ["masters"]
+                    "active" => ["masters"],
+                    "can" => ["can-owner", "can-host"]
                 ],
                 [
                     "text" => "Косметологи",
                     "route" => "cosmetologists.index",
                     "icon" => "fa fa-user-tag",
-                    "active" => ["cosmetologists"]
+                    "active" => ["cosmetologists"],
+                    "can" => ["can-owner", "can-host"]
                 ],
                 [
                     "text" => "Операторы",
                     "route" => "operators.index",
                     'icon' => 'fa fa-headset',
-                    "active" => ["operators"]
+                    "active" => ["operators"],
+                    "can" => ["can-owner", "can-host"]
                 ],
                 [
                     "text" => "Маркетологи",
@@ -390,37 +452,37 @@ return [
                     "text" => "Команды",
                     "route" => "teams.index",
                     'icon' => 'fa fa-users',
-                    "active" => ["teams"]
+                    "active" => ["teams"],
                 ],
                 [
                     "text" => "Города",
                     "route" => "cities.index",
                     'icon' => 'fa fa-city',
-                    "active" => ["cities"]
+                    "active" => ["cities"],
                 ],
                 [
                     "text" => "Страны",
                     "route" => "countries.index",
                     'icon' => 'fa fa-globe-europe',
-                    "active" => ["countries"]
+                    "active" => ["countries"],
                 ],
                 [
                     "text" => "Валюты",
                     "route" => "currencies.index",
                     'icon' => 'fa fa-ruble-sign',
-                    "active" => ["currencies"]
+                    "active" => ["currencies"],
                 ],
                 [
                     "text" => "Бонусы",
                     "route" => "configurations.bonuses",
                     'icon' => 'fa fa-percentage',
-                    "active" => ["configurations*"]
+                    "active" => ["configurations*"],
                 ],
                 [
                     "text" => "Профиль",
                     "route" => "users.profile",
                     'icon' => 'fa fa-user-circle',
-                    "active" => ["users/profile"]
+                    "active" => ["users/profile"],
                 ]
             ],
             "can"  => ["can-owner", "can-host"]

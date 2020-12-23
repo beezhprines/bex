@@ -19,7 +19,7 @@ class TeamController extends Controller
      */
     public function index()
     {
-        access(["can-owner", "can-host"]);
+        access(["can-owner", "can-host", "can-manager"]);
 
         $teams = Team::all();
         $operators = Operator::all();
@@ -50,7 +50,7 @@ class TeamController extends Controller
      */
     public function store(Request $request)
     {
-        access(["can-owner", "can-host"]);
+        access(["can-owner", "can-host", "can-manager"]);
 
         $team = Team::create($request->all());
 
@@ -96,7 +96,7 @@ class TeamController extends Controller
      */
     public function update(Request $request, Team $team)
     {
-        access(["can-owner", "can-host"]);
+        access(["can-owner", "can-host", "can-manager"]);
 
         $team->update($request->all());
 
@@ -120,7 +120,7 @@ class TeamController extends Controller
 
     public function updateAll(Request $request)
     {
-        access(["can-owner", "can-host"]);
+        access(["can-owner", "can-host", "can-manager"]);
 
         $data = $request->validate([
             'teams' => 'required|array',

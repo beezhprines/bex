@@ -18,22 +18,6 @@ class FeatureSeeder extends Seeder
      */
     public function run()
     {
-        Contact::truncate();
 
-        Artisan::call("migrate");
-        $today = isodate();
-        Artisan::call("seed --contacts --startDate=2020-11-30 --endDate={$today}");
-
-        $newBudgetType =
-            [
-                "title" => "Непредвиденный доход мастера",
-                "code" => "master:unexpected:income",
-                "income" => 1
-            ];
-
-        $budgetType = BudgetType::firstWhere("code", "master:unexpected:income");
-        if (empty($budgetType)) {
-            BudgetType::create($newBudgetType);
-        }
     }
 }

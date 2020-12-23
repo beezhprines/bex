@@ -22,7 +22,7 @@ class MasterController extends Controller
      */
     public function index()
     {
-        access(["can-owner", "can-host"]);
+        access(["can-owner", "can-host", "can-manager"]);
 
         $masters = Master::all();
         $teams = Team::all();
@@ -85,7 +85,7 @@ class MasterController extends Controller
      */
     public function update(Request $request, Master $master)
     {
-        access(["can-owner", "can-host"]);
+        access(["can-owner", "can-host", "can-manager"]);
 
         $data = $request->validate([
             'team_id' => 'required|exists:teams,id',
