@@ -169,11 +169,9 @@ class ManagerController extends Controller
         access(["can-manager"]);
 
         $teams = Team::all();
-        $contactTypes = ContactType::all();
 
         return view("managers.statistics", [
-            "teams" => $teams,
-            "contactTypes" => $contactTypes
+            "teams" => $teams
         ]);
     }
 
@@ -299,6 +297,17 @@ class ManagerController extends Controller
 
         return view("managers.masters", [
             "masters" => $masters
+        ]);
+    }
+
+    public function contacts()
+    {
+        $teams = Team::all();
+        $contactTypes = ContactType::all();
+
+        return view("contacts.form", [
+            "teams" => $teams,
+            "contactTypes" => $contactTypes
         ]);
     }
 }

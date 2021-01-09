@@ -53,23 +53,6 @@
                 </ul>
             </div>
         </div>
-
-        <div class="card card-warning card-outline">
-            <div class="card-header">
-                <strong>Контакты на текущую неделю</strong>
-                <div class="card-tools">
-                    <!-- Collapse Button -->
-                    <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
-                </div>
-            </div>
-            <div class="card-body p-0">
-                @include("contacts.week-form", [
-                "contactTypes" => $contactTypes,
-                "contacts" => $team->contacts()->where("date", week()->end())->get(),
-                "previousWeekContacts" => $team->contacts()->where("date", week()->previous(week()->end()))->get(),
-                ])
-            </div>
-        </div>
     </div>
 </div>
 <hr>

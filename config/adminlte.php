@@ -306,6 +306,13 @@ return [
                     "active" => ["managers/statistics"],
                     "can"  => ["can-manager"]
                 ],
+                [
+                    "text" => "Контакты",
+                    "route" => "managers.contacts",
+                    "icon" => "fa fa-address-card",
+                    "active" => ["managers/contacts"],
+                    "can"  => ["can-manager"]
+                ],
             ],
             "can"  => ["can-manager"]
         ],
