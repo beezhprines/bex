@@ -349,10 +349,10 @@ return [
             "icon" => "fa fa-binoculars",
             "submenu" => [
                 [
-                    "text" => "Диаграммы",
-                    "route" => "managers.diagrams",
+                    "text" => "Диаграммы чатов",
+                    "route" => "charts.chats",
                     "icon" => "fa fa-chart-pie",
-                    "active" => ["managers/diagrams"],
+                    "active" => ["charts/chats*"],
                     "can"  => ["can-manager"]
                 ],
                 [
@@ -531,6 +531,19 @@ return [
                 ],
             ],
             "can"  => ["can-owner", "can-host"]
+        ],
+        [
+            "text" => "Мониторинг",
+            "icon" => "fa fa-binoculars",
+            "submenu" => [
+                [
+                    "text" => "Диаграммы чатов",
+                    "route" => "charts.chats",
+                    "icon" => "fa fa-chart-pie",
+                    "active" => ["charts/chats*"],
+                    "can"  => ["can-host", "can-owner"]
+                ],
+            ]
         ],
     ],
 

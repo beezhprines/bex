@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Master;
 use App\Models\Team;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -11,6 +10,15 @@ class ChartController extends Controller
 {
     public function chats(Request $request)
     {
+        access(["can-owner", "can-host", "can-manager"]);
+
+        if (!$request->has("startDate") && !$request->has("endDate")) {
+            return redirect()->route("charts.chats", [
+                "startDate" => week()->beforeWeeks(4, week()->start()),
+                "endDate" => week()->end(),
+            ]);
+        }
+
         $data = $request->validate([
             "startDate" => "required|date_format:Y-m-d",
             "endDate" => "required|date_format:Y-m-d",
@@ -19,21 +27,35 @@ class ChartController extends Controller
         $startDate = $data["startDate"];
         $endDate = $data["endDate"];
 
-        $chats = Team::select(["id", "title"])
-            ->with("masters:id,name,team_id")
-            ->with(["contacts" => function ($query) use ($startDate, $endDate) {
-                $query->select(["team_id", "date", DB::raw("SUM(amount) as total_amount")])
-                    ->whereBetween(DB::raw("DATE(date)"), array($startDate, $endDate))
-                    ->groupBy("team_id", "date");
-            }])
-            ->get()
-            ->map(function ($team) {
-                $team->total_amount = $team->contacts->sum(function ($contact) {
-                    return $contact->total_amount;
-                });
-                return $team;
-            })
-            ->first();
-        return $chats;
+        $chats = collect();
+
+        $teams = Team::all();
+        foreach ($teams as $team) {
+            $contacts = $team->contacts()
+                ->whereBetween(DB::raw("DATE(date)"), [$startDate, $endDate])
+                ->get();
+
+            $chats->push([
+                "id" => $team->id,
+                "data" => collect([
+                    "title" => "Диаграмма чатов {$team->title}",
+                    "x" => collect(array_keys($contacts->groupBy("date")->toArray()))->map(function ($date) {
+                        return viewdate($date);
+                    })->toArray(),
+                    "y" => array_values(
+                        $contacts->groupBy("date")->map(function ($date) {
+                            return $date->sum(function ($contact) {
+                                return $contact->amount;
+                            });
+                        })->toArray()
+                    )
+                ])
+            ]);
+        }
+
+        return view("charts.chats", [
+            "teams" => $teams,
+            "chats" => $chats
+        ]);
     }
 }

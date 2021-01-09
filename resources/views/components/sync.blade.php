@@ -1,4 +1,4 @@
-@if (week()->start() >= week()->before(14, week()->monday(isodate())) )
+@if (week()->start() >= week()->beforeWeeks(2, week()->monday(isodate())) )
 <a class="dropdown-item" href="#" onclick="event.preventDefault(); document.getElementById('loader').style.display = 'block'; document.getElementById('sync-form').submit();">
     Пересчитать неделю
 </a>

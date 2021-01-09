@@ -99,7 +99,6 @@ Route::middleware(["auth"])->group(function () {
         Route::get("/weekplan", [ManagerController::class, "weekplan"])->name("weekplan");
         Route::get("/statistics", [ManagerController::class, "statistics"])->name("statistics");
         Route::get("/contacts", [ManagerController::class, "contacts"])->name("contacts");
-        Route::get("/diagrams", [ManagerController::class, "diagrams"])->name("diagrams");
         Route::get("/monitoring", [ManagerController::class, "monitoring"])->name("monitoring");
         Route::get("/comissions", [ManagerController::class, "comissions"])->name("comissions");
         Route::get("/cosmetologists", [ManagerController::class, "cosmetologists"])->name("cosmetologists");

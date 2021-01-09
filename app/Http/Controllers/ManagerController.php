@@ -175,13 +175,6 @@ class ManagerController extends Controller
         ]);
     }
 
-    public function diagrams()
-    {
-        access(["can-manager"]);
-
-        return view("managers.diagrams");
-    }
-
     public function comissions(Request $request)
     {
         access(["can-manager", "can-owner", "can-host", "can-recruiter"]);

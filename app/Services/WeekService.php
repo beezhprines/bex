@@ -92,8 +92,8 @@ class WeekService
         ResponseCache::clear();
     }
 
-    public function before(int $days, string $date)
+    public function beforeWeeks(int $weeks, string $date)
     {
-        return date(config('app.iso_date'), strtotime($date . " -{$days} day"));
+        return date(config('app.iso_date'), strtotime($date . " -{$weeks} week"));
     }
 }
