@@ -56,12 +56,9 @@
         <div class="alert alert-warning" role="alert">
             <h4 class="alert-heading">Внимание!</h4>
             <p>
-                После того, как сохраните данные, обязательно пересчитайте бюджеты за всю неделю!
+            Внимание! Необходимо заново пересчитать текущую неделю, чтобы обновились бонусы!
             </p>
-            <hr>
-            <p class="mb-0">
-                Ссылка на страницу: <a href="{{ route('managers.weekplan') }}" class="text-dark">Недельный план</a>
-            </p>
+            <x-sync></x-sync>
         </div>
     </div>
 </div>

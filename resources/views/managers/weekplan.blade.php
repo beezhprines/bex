@@ -7,19 +7,7 @@
             <i class="fa fa-ellipsis-v"></i>
         </button>
         <div class="dropdown-menu">
-            @if (week()->start() >= week()->before(14, week()->monday(isodate())) )
-            <a class="dropdown-item" href="#" onclick="event.preventDefault(); document.getElementById('loader').style.display = 'block'; document.getElementById('sync-form').submit();">
-                Обновить из журнала
-            </a>
-            <form id="sync-form" action="{{ route('managers.sync') }}" method="POST">
-                @csrf
-                <input type="hidden" name="day" value="{{ request()->query('day') }}">
-            </form>
-            @else
-            <a class="dropdown-item" href="#" onclick="event.preventDefault();">
-                Обновление запрещено
-            </a>
-            @endif
+            <x-sync></x-sync>
             <a class="dropdown-item" href="#" onclick="event.preventDefault(); document.getElementById('loader').style.display = 'block'; document.getElementById('cache-clear-form').submit();">
                 Очистить кэш
             </a>

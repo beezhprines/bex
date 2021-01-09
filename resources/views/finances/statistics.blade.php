@@ -130,30 +130,50 @@
                         </div>
                         @endif
                     </li>
+
                     @php
-                    $penalty = $master->getPenalty(week()->start(), week()->end());
+                    $unexpectedComission = $master->getUnexpectedComission(week()->start(), week()->end(), true);
                     @endphp
-                    @if ($penalty != 0 && $comission != 0)
+                    <li class="list-group-item">
+                        <b>
+                            Доп комиссия за неделю:
+                        </b>
+                        <span class="float-right">
+                            {{ price($unexpectedComission) }} {{ $master->currency()->code ?? 'Нет' }}
+                        </span>
+                    </li>
+
                     <li class="list-group-item">
                         <b>
                             Пеня за неделю:
+                            @php
+                            $penalty = $master->getPenalty(week()->start(), week()->end());
+                            @endphp
                             <div class="badge badge-warning">
+                                @if ($comission == 0)
+                                0 %
+                                @else
                                 {{ round(($penalty / $comission) * 100)}} %
+                                @endif
                             </div>
                         </b>
                         <span class="float-right">
                             {{ price($penalty) }} KZT
                         </span>
                     </li>
+
                     <li class="list-group-item">
                         <b>
                             Итого:
                         </b>
                         <span class="float-right">
-                            {{ price($penalty + $comission) }} KZT
+                            @php
+                            $unexpectedComission = $master->getUnexpectedComission(week()->start(), week()->end());
+                            $masterTotalComission = $comission + $penalty + $unexpectedComission;
+                            @endphp
+                            {{ $masterTotalComission }} KZT
                         </span>
                     </li>
-                    @endif
                     <li class="list-group-item">
                         <b>Прибыль мастера за неделю:</b>
                         <span class="float-right">

@@ -265,7 +265,7 @@ class Master extends Model
         return $comission != 0 ?  $masterComission / $comission * $managerBonus : 0;
     }
 
-    public function getUnexpectedComission(string $startDate, string $endDate)
+    public function getUnexpectedComission(string $startDate, string $endDate, bool $exchange = false)
     {
         $budgetType = BudgetType::findByCode("master:unexpected:income");
 
@@ -277,6 +277,10 @@ class Master extends Model
                     return $budget->amount ?? 0;
                 })
         );
+
+        if ($exchange) {
+            $amount = empty($this->currency()) ? 0 : $amount / CurrencyRate::findByCurrencyAndDate($this->currency(), week()->last())->rate;
+        }
 
         return $amount == 0 ? 0 : $amount *  $budgetType->sign();
     }

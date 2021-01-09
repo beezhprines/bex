@@ -151,7 +151,6 @@ class MasterController extends Controller
 
         $budget = $master->getBudget(week()->end(), BudgetType::findByCode("master:comission:income")->id);
 
-
         $currency = $master->currency();
         $avgRate = 1;
         if (!empty($currency) && $currency->code != "KZT") {
@@ -162,9 +161,12 @@ class MasterController extends Controller
 
         $comission = $master->getComissionWithoutExchange(week()->start(), week()->end());
 
+        $unexpectedComission = $master->getUnexpectedComission(week()->start(), week()->end(), true);
+
         return view("masters.statistics", [
             "master" => $master,
             "comission" => $comission,
+            "unexpectedComission" => $unexpectedComission,
             "budget" => $budget,
             "penalty" => $penalty,
             "avgRate" => $avgRate,

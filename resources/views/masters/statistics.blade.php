@@ -28,12 +28,24 @@
                         {{ price($penalty) }} {{ $currency->code }}
                         </span>
                     </li>
+                    @endif
+                    @if ($unexpectedComission != 0)
+                    <li class="list-group-item">
+                        <b>
+                            Доп комиссия за неделю:
+                        </b>
+                        <span class="float-right">
+                        {{ price($unexpectedComission) }} {{ $currency->code }}
+                        </span>
+                    </li>
+                    @endif
+                    @if ($penalty != 0 || $unexpectedComission != 0)
                     <li class="list-group-item">
                         <b>
                             Итого:
                         </b>
                         <span class="float-right">
-                        {{ price($penalty + $comission) }} {{ $currency->code }}
+                        {{ price($penalty + $comission + $unexpectedComission) }} {{ $currency->code }}
                         </span>
                     </li>
                     @endif
