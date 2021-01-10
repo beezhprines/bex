@@ -1,11 +1,11 @@
 @extends('adminlte::page')
 
 @section('content_header')
-<x-week-header header="Диаграммы чатов"></x-week-header>
+<x-week-header header="Диаграммы конверсий"></x-week-header>
 @stop
 
 @section('content')
-<x-period-control :route="route('charts.chats')"></x-period-control>
+<x-period-control :route="route('charts.conversion')"></x-period-control>
 
 @foreach($teams as $team)
 <div class="card">

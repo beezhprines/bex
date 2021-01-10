@@ -182,5 +182,6 @@ Route::middleware(["auth"])->group(function () {
     // charts
     Route::prefix("charts")->name("charts.")->group(function () {
         Route::get("/chats", [ChartController::class, "chats"])->name("chats");
+        Route::get("/conversion", [ChartController::class, "conversion"])->name("conversion");
     });
 });

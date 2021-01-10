@@ -88,7 +88,6 @@ class ChartController extends Controller
                         "name" => "Контакты",
                         "data" => array_values($totalContactsCollection->toArray()),
                         "color" => "#c2de80",
-                        "dataLabels" => ["color" => "#c2de80", "style" => ["textOutline" => 0]]
                     ],
                     [
                         "name" => "Затраты (тыс. тг)",
@@ -96,20 +95,95 @@ class ChartController extends Controller
                             return round($outcome / 1000);
                         })->toArray()),
                         "color" => "#db9876",
-                        "dataLabels" => ["color" => "#db9876", "style" => ["textOutline" => 0]]
                     ],
                     [
                         "name" => "Лид (тг)",
                         "data" => array_values($leads),
                         "color" => "#aaaaaa",
-                        "dataLabels" => ["color" => "#aaaaaa", "style" => ["textOutline" => 0]]
                     ]
-
                 ]
             ]);
         }
 
         return view("charts.chats", [
+            "teams" => $teams,
+            "chats" => $chats
+        ]);
+    }
+
+    public function conversion(Request $request)
+    {
+        access(["can-owner", "can-host", "can-manager"]);
+
+        if (!$request->has("startDate") && !$request->has("endDate")) {
+            return redirect()->route("charts.conversion", [
+                "startDate" => week()->beforeWeeks(4, week()->start()),
+                "endDate" => week()->end(),
+            ]);
+        }
+
+        $data = $request->validate([
+            "startDate" => "required|date_format:Y-m-d",
+            "endDate" => "required|date_format:Y-m-d",
+        ]);
+
+        $startDate = $data["startDate"];
+        $endDate = $data["endDate"];
+
+        $chats = collect();
+
+        $teams = Team::all();
+        foreach ($teams as $team) {
+            $contactsCollection = $team->contacts()
+                ->whereBetween(DB::raw("DATE(date)"), [$startDate, $endDate])
+                ->get();
+
+            $datesCollection = collect(array_keys($contactsCollection->groupBy("date")->toArray()));
+
+            $conversionRecords = $datesCollection->map(function ($date) use ($team) {
+                return $team->solveConversion($date, $date, "records");
+            });
+
+            $conversionAttendanceRecords = $datesCollection->map(function ($date) use ($team) {
+                return $team->solveConversion($date, $date, "attendance_records");
+            });
+
+            $chats->push([
+                "info" => [
+                    "team_id" => $team->id
+                ],
+                "title" => ["text" => $team->title],
+                "subtitle" => [
+                    "text" => null
+                ],
+                "xAxis" => [
+                    "categories" => $datesCollection
+                        ->map(function ($date) {
+                            return viewdate($date);
+                        })
+                        ->toArray(),
+                    "gridLineWidth" => 1
+                ],
+                "yAxis" => [
+                    "title" => ["text" => null],
+                    "gridLineWidth" => 1
+                ],
+                "series" => [
+                    [
+                        "name" => "Конверсия записей",
+                        "data" => $conversionRecords->toArray(),
+                        "color" => "#c2de80",
+                    ],
+                    [
+                        "name" => "Конверсия пришедших",
+                        "data" => $conversionAttendanceRecords->toArray(),
+                        "color" => "#db9876",
+                    ]
+                ]
+            ]);
+        }
+
+        return view("charts.conversion", [
             "teams" => $teams,
             "chats" => $chats
         ]);
