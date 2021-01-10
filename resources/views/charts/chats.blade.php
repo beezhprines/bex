@@ -5,30 +5,7 @@
 @stop
 
 @section('content')
-<form action="{{ route('charts.chats') }}" class="form-inline" method="GET">
-    <label class="m-2">Период</label>
-    <label class="sr-only" for="startDate">Начало</label>
-    <div class="input-group m-2">
-        <div class="input-group-prepend">
-            <div class="input-group-text">
-                <i class="fa fa-calendar"></i>
-            </div>
-        </div>
-        <input type="text" class="form-control" id="startDate" placeholder="Начало" value="{{ request()->query('startDate') }}">
-    </div>
-    <label class="sr-only" for="endDate">Окончание</label>
-    <div class="input-group m-2">
-        <div class="input-group-prepend">
-            <div class="input-group-text">
-                <i class="fa fa-calendar"></i>
-            </div>
-        </div>
-        <input type="text" class="form-control" id="endDate" placeholder="Окончание" value="{{ request()->query('endDate') }}">
-    </div>
-    <div class="m-2">
-        <button type="submit" class="btn btn-default btn-sm">Обновить</button>
-    </div>
-</form>
+<x-period-control route="route('charts.chats')"></x-period-control>
 
 @foreach($teams as $team)
 <div class="card">
@@ -45,41 +22,39 @@
 <script>
     const chats = JSON.parse('{!! $chats->toJson() !!}');
     const urlParams = new URLSearchParams(window.location.search);
-    const startDate = urlParams.get('startDate');
-    const endDate = urlParams.get('endDate');
 
     chats.forEach(chat => {
-        Highcharts.chart(`chart-team-${chat["id"]}`, {
+        Highcharts.chart(`chart-team-${chat.info.team_id}`, {
             chart: {
-                type: 'line'
+                type: 'area'
             },
-            title: {
-                text: chat.data.title
-            },
-            subtitle: {
-                text: `Период: с ${startDate} по ${endDate}`
-            },
-            xAxis: {
-                categories: chat.data.x
-            },
-            yAxis: {
-                title: {
-                    text: 'Количество чатов'
-                }
-            },
+            title: chat.title,
+            subtitle: chat.subtitle,
+            xAxis: chat.xAxis,
+            yAxis: chat.yAxis,
             plotOptions: {
-                line: {
+                area: {
+                    fillOpacity: 0.5,
                     dataLabels: {
-                        enabled: true
-                    },
-                    enableMouseTracking: false
+                        enabled: true,
+                    }
                 }
             },
-            series: [{
-                name: 'Сумма чатов',
-                data: chat.data.y
-            }]
+            series: chat.series
         });
     });
+    (function($) {
+        $('.date').datepicker({
+            format: "yyyy-mm-dd",
+            weekStart: 1,
+            endDate: moment()
+                .isoWeek(moment().isoWeek())
+                .format("YYYY-MM-DD"),
+            maxViewMode: 1,
+            language: "ru",
+            multidate: false,
+            autoclose: true
+        });
+    })(jQuery);
 </script>
 @stop

@@ -144,11 +144,11 @@ class Team extends Model
         $contacts = $this->getContactsIncrease($endDate);
 
         switch ($type) {
-            case 'records':
+            case "records":
                 $records = $this->getRecords($startDate, $endDate, false);
                 break;
 
-            case 'attendance_records':
+            case "attendance_records":
                 $records = $this->getRecords($startDate, $endDate, true);
                 break;
 
@@ -158,5 +158,20 @@ class Team extends Model
         }
 
         return $records != 0 ? round($contacts / $records * 100) : 0;
+    }
+
+    public function getOutcomes(string $date)
+    {
+        $budgetTypeInstagram = BudgetType::findByCode("marketer:team:instagram:outcome");
+        $budgetTypeVK = BudgetType::findByCode("marketer:team:vk:outcome");
+
+        $amount = 0;
+
+        $instagram = collect(json_decode(Budget::findByDateAndType($date, $budgetTypeInstagram)->json, true));
+        $vk = collect(json_decode(Budget::findByDateAndType($date, $budgetTypeVK)->json, true));
+        $amount += $instagram->firstWhere("team_id", $this->id)["amount"] ?? 0;
+        $amount += $vk->firstWhere("team_id", $this->id)["amount"] ?? 0;
+
+        return $amount;
     }
 }
