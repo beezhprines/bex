@@ -62,13 +62,14 @@ class ChartController extends Controller
 
             $sumLeads = $sumTotalContacts == 0 ? 0 : round($sumOutcomes / $sumTotalContacts);
 
+            $masterNames = implode(",", $team->masters->pluck("name")->toArray());
             $chats->push([
                 "info" => [
                     "team_id" => $team->id
                 ],
                 "title" => ["text" => $team->title],
                 "subtitle" => [
-                    "text" => "За период: $sumTotalContacts, расходы: $sumOutcomes, цена за лид: $sumLeads",
+                    "text" => "$masterNames<br>За период: $sumTotalContacts, расходы: $sumOutcomes, цена за лид: $sumLeads",
                     "useHTML" => true
                 ],
                 "xAxis" => [
@@ -148,13 +149,18 @@ class ChartController extends Controller
                 return $team->solveConversion($date, $date, "attendance_records");
             });
 
+            $masterNames = implode(",", $team->masters->pluck("name")->toArray());
+
             $chats->push([
                 "info" => [
                     "team_id" => $team->id
                 ],
-                "title" => ["text" => $team->title],
+                "title" => [
+                    "text" => $team->title,
+                    "useHTML" => true
+                ],
                 "subtitle" => [
-                    "text" => null
+                    "text" => $masterNames
                 ],
                 "xAxis" => [
                     "categories" => $datesCollection
