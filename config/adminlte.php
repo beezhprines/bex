@@ -360,10 +360,10 @@ return [
                     "route" => "charts.conversion",
                     "icon" => "fa fa-chart-pie",
                     "active" => ["charts/conversion*"],
-                    "can"  => ["can-host", "can-owner"]
+                    "can"  => ["can-manager"]
                 ],
                 [
-                    "text" => "Мониторинг",
+                    "text" => "Комиссии и чеки",
                     "route" => "managers.monitoring",
                     "icon" => "fa fa-binoculars",
                     "active" => ["managers/monitoring"],
@@ -557,7 +557,8 @@ return [
                     "active" => ["charts/conversion*"],
                     "can"  => ["can-host", "can-owner"]
                 ],
-            ]
+            ],
+            "can"  => ["can-owner", "can-host"]
         ],
     ],
 

@@ -14,7 +14,7 @@ class ChartController extends Controller
 
         if (!$request->has("startDate") && !$request->has("endDate")) {
             return redirect()->route("charts.chats", [
-                "startDate" => week()->beforeWeeks(4, week()->start()),
+                "startDate" => week()->beforeWeeks(12, week()->sunday(isodate())),
                 "endDate" => week()->end(),
             ]);
         }
@@ -75,7 +75,7 @@ class ChartController extends Controller
                 "xAxis" => [
                     "categories" => $datesCollection
                         ->map(function ($date) {
-                            return viewdate($date);
+                            return date("d M", strtotime($date));
                         })
                         ->toArray(),
                     "gridLineWidth" => 1
@@ -118,7 +118,7 @@ class ChartController extends Controller
 
         if (!$request->has("startDate") && !$request->has("endDate")) {
             return redirect()->route("charts.conversion", [
-                "startDate" => week()->beforeWeeks(4, week()->start()),
+                "startDate" => week()->beforeWeeks(12, week()->sunday(isodate())),
                 "endDate" => week()->end(),
             ]);
         }
@@ -165,7 +165,7 @@ class ChartController extends Controller
                 "xAxis" => [
                     "categories" => $datesCollection
                         ->map(function ($date) {
-                            return viewdate($date);
+                            return date("d M", strtotime($date));
                         })
                         ->toArray(),
                     "gridLineWidth" => 1
