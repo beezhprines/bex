@@ -146,6 +146,7 @@ class YClientsService
             ->json();
     }
 
+    // obsolete
     public function getTransactions(int $recordId, int $visitId)
     {
         return $this->http->get("{$this->baseURL}/timetable/transactions/{$this->companyId}", [
