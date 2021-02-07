@@ -152,18 +152,31 @@ class ManagerController extends Controller
         $masters = Master::all();
         $operators = Operator::all();
         $managers = Manager::all();
+        $user = User::find(Auth::id());
 
-        return view("managers.weekplan", [
-            "milestones" => $milestones,
-            "comission" => $comission,
-            "managerBonusRate" => $managerBonusRate,
-            "milestoneBonus" => $milestoneBonus,
-            "masters" => $masters,
-            "managers" => $managers,
-            "operators" => $operators,
-        ]);
+        if ($user->isRecruiter()) {
+            return view("recruiter.weekplan", [
+                "milestones" => $milestones,
+                "comission" => $comission,
+                "managerBonusRate" => $managerBonusRate,
+                "milestoneBonus" => $milestoneBonus,
+                "masters" => $masters,
+                "managers" => $managers,
+                "operators" => $operators,
+            ]);
+        }else{
+            return view("managers.weekplan", [
+                "milestones" => $milestones,
+                "comission" => $comission,
+                "managerBonusRate" => $managerBonusRate,
+                "milestoneBonus" => $milestoneBonus,
+                "masters" => $masters,
+                "managers" => $managers,
+                "operators" => $operators,
+            ]);
+        }
+
     }
-
     public function statistics()
     {
         access(["can-manager"]);

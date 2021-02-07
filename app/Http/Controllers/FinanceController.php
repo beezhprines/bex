@@ -7,7 +7,9 @@ use App\Models\BudgetType;
 use App\Models\Manager;
 use App\Models\Master;
 use App\Models\Operator;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class FinanceController extends Controller
 {
@@ -49,7 +51,7 @@ class FinanceController extends Controller
 
     public function statistics()
     {
-        access(["can-owner", "can-host"]);
+        access(["can-owner", "can-host","can-recruiter"]);
 
         $masters = Master::all();
 
@@ -100,12 +102,22 @@ class FinanceController extends Controller
         $total["profit"] = $total["totalComission"] - $total["customOutcomes"] - $total["instagramOutcomes"] - $total["vkOutcomes"] - $total["managerBonuses"] - $total["operatorBonuses"];
 
         /* END TOTAL STATISTICS */
+        $user = User::find(Auth::id());
 
-        return view("finances.statistics", [
-            "masters" => $masters,
-            "masterComissionBudgetType" => $masterComissionBudgetType,
-            "total" => $total
-        ]);
+        if ($user->isRecruiter()) {
+            return view("recruiter.statistics", [
+                "masters" => $masters,
+                "masterComissionBudgetType" => $masterComissionBudgetType,
+                "total" => $total
+            ]);
+        }else{
+            return view("finances.statistics", [
+                "masters" => $masters,
+                "masterComissionBudgetType" => $masterComissionBudgetType,
+                "total" => $total
+            ]);
+        }
+
     }
 
     public function payments()

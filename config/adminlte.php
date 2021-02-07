@@ -510,34 +510,40 @@ return [
                     "text" => "Статистика",
                     "route" => "finances.statistics",
                     'icon' => 'fa fa-money-check-alt',
-                    "active" => ["finances/statistics"]
+                    "active" => ["finances/statistics"],
+                    "can"  => ["can-owner", "can-host","can-recruiter"]
+
                 ],
                 [
                     "text" => "Расходы",
                     "route" => "finances.customOutcomes",
                     'icon' => 'fa fa-file-invoice-dollar',
-                    "active" => ["finances/customOutcomes"]
+                    "active" => ["finances/customOutcomes"],
+                    "can"  => ["can-owner", "can-host"]
                 ],
                 [
                     "text" => "Комиссии",
                     "route" => "managers.comissions",
                     "icon" => "fa fa-coins",
-                    "active" => ["managers/comissions"]
+                    "active" => ["managers/comissions"],
+                    "can"  => ["can-owner", "can-host"]
                 ],
                 [
                     "text" => "Выплаты",
                     "route" => "finances.payments",
                     "icon" => "fa fa-money-bill-alt",
-                    "active" => ["finances/payments"]
+                    "active" => ["finances/payments"],
+                    "can"  => ["can-owner", "can-host"]
                 ],
                 [
                     "text" => "Недельный план",
                     "route" => "managers.weekplan",
                     "icon" => "fa fa-chart-line",
-                    "active" => ["managers/weekplan"]
+                    "active" => ["managers/weekplan"],
+                    "can"  => ["can-owner", "can-host","can-recruiter"]
+
                 ],
             ],
-            "can"  => ["can-owner", "can-host"]
         ],
         [
             "text" => "Мониторинг",
