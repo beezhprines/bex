@@ -122,7 +122,7 @@ class InvoiceController extends Controller
 
     public function confirm(Request $request)
     {
-        access(["can-owner", "can-host"]);
+        access(["can-owner", "can-host", "can-recruiter"]);
 
         $data = $request->validate([
             'invoices' => 'required|array',

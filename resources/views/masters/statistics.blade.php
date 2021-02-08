@@ -113,8 +113,6 @@
                         <thead>
                             <th>Услуга</th>
                             <th class="text-center">Записи</th>
-                            <th class="text-center">Цена</th>
-                            <th class="text-center">Общая сумма</th>
                             <th class="text-center">Комиссия</th>
                         </thead>
                         <tbody>
@@ -126,12 +124,6 @@
                                 <td class="text-center">
                                     @php $serviceCount = $service->getRecordsBetweenDates(week()->start(), week()->end())->count(); @endphp
                                     {{ $serviceCount }}
-                                </td>
-                                <td class="text-center">
-                                    {{ price($service->price) }}
-                                </td>
-                                <td class="text-center">
-                                    {{ price($service->price * $serviceCount) }}
                                 </td>
                                 <td class="text-center">
                                     {{ price($service->comission * $serviceCount) }}
