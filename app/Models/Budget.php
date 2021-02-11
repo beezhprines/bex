@@ -296,7 +296,7 @@ class Budget extends Model
         $managers = Manager::all();
 
         foreach ($managers as $manager) {
-            $amount = Manager::solveBonus($comission, $manager->premium_rate) * $budgetType->sign();
+            $amount = Manager::solveBonus($comission, $manager->premium_rate,$date) * $budgetType->sign();
 
             $budget = $manager->budgets->firstWhere("date", $date);
 

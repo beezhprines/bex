@@ -33,16 +33,30 @@ class Manager extends Model
             ->last()["bonus"] ?? 0;
     }
 
-    public static function solveBonus(float $comission, float $premium_rate)
+    public static function solveBonus(float $comissionToDay, float $premium_rate,string $date)
     {
         // get base manager comission coefficient
         $comissionCoef = floatval(Configuration::findByCode("manager:profit")->value);
+
+        $monday = date(config('app.iso_date'), strtotime("this week Monday", strtotime($date)));
+        $sunday = date(config('app.iso_date'), strtotime("this week Sunday", strtotime($date)));
+
+        $comission = Budget::getComission($monday, $sunday);
 
         // get milestones bonus
         $bonus = self::getMilestoneBonus($comission);
 
         // solve
-        return (($comissionCoef * $comission) + floatval($bonus)) * floatval($premium_rate);
+        echo "comissionCoef ".$comissionCoef;
+        echo "\n ";
+        echo "comission  ".$comission;
+        echo "\n ";
+        echo "bonus ".$bonus;
+        echo "\n ";
+        echo "comissionCoef ".$comissionCoef;
+        echo "\n ";
+        echo "premium_rate ".$premium_rate;
+        return (($comissionCoef * $comissionToDay) ) * floatval($premium_rate) + (floatval($premium_rate)*$bonus/7);
     }
 
     public function getBonus(string $startDate, string $endDate)
