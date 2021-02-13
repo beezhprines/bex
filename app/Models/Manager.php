@@ -47,15 +47,6 @@ class Manager extends Model
         $bonus = self::getMilestoneBonus($comission);
 
         // solve
-        echo "comissionCoef ".$comissionCoef;
-        echo "\n ";
-        echo "comission  ".$comission;
-        echo "\n ";
-        echo "bonus ".$bonus;
-        echo "\n ";
-        echo "comissionCoef ".$comissionCoef;
-        echo "\n ";
-        echo "premium_rate ".$premium_rate;
         return (($comissionCoef * $comissionToDay) ) * floatval($premium_rate) + (floatval($premium_rate)*$bonus/7);
     }
 
