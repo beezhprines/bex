@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Manager;
 use App\Models\Master;
 use App\Models\Operator;
 use App\Models\Team;
@@ -167,6 +168,7 @@ class OperatorController extends Controller
             $lastWeekPoints = Operator::getTotalPoints($lastWeekProfit);
 
             $masters = Master::all();
+            $managers = Manager::all();
         } else {
             abort(500);
         }
@@ -179,7 +181,8 @@ class OperatorController extends Controller
             "points" => $points,
             "milestones" => $milestones,
             "profit" => $profit,
-            "masters" => $masters
+            "masters" => $masters,
+            "managers" =>$managers
         ]);
     }
 

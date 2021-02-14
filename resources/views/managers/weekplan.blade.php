@@ -144,7 +144,7 @@
                             {{ $operator->name }}
                         </span>
                         <strong>
-                            {{ $operator->getPoints($operator->getProfit(week()->start(), week()->end())) }}
+                            {{ price($operator->getProfit(week()->start(), week()->end())) }}
                         </strong>
                     </li>
                     @endforeach

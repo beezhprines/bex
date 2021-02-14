@@ -39,7 +39,7 @@ class HomeController extends Controller
         } elseif ($user->isRecruiter()) {
             return redirect()->route("managers.weekplan");
         } elseif ($user->isChiefOperator()) {
-            return redirect()->route("operators.statistics");
+            return redirect()->route("operators.salesplan");
         } elseif ($user->isOwner() || $user->isHost()) {
             return redirect()->route("managers.weekplan");
         }
