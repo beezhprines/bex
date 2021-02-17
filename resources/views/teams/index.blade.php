@@ -45,6 +45,9 @@
                                 <th>
                                     Коэффициент сложности
                                 </th>
+                                <th>
+
+                                </th>
                             </thead>
                             <tbody>
                                 @foreach($teams as $team)
@@ -90,6 +93,9 @@
                                     </td>
                                     <td>
                                         <input type="text" class="form-control form-control-sm" name="teams[{{ $team->id }}][premium_rate]" value="{{ number_format($team->premium_rate, 2, '.', ' ') }}" required>
+                                    </td>
+                                    <td>
+                                        <input type="button" style="background: #f67676" onclick="acrhivate('{{$team->id}}','{{$team->title}}')" name="archivate" value="Архивировать">
                                     </td>
                                 </tr>
                                 @endforeach
@@ -202,4 +208,24 @@
         </div>
     </div>
 </div>
+<form id="teamForm" action="{{route('teams.archivate.team')}}" method="POST">
+    @csrf
+    <input id="team" name="team" type="hidden" value="{{0}}">
+</form>
+@stop
+@section('js')
+    <script>
+        function acrhivate(id,teamTitle){
+            if (confirm('Вы точно хотите архивировать "'+teamTitle+'" ?')) {
+                document.getElementById('team').value = id;
+                console.log(document.getElementById('team').value);
+                document.getElementById('teamForm').submit();
+            } else {
+                // Do nothing!
+                console.log('Thing was not saved to the database.');
+            }
+
+        }
+
+    </script>
 @stop

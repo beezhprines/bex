@@ -126,6 +126,7 @@ Route::middleware(["auth"])->group(function () {
     Route::prefix("teams")->name("teams.")->group(function () {
         Route::get("/", [TeamController::class, "index"])->name("index");
         Route::post("/update/all", [TeamController::class, "updateAll"])->name("update.all");
+        Route::post("/archivate/team", [TeamController::class, "archivateTeam"])->name("archivate.team");
         Route::post("/store", [TeamController::class, "store"])->name("store");
     });
 

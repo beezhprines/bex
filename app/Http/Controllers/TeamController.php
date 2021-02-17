@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\City;
 use App\Models\Contact;
+use App\Models\Cosmetologist;
+use App\Models\Master;
 use App\Models\Operator;
 use App\Models\Team;
 use Illuminate\Http\Request;
@@ -137,6 +139,38 @@ class TeamController extends Controller
         }
 
         note("info", "team:update", "Обновлены команды", Team::class);
+
+        return back()->with(['success' => __('common.saved-success')]);
+    }
+    public function archivateTeam(Request $request)
+    {
+
+        access(["can-owner", "can-host", "can-manager"]);
+        $teamId = $request->team;
+        $masters = Master::all();
+        $cosmetologists = Cosmetologist::all();
+        $team = Team::find($teamId);
+        foreach ($masters as $master){
+
+            if($master->team== $teamId){
+                $master->update(
+                    array(
+                        'team_id' => null,
+                    )
+                );
+            }
+        }
+        foreach ($cosmetologists as $cosmetologist){
+            if($cosmetologist->team== $teamId){
+                $cosmetologist->update(
+                    array(
+                        'team_id' => null,
+                    )
+                );
+            }
+        }
+        $team->delete();
+        note("info", "team:archivate", "archivateTeam  id=".($request->team), Team::class);
 
         return back()->with(['success' => __('common.saved-success')]);
     }

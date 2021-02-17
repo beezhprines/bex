@@ -89,7 +89,7 @@
                         </span>
                     </li>
                     <li class="list-group-item">
-                        <b>За все время:</b>
+                        <b>С 26 октября 2020 года:</b>
                         <span class="float-right">
                             {{ price(round($master->getTotalProfit()) / $avgRate) }} {{ $currency->code }}
                         </span>
