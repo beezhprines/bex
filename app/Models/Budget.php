@@ -248,8 +248,15 @@ class Budget extends Model
         ];
 
         foreach ($types as $type) {
+            if($type['budgetType']['code']=="custom:week:outcome"){
+                $firstDay = date(config('app.iso_date'), strtotime("this week Monday", strtotime($date)));
+            }else if($type['budgetType']['code']=="custom:month:outcome"){
+                $firstDay = date('Y-m-01', strtotime($date));
+            }
 
-            $budget = self::findByDateAndType($date, $type["budgetType"]);
+            $budget = self::findByDateAndType($firstDay, $type["budgetType"]);
+            $budgetCurentday = self::findByDateAndType($date, $type["budgetType"]);
+
             $budgetTypeCode = $type["budgetType"]->code;
 
             if (empty($budget)) throw new Exception("Бюджет на дату {$date} и типом {$budgetTypeCode} не найден");
@@ -260,7 +267,9 @@ class Budget extends Model
                 return floatval($outcome["amount"] ?? 0);
             }) / $type["days"] * $type["budgetType"]->sign();
 
-            $budget->update([
+
+
+            $budgetCurentday->update([
                 "amount" => $amount
             ]);
 
