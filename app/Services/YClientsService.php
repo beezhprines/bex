@@ -106,7 +106,7 @@ class YClientsService
                 ])
                     ->throw()
                     ->json();
-                array_push($response['data'], $data['data']);
+                array_push($response['data'], ...$data['data']);
             }
         }
 
