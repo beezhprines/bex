@@ -14,6 +14,11 @@
         @endif
 
         >
+        @if (
+        (auth()->user()->isOwner() || auth()->user()->isHost())
+        ||
+        (isset (auth()->user()->manager->id))
+        )
         <div class="card card-success card-outline collapsed-card">
             <div class="card-header">
                 <div class="card-title">
@@ -29,7 +34,7 @@
                         @if (
                         (auth()->user()->isOwner() || auth()->user()->isHost())
                         ||
-                        (auth()->user()->manager->id == $manager->id)
+                        (isset (auth()->user()->manager->id) && auth()->user()->manager->id == $manager->id)
                         )
                             <li class="list-group-item d-flex justify-content-between align-items-center">
                         <span>
@@ -47,7 +52,7 @@
                 </ul>
             </div>
         </div>
-
+        @endif
         <div class="card card-warning card-outline">
             <div class="card-body">
                 <div class="mb-2">

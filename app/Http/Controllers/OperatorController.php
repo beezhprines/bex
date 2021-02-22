@@ -150,6 +150,8 @@ class OperatorController extends Controller
         access(["can-operator", "can-chief-operator"]);
 
         $user = User::find(Auth::id());
+        $managers = Manager::all();
+        $masters = Master::all();
 
         if ($user->isOperator()) {
             $operator = $user->operator;
@@ -167,8 +169,6 @@ class OperatorController extends Controller
             $points = Operator::getTotalPoints($profit);
             $lastWeekPoints = Operator::getTotalPoints($lastWeekProfit);
 
-            $masters = Master::all();
-            $managers = Manager::all();
         } else {
             abort(500);
         }
