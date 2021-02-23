@@ -95,9 +95,17 @@ class Master extends Model
     public function solvePenalty(string $date, float $weekComission)
     {
         $penaltyPercent = floatval(Configuration::findByCode("master:penalty")->value);
+        $firstDay = date(config('app.iso_date'), strtotime("this week Monday", strtotime($date)));
+        $today = isodate();
+        $diff = (strtotime($today) - strtotime($firstDay))/(60*60*24);
 
-        if (date("D", strtotime($date)) != "Mon" && date("D", strtotime($date)) != "Tue") {
-            return round($weekComission * $penaltyPercent / 100);
+        if ( $diff >= 9) {
+            if($diff-6>5){
+                $coef = 5;
+            }else{
+                $coef = $diff-6;
+            }
+            return round($weekComission * $penaltyPercent / 100)*$coef;
         }
         return null;
     }

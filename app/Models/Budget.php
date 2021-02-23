@@ -448,19 +448,24 @@ class Budget extends Model
 
             $weekComission = $master->getComission($startDate, $endDate);
             $amount = $master->solvePenalty($date, $weekComission);
-            if (is_null($amount) || $amount == 0) continue;
+            if (is_null($amount) || $amount == 0) {
+                $amount = 0;
+            }
 
-            $budget = $master->getBudget($date, $budgetType->id);
+            $budget = $master->getBudget($startDate, $budgetType->id);
 
             if (empty($budget)) {
+                echo "\n"." create ";
+
                 $budget = self::create([
                     "amount" => $amount,
-                    "date" => $date,
+                    "date" => $startDate,
                     "budget_type_id" => $budgetType->id
                 ]);
 
                 $budget->masters()->attach($master);
             } else {
+                echo "\n"." update ";
                 $budget->update([
                     "amount" => $amount
                 ]);
