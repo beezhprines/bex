@@ -29,6 +29,14 @@ class HomeController extends Controller
         $user = User::find(Auth::id());
 
         if ($user->isMaster()) {
+            $monday = date(config('app.iso_date'), strtotime("last week Monday", strtotime(isodate())));
+            $sunday = date(config('app.iso_date'), strtotime("last week Sunday", strtotime(isodate())));
+
+            week()->set(
+                $monday,
+                $sunday
+            );
+
             return redirect()->route("masters.statistics");
         } elseif ($user->isMarketer()) {
             return redirect()->route("marketers.analytics");
