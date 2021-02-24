@@ -149,18 +149,18 @@ class TeamController extends Controller
         $cosmetologists = Cosmetologist::all();
         $team = Team::find($teamId);
         if (!empty($team->operator)){
-            return back()->with(['warning' => __('common.forbidden')]);
+            return back()->with(['error' => __('common.forbidden')]);
         }
         foreach ($masters as $master){
             if(intval($master->team_id )== intval($teamId)){
                 note("info", "team:archivate.forbidden", "archivateTeam forbidden  id=".($request->team), Team::class);
-                return back()->with(['warning' => __('common.forbidden')]);
+                return back()->with(['error' => __('common.forbidden')]);
             }
         }
         foreach ($cosmetologists as $cosmetologist){
             if(intval($cosmetologist->team_id )== intval($teamId)){
                 note("info", "team:archivate.forbidden", "archivateTeam  forbidden  id=".($request->team), Team::class);
-                return back()->with(['warning' => __('common.forbidden')]);
+                return back()->with(['error' => __('common.forbidden')]);
             }
         }
         $team->delete();
