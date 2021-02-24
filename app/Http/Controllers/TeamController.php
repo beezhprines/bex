@@ -129,12 +129,10 @@ class TeamController extends Controller
             'teams.*.title' => 'required|string',
             'teams.*.operator_id' => 'required|exists:operators,id',
             'teams.*.city_id' => 'required|exists:cities,id',
-            'teams.*.premium_rate' => 'required|regex:/^\d+([\,]\d+)*([\.]\d+)?$/',
         ]);
 
         foreach ($data['teams'] as $teamId => $teamData) {
             $team = Team::find($teamId);
-            $teamData['premium_rate'] = floatval(str_replace(",", ".", $teamData['premium_rate']));
             $team = $team->update($teamData);
         }
 

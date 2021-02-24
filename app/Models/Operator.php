@@ -77,7 +77,7 @@ class Operator extends Model
 
     public function solvePointsPerMaster(Master $master, string $startDate, string $endDate)
     {
-        $comission = $master->getComission($startDate, $endDate) * floatval($master->team->premium_rate);
+        $comission = $master->getComission($startDate, $endDate) ;
 
         return round($comission / $this->pointValue());
     }

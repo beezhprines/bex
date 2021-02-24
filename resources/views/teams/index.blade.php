@@ -92,9 +92,6 @@
                                         </select>
                                     </td>
                                     <td>
-                                        <input type="text" class="form-control form-control-sm" name="teams[{{ $team->id }}][premium_rate]" value="{{ number_format($team->premium_rate, 2, '.', ' ') }}" required>
-                                    </td>
-                                    <td>
                                     <input type="button" onclick="acrhivate('{{$team->id}}','{{$team->title}}')" class="btn btn-danger" value="Архивировать">
                                     </td>
                                 </tr>

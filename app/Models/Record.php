@@ -37,14 +37,7 @@ class Record extends Model
     {
         return $records->sum(function ($record) use ($withTeamPremiumRate) {
             return $record->services->sum(function ($service) use ($withTeamPremiumRate) {
-                $premiumRate = 1;
-                if ($withTeamPremiumRate) {
-                    $team = $service->master->team;
-                    if (!empty($team->premium_rate)) {
-                        $premiumRate = floatval($team->premium_rate);
-                    }
-                }
-                return floatval($service->pivot->comission) * $premiumRate;
+                return floatval($service->pivot->comission) ;
             });
         });
     }

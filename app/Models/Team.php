@@ -11,7 +11,7 @@ class Team extends Model
     use HasFactory, SoftDeletes, ModelBase, ClearsResponseCache;
 
     protected $fillable = [
-        "title", "premium_rate", "operator_id", "city_id"
+        "title", "operator_id", "city_id"
     ];
 
     public function city()
@@ -106,7 +106,7 @@ class Team extends Model
             return $cosmetologist->getComission($startDate, $endDate) ?? 0;
         });
 
-        return $comission * floatval($this->premium_rate);
+        return $comission;
     }
 
     public function getContactsIncrease(string $date)
