@@ -544,6 +544,7 @@ return [
 
                 ],
             ],
+            "can"  => ["can-owner", "can-host","can-recruiter"]
         ],
         [
             "text" => "Мониторинг",
