@@ -65,7 +65,8 @@ class Budget extends Model
     {
         $budgetTypes = [
             BudgetType::findByCode("custom:month:outcome"),
-            BudgetType::findByCode("custom:week:outcome")
+            BudgetType::findByCode("custom:week:outcome"),
+            BudgetType::findByCode("marketer:unexpected:outcome")
         ];
 
         foreach ($budgetTypes as $budgetType) {
@@ -244,13 +245,15 @@ class Budget extends Model
     {
         $types = [
             ["budgetType" => BudgetType::findByCode("custom:month:outcome"), "days" => date("t", strtotime($date))],
-            ["budgetType" => BudgetType::findByCode("custom:week:outcome"), "days" => 7]
+            ["budgetType" => BudgetType::findByCode("custom:week:outcome"), "days" => 7],
+            ["budgetType" => BudgetType::findByCode("marketer:unexpected:outcome"), "days" => 7]
+
         ];
 
         foreach ($types as $type) {
             if($type['budgetType']['code']=="custom:week:outcome"){
                 $firstDay = date(config('app.iso_date'), strtotime("this week Monday", strtotime($date)));
-            }else if($type['budgetType']['code']=="custom:month:outcome"){
+            }else if($type['budgetType']['code']=="custom:month:outcome" || $type['budgetType']['code']=="marketer:unexpected:outcome"){
                 $firstDay = date('Y-m-01', strtotime($date));
             }
 

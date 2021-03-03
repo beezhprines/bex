@@ -140,6 +140,7 @@ class MarketerController extends Controller
 
         $budgetTypeInstagram = BudgetType::findByCode("marketer:team:instagram:outcome");
         $budgetTypeVK = BudgetType::findByCode("marketer:team:vk:outcome");
+        $budgetMarketerUnOut = Budget::findByDateAndType(week()->start(), BudgetType::findByCode("marketer:unexpected:outcome"));
 
         $instagram = collect(json_decode(Budget::findByDateAndType(week()->end(), $budgetTypeInstagram)->json, true));
         $vk = collect(json_decode(Budget::findByDateAndType(week()->end(), $budgetTypeVK)->json, true));
@@ -159,8 +160,30 @@ class MarketerController extends Controller
             "vk" => $vk,
             "currencyRates" => collect($currencyRates),
             "currencies" => $currencies,
-            "currencyRateDate" => $currencyRateDate
+            "currencyRateDate" => $currencyRateDate,
+            "budgetMarketerUnOut" => $budgetMarketerUnOut
         ]);
+    }
+    public function updateMarketerCustomOutcomes(Request $request)
+    {
+        access(["can-marketer"]);
+
+        $data = $request->validate([
+            "budget_id" => "required|exists:budgets,id",
+            "custom-outcomes" => "nullable|array",
+            "custom-outcomes.*.title" => "required|string",
+            "custom-outcomes.*.amount" => "required|numeric",
+        ]);
+
+        $budget = Budget::find($data["budget_id"]);
+
+        $budget->update([
+            "json" => json_encode($data["custom-outcomes"] ?? [])
+        ]);
+
+        note("info", "budget:custom-outcomes", "Обновлены расходы", Budget::class, $budget->id);
+
+        return redirect()->back()->with(["success" => __("common.saved-success")]);
     }
 
     public function saveTeamOutcomes(Request $request)

@@ -18,6 +18,15 @@ class FeatureSeeder extends Seeder
      */
     public function run()
     {
-
+        $newBudgetType =
+            [
+                "title" => "Непредвиденный расход маркетолога",
+                "code" => "marketer:unexpected:outcome",
+                "income" => 0
+            ];
+        $budgetType = BudgetType::firstWhere("code", "marketer:unexpected:outcome");
+        if (empty($budgetType)) {
+            BudgetType::create($newBudgetType);
+        }
     }
 }
