@@ -34,6 +34,8 @@ class FeatureSeeder extends Seeder
             echo "seed 2";
             echo "\n";
             BudgetType::create($newBudgetType);
+        }else{
+            echo $budgetType->title;
         }
     }
 }
