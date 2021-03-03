@@ -18,6 +18,10 @@ class FeatureSeeder extends Seeder
      */
     public function run()
     {
+        echo "\n";
+        echo "seed 1";
+        echo "\n";
+
         $newBudgetType =
             [
                 "title" => "Непредвиденный расход маркетолога",
@@ -26,6 +30,9 @@ class FeatureSeeder extends Seeder
             ];
         $budgetType = BudgetType::firstWhere("code", "marketer:unexpected:outcome");
         if (empty($budgetType)) {
+            echo "\n";
+            echo "seed 2";
+            echo "\n";
             BudgetType::create($newBudgetType);
         }
     }
