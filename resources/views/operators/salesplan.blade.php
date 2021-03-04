@@ -105,3 +105,11 @@
     @endif
 </div>
 @stop
+@section('js')
+    <script>
+if(document.getElementsByClassName('profit')[0].innerText){
+    document.getElementsByClassName('profit')[0].innerText = document.getElementsByClassName('profit')[0].innerText + " баллы"
+}
+    </script>
+@stop
+

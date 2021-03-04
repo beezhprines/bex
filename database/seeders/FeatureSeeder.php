@@ -18,24 +18,13 @@ class FeatureSeeder extends Seeder
      */
     public function run()
     {
-        echo "\n";
-        echo "seed 1";
-        echo "\n";
 
-        $newBudgetType =
-            [
-                "title" => "Непредвиденный расход маркетолога",
-                "code" => "marketer:unexpected:outcome",
-                "income" => 0
-            ];
-        $budgetType = BudgetType::firstWhere("code", "marketer:unexpected:outcome");
-        if (empty($budgetType)) {
-            echo "\n";
-            echo "seed 2";
-            echo "\n";
-            BudgetType::create($newBudgetType);
-        }else{
-            echo $budgetType->title;
+        $role = Role::findByCode("chief-operator");
+        if (!empty($role)) {
+
+            $role->update([
+                "title" => "Оператор вых. дня"
+            ]);
         }
     }
 }
