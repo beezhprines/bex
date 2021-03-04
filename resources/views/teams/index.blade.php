@@ -43,7 +43,7 @@
                                     Город
                                 </th>
                                 <th>
-                                    Коэффициент сложности
+                                    Архивировать
                                 </th>
                                 <th>
 
@@ -57,11 +57,9 @@
                                     </td>
                                     <td>
                                         <select class="form-control selectpicker" name="teams[{{ $team->id }}][operator_id]" data-live-search="true" data-size="10" required>
-                                            @if(empty($team->operator->id))
-                                            <option>
+                                            <option value="0">
                                                 @lang('common.not-selected')
                                             </option>
-                                            @endif
                                             @forelse($operators as $operator)
                                             <option value="{{ $operator->id }}" @if ( $operator->id == $team->operator_id) selected @endif>
                                                 {{ $operator->name }}
@@ -133,17 +131,6 @@
                         @enderror
                     </div>
 
-                    <div class="form-group">
-                        <label for="premium_rate">
-                            Коэффициент сложности
-                        </label>
-                        <input type="text" class="form-control @error('premium_rate') is-invalid @enderror" id="premium_rate" name="premium_rate" required>
-                        @error('premium_rate')
-                        <span class="error invalid-feedback" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
-                        @enderror
-                    </div>
 
                     <div class="form-group">
                         <label for="operator_id">
@@ -215,11 +202,7 @@
         function acrhivate(id,teamTitle){
             if (confirm('Вы точно хотите архивировать "'+teamTitle+'" ?')) {
                 document.getElementById('team').value = id;
-                console.log(document.getElementById('team').value);
                 document.getElementById('teamForm').submit();
-            } else {
-                // Do nothing!
-                console.log('Thing was not saved to the database.');
             }
 
         }

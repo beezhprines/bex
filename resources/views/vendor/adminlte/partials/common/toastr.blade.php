@@ -9,7 +9,7 @@
         toastr.info("{{ session('info') }}");
         @endif
         @if(session('warning'))
-        toastr.warning("{{ session('warning') }}");
+        toastr.error("{{ session('warning') }}");
         @endif
         @if(session('success'))
         toastr.success("{{ session('success') }}");

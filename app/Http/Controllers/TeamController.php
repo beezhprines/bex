@@ -11,6 +11,7 @@ use App\Models\Team;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
+use Session;
 
 class TeamController extends Controller
 {
@@ -127,18 +128,22 @@ class TeamController extends Controller
         $data = $request->validate([
             'teams' => 'required|array',
             'teams.*.title' => 'required|string',
-            'teams.*.operator_id' => 'required|exists:operators,id',
+            'teams.*.operator_id' => 'required',
             'teams.*.city_id' => 'required|exists:cities,id',
         ]);
 
         foreach ($data['teams'] as $teamId => $teamData) {
+
+            if((is_int($teamData['operator_id']) && $teamData['operator_id']=0)){
+                $teamData['operator_id'] = null;
+            }
             $team = Team::find($teamId);
             $team = $team->update($teamData);
         }
 
         note("info", "team:update", "Обновлены команды", Team::class);
 
-        return back()->with(['success' => __('common.saved-success')]);
+        return redirect("/teams")->with(['success' => __('common.saved-success')]);
     }
     public function archivateTeam(Request $request)
     {
@@ -149,23 +154,21 @@ class TeamController extends Controller
         $cosmetologists = Cosmetologist::all();
         $team = Team::find($teamId);
         if (!empty($team->operator)){
-            return back()->with(['error' => __('common.forbidden')]);
+            return redirect("/teams?")->with('warning','Ошибка! '.$team->title.' имеет оператора');;
         }
         foreach ($masters as $master){
             if(intval($master->team_id )== intval($teamId)){
-                note("info", "team:archivate.forbidden", "archivateTeam forbidden  id=".($request->team), Team::class);
-                return back()->with(['error' => __('common.forbidden')]);
+                return redirect("/teams?")->with('warning','Ошибка! '.$team->title.' имеет мастера '.$master->name);;
             }
         }
         foreach ($cosmetologists as $cosmetologist){
             if(intval($cosmetologist->team_id )== intval($teamId)){
-                note("info", "team:archivate.forbidden", "archivateTeam  forbidden  id=".($request->team), Team::class);
-                return back()->with(['error' => __('common.forbidden')]);
+                return redirect("/teams?")->with('warning','Ошибка! '.$team->title.' имеет косметолога '.$cosmetologist->name);;
             }
         }
         $team->delete();
         note("info", "team:archivate", "archivateTeam  id=".($request->team), Team::class);
-        return back()->with(['success' => __('common.saved-success')]);
+        return redirect("/teams")->with(['success' => __('common.saved-success')]);
 
 
     }
