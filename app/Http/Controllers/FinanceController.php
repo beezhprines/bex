@@ -67,6 +67,12 @@ class FinanceController extends Controller
                 return $budget->amount ?? 0;
             });
 
+        $budgetType = BudgetType::findByCode("marketer:unexpected:outcome");
+        $marketerOutcomes = Budget::getBetweenDatesAndType($startWeek, $endWeek, $budgetType)
+            ->sum(function ($budget) {
+                return $budget->amount ?? 0;
+            });
+
         $budgetType = BudgetType::findByCode("marketer:team:vk:outcome");
         $vkOutcomes = Budget::getBetweenDatesAndType($startWeek, $endWeek, $budgetType)
             ->sum(function ($budget) {
@@ -94,6 +100,7 @@ class FinanceController extends Controller
             "vkOutcomes" => $vkOutcomes,
             "managerBonuses" => $managerBonuses,
             "operatorBonuses" => $operatorBonuses,
+            "marketerOutcomes"=> $marketerOutcomes,
         ];
 
         $masterProfit = Budget::getMastersProfit($startWeek, $endWeek);

@@ -63,6 +63,10 @@
                             <h4>{{ price($total["vkOutcomes"] ?? 0) }}</h4>
                         </td>
                         <td>
+                            <div class="mb-1">Расход маркетолога</div>
+                            <h4>{{ price($total["marketerOutcomes"] ?? 0) }}</h4>
+                        </td>
+                        <td>
                             <div class="mb-1">Бонусы менеджеров</div>
                             <h4>{{ price($total["managerBonuses"] ?? 0) }}</h4>
                         </td>
