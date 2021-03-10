@@ -43,7 +43,10 @@ class FinanceController extends Controller
         $budget->update([
             "json" => json_encode($data["custom-outcomes"] ?? [])
         ]);
-
+        foreach (daterange(week()->start(), week()->end(), true) as $date) {
+            $date = date_format($date, config("app.iso_date"));
+            Budget::solveCustomOutcomes($date);
+        }
         note("info", "budget:custom-outcomes", "Обновлены расходы", Budget::class, $budget->id);
 
         return redirect()->back()->with(["success" => __("common.saved-success")]);
