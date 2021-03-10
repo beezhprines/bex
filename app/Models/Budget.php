@@ -70,10 +70,14 @@ class Budget extends Model
         ];
 
         foreach ($budgetTypes as $budgetType) {
-            $json = $budgetType->budgets()->whereNotNull("json")->orderBy("date")->first()->json ?? null;
 
             foreach (daterange($startDate, $endDate, true) as $date) {
                 $date = date_format($date, config("app.iso_date"));
+                if(date('N',$date)==1){
+                    $json = Budget::findByDateAndType(strtotime("last week Monday", strtotime($date)), $budgetType)->json;
+                }else{
+                    $json = null;
+                }
                 $budget = $budgetType->budgets()->firstWhere("date", $date);
 
                 if (!empty($budget)) continue;
@@ -251,11 +255,7 @@ class Budget extends Model
         ];
 
         foreach ($types as $type) {
-            if($type['budgetType']['code']=="custom:week:outcome"){
-                $firstDay = date(config('app.iso_date'), strtotime("this week Monday", strtotime($date)));
-            }else if($type['budgetType']['code']=="custom:month:outcome" || $type['budgetType']['code']=="marketer:unexpected:outcome"){
-                $firstDay = date('Y-m-01', strtotime($date));
-            }
+            $firstDay = date(config('app.iso_date'), strtotime("this week Monday", strtotime($date)));
 
             $budget = self::findByDateAndType($firstDay, $type["budgetType"]);
             $budgetCurentday = self::findByDateAndType($date, $type["budgetType"]);

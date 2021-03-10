@@ -17,7 +17,7 @@ class FinanceController extends Controller
     {
         access(["can-owner", "can-host"]);
 
-        $monthBudget = Budget::findByDateAndType(month()->start(week()->end()), BudgetType::findByCode("custom:month:outcome"));
+        $monthBudget = Budget::findByDateAndType(week()->start(), BudgetType::findByCode("custom:month:outcome"));
 
         $weekBudget = Budget::findByDateAndType(week()->start(), BudgetType::findByCode("custom:week:outcome"));
 
