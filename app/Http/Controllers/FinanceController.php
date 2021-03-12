@@ -16,10 +16,17 @@ class FinanceController extends Controller
     public function customOutcomes()
     {
         access(["can-owner", "can-host"]);
+        $today = isodate();
+        if(week()->start()<= $today && week()->end()>= $today ){
+            $monthBudget = Budget::findByDateAndType($today, BudgetType::findByCode("custom:month:outcome"));
+            $weekBudget = Budget::findByDateAndType($today, BudgetType::findByCode("custom:week:outcome"));
 
-        $monthBudget = Budget::findByDateAndType(week()->start(), BudgetType::findByCode("custom:month:outcome"));
+        }else{
+            $monthBudget = Budget::findByDateAndType(week()->end(), BudgetType::findByCode("custom:month:outcome"));
+            $weekBudget = Budget::findByDateAndType(week()->end(), BudgetType::findByCode("custom:week:outcome"));
 
-        $weekBudget = Budget::findByDateAndType(week()->start(), BudgetType::findByCode("custom:week:outcome"));
+        }
+
 
         return view("finances.custom-outcomes", [
             "monthBudget" => $monthBudget,
@@ -40,16 +47,25 @@ class FinanceController extends Controller
 
         $budget = Budget::find($data["budget_id"]);
 
-        $budget->update([
-            "json" => json_encode($data["custom-outcomes"] ?? [])
-        ]);
-        foreach (daterange(week()->start(), week()->end(), true) as $date) {
-            $date = date_format($date, config("app.iso_date"));
-            Budget::solveCustomOutcomes($date);
-        }
-        note("info", "budget:custom-outcomes", "Обновлены расходы", Budget::class, $budget->id);
+        $today = isodate();
+        if($budget->date==$today){
 
-        return redirect()->back()->with(["success" => __("common.saved-success")]);
+            foreach (daterange($today, week()->end(), true) as $date) {
+                $date = date_format($date, config("app.iso_date"));
+                $budgetToUpdate=Budget::findByDateAndType($date, BudgetType::findByCode("custom:month:outcome"));
+                $budgetToUpdate->update([
+                    "json" => json_encode($data["custom-outcomes"] ?? [])
+                ]);
+                Budget::solveCustomOutcomes($date);
+            }
+            note("info", "budget:custom-outcomes", "Обновлены расходы", Budget::class, $budget->id);
+            return redirect("/finances/customOutcomes")->with(["success" => __("common.saved-success")]);
+
+        }else{
+            return redirect("/finances/customOutcomes?")->with('warning','Ошибка!  Невозможно изменить расходы за прошедшую неделю');
+        }
+
+
     }
 
     public function statistics()

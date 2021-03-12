@@ -73,11 +73,10 @@ class Budget extends Model
 
             foreach (daterange($startDate, $endDate, true) as $date) {
                 $date = date_format($date, config("app.iso_date"));
-                if(date('N',$date)==1){
-                    $json = Budget::findByDateAndType(strtotime("last week Monday", strtotime($date)), $budgetType)->json;
-                }else{
-                    $json = null;
-                }
+                $yesterday = date(config("app.iso_date"), strtotime($date."-1 days"));
+
+                $json = Budget::findByDateAndType($yesterday, $budgetType)->json;
+
                 $budget = $budgetType->budgets()->firstWhere("date", $date);
 
                 if (!empty($budget)) continue;
@@ -255,10 +254,8 @@ class Budget extends Model
         ];
 
         foreach ($types as $type) {
-            $firstDay = date(config('app.iso_date'), strtotime("this week Monday", strtotime($date)));
 
-            $budget = self::findByDateAndType($firstDay, $type["budgetType"]);
-            $budgetCurentday = self::findByDateAndType($date, $type["budgetType"]);
+            $budget = self::findByDateAndType($date, $type["budgetType"]);
 
             $budgetTypeCode = $type["budgetType"]->code;
 
@@ -270,9 +267,7 @@ class Budget extends Model
                 return floatval($outcome["amount"] ?? 0);
             }) / $type["days"] * $type["budgetType"]->sign();
 
-
-
-            $budgetCurentday->update([
+            $budget->update([
                 "amount" => $amount
             ]);
 
