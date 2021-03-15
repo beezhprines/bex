@@ -125,7 +125,7 @@ class FinanceController extends Controller
         $masterProfit = Budget::getMastersProfit($startWeek, $endWeek);
 
         $total["total"] = $masterProfit + $total["totalComission"];
-        $total["profit"] = $total["totalComission"] - $total["customOutcomes"] - $total["instagramOutcomes"] - $total["vkOutcomes"] - $total["managerBonuses"] - $total["operatorBonuses"];
+        $total["profit"] = abs($total["totalComission"]) - abs($total["customOutcomes"]) - abs($total["instagramOutcomes"]) - abs($total["vkOutcomes"]) - abs($total["managerBonuses"]) - abs($total["operatorBonuses"]);
 
         /* END TOTAL STATISTICS */
         $user = User::find(Auth::id());

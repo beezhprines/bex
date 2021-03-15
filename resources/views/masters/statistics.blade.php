@@ -70,7 +70,7 @@
                             </button>
                         </div>
                         @else
-                        <span class="text-danger">Не создан бюджет на дату {{ week()->end() }}</span>
+                        <span class="text-danger">Комиссия будет подсчитана в понедельник {{ week()->end() }}</span>
                         @endif
                     </li>
                     <li class="list-group-item text-center">
