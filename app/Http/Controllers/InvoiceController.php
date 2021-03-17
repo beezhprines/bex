@@ -82,7 +82,7 @@ class InvoiceController extends Controller
      */
     public function destroy(Invoice $invoice)
     {
-        access(["can-master"]);
+        access(["can-master","can-owner", "can-host","can-recruiter"]);
 
         $invoice->delete();
 
@@ -93,7 +93,7 @@ class InvoiceController extends Controller
 
     public function storeMany(Request $request)
     {
-        access(["can-master"]);
+        access(["can-master","can-owner","can-recruiter"]);
 
         $data = $request->validate([
             'master_id' => 'required|exists:masters,id',

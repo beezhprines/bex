@@ -150,7 +150,7 @@
                                                     @if($invoice->confirmed_date)
                                                         <span class="badge badge-success confirmed">Подтвержден</span>
                                                     @endif
-                                                    <img src="data:image/png;base64, {{ $invoice->file }}" class="invoice img-fluid" alt="invoice_{{ $invoice->id }}" />
+                                                    <img src="data:image/png;base64, {{ $invoice->file }}" class="invoice img-fluid" alt="invoice_{{ $invoice->id }}" data-route="{{ route('invoices.destroy', ['invoice' => $invoice]) }}" />
                                                 </div>
                                             @empty
                                                 <div class="col-12 mb-1">
@@ -167,6 +167,9 @@
                                             </div>
                                         @endif
                                     </form>
+                                    <button id="invoices-btn" onclick="upload_invoice_func({{ $master->id }},{{ $budget->id }})" class="btn btn-sm btn-success" >
+                                        Загрузить чек
+                                    </button>
                                 @else
                                     <span class="text-danger">
                             Не создан бюджет на дату {{ week()->end() }}
@@ -182,18 +185,37 @@
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-body">
-                        <div class="content text-center"></div>
+                        <form action="" method="post" id="delete-invoice-form">
+                            @csrf
+                            @method('DELETE')
+                            <div class="content text-center"></div>
+                        </form>
                         <hr>
-                        <div class="text-right">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">
-                                Закрыть
-                            </button>
+                        <div class="row">
+                            <div class="col">
+                                <button id="delete-invoice" type="button" class="btn btn-warning">
+                                    Удалить
+                                </button>
+                            </div>
+                            <div class="col text-right">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                    Закрыть
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     @endforeach
+    <div>
+        <form action="{{ route('invoices.store.many') }}" method="POST" id="store-invoices-form" enctype="multipart/form-data">
+            @csrf
+            <input type="hidden" id="master_id" name="master_id" value="0" />
+            <input type="hidden" id="budget_id" name="budget_id" value="0" />
+            <input type="file"  class="d-none" name="invoices[]" id="invoices" accept="image/*" multiple required>
+        </form>
+    </div>
 @stop
 
 @section('js')
@@ -201,6 +223,7 @@
         $(document).ready(function() {
             $(".invoice").on("click", function() {
                 var modal = $("#invoice-modal");
+                modal.find("form").attr("action", $(this).attr('data-route'));
                 modal.find(".content").html($(this).clone());
                 modal.modal('show');
             });
@@ -229,6 +252,22 @@
                 $("#filter .badge-warning").hide();
                 $("#filter").hide();
             });
+            $("#delete-invoice").on("click", function() {
+                $("#delete-invoice-form").submit();
+            });
+
+        });
+
+        function upload_invoice_func(master_id,budget_id){
+            $("#master_id").value=master_id;
+            $("#budget_id").value=budget_id;
+            document.getElementById("master_id").value = master_id;
+            document.getElementById("budget_id").value = budget_id;
+
+            $("#invoices").click();
+        }
+        $("#invoices").on('change', function() {
+            $("#store-invoices-form").submit();
         });
     </script>
 @stop

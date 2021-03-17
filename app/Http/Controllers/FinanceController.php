@@ -130,7 +130,7 @@ class FinanceController extends Controller
         /* END TOTAL STATISTICS */
         $user = User::find(Auth::id());
 
-        if ($user->isRecruiter()) {
+        if ($user->isRecruiter() || $user->isOwner() ) {
             return view("recruiter.statistics", [
                 "masters" => $masters,
                 "masterComissionBudgetType" => $masterComissionBudgetType,
