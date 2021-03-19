@@ -2,9 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\Models\Budget;
 use App\Models\BudgetType;
-use App\Models\Contact;
-use App\Models\Manager;
 use App\Models\Role;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Artisan;
@@ -19,12 +18,28 @@ class FeatureSeeder extends Seeder
     public function run()
     {
 
-        $role = Role::findByCode("chief-operator");
-        if (!empty($role)) {
+        $from = "2021-02-01";
+        $to = "2021-03-19";
 
-            $role->update([
-                "title" => "Оператор вых. дня"
+
+foreach (daterange($from, $to, true) as $date) {
+    $date = date_format($date, config("app.iso_date"));
+    $dates[] = $date;
+}
+        $dateSource = date(config("app.iso_date"), strtotime("2021-03-17"));
+        $budgetTypeSource = BudgetType::findByCode("custom:month:outcome");
+        $budgetSource = Budget::findByDateAndType($dateSource, $budgetTypeSource);
+
+        foreach ($dates as $date) {
+            $budgetType = BudgetType::findByCode("custom:month:outcome");
+            $budget = Budget::findByDateAndType($date, $budgetType);
+            if (!empty($budget)) {
+            $budget->update([
+                'json'=>$budgetSource->json
             ]);
+                Budget::solveCustomOutcomes($date);
+            }
         }
+
     }
 }
