@@ -269,5 +269,20 @@
         $("#invoices").on('change', function() {
             $("#store-invoices-form").submit();
         });
+        document.addEventListener('scroll',function (e){
+            lastKnowScrollPosition = window.scrollY;
+            currenUrl = window.location.href;
+            mainUrlArray = currenUrl.split("?position=");
+            mainUrlStr = mainUrlArray[0]+"?position="+lastKnowScrollPosition;
+            console.log(mainUrlStr);
+            history.pushState({},null,mainUrlStr);
+        });
+        const queryStr = window.location.search;
+
+        const urlParams = new URLSearchParams(queryStr);
+        const pos = urlParams.get("position");
+        if (pos){
+            window.scrollTo(0,pos);
+        }
     </script>
 @stop
