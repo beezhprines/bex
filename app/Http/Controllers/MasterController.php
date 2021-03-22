@@ -260,7 +260,8 @@ class MasterController extends Controller
 
             foreach (daterange($data["startDate"], $data["endDate"], true) as $date) {
                 $date = date_format($date, config("app.iso_date"));
-                $amount = round($comission / 7, 2);
+                $currency_rate = $master->getCurrencyRate()[0];
+                $amount = round(($comission / $currency_rate['currency_rate'])/ 7, 2);
 
                 Budget::solveUnexpectedMasterComission($date, $amount, $master);
             }

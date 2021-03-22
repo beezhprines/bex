@@ -26,6 +26,9 @@
                                 <th>
                                     Комиссия
                                 </th>
+                                <th>
+                                    Валюта
+                                </th>
                             </thead>
                             <tbody>
                                 @foreach($masters as $master)
@@ -34,7 +37,10 @@
                                         {{ $master->name }}
                                     </td>
                                     <td>
-                                        <input type="text" class="form-control form-control-sm" name="comissions[{{$master->id}}]" placeholder="Комиссия в тенге" required value="{{ $master->getUnexpectedComission(week()->start(), week()->end()) }}" />
+                                        <input type="text" class="form-control form-control-sm" name="comissions[{{$master->id}}]" placeholder="Комиссия в {{$master->getCurrencyRate()[0]['currency_name']}}" required value="{{ $master->getUnexpectedComission(week()->start(), week()->end())*$master->getCurrencyRate()[0]['currency_rate'] }}" />
+                                    </td>
+                                    <td>
+                                        {{$master->getCurrencyRate()[0]['currency_name']}}
                                     </td>
                                 </tr>
                                 @endforeach

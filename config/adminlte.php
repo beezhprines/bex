@@ -317,7 +317,7 @@ return [
             "can"  => ["can-manager"]
         ],
         [
-            "text" => "Комиссии",
+            "text" => "Дополнительные комиссии",
             "icon" => "fa fa-coins",
             "submenu" => [
                 [

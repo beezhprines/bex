@@ -292,4 +292,27 @@ class Master extends Model
 
         return $amount == 0 ? 0 : $amount *  $budgetType->sign();
     }
+    public function getCurrencyRate(){
+        $result = array([
+            'currency_rate' => 0,
+            'currency' => 0
+        ]);
+        $today = isodate();
+        if(week()->start()<= $today && week()->end()>= $today ){
+            $today = isodate();
+        }else{
+            $today = week()->start();
+        }
+        if(! empty($this->currency())){
+            $currencyRate = CurrencyRate::findByCurrencyAndDate($this->currency(),$today);
+            $result = array([
+                'currency_rate' => $currencyRate->rate,
+                'currency_name' => $this->currency()->title
+            ]);
+        }
+
+
+
+        return $result;
+    }
 }
