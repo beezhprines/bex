@@ -291,12 +291,6 @@ class Budget extends Model
                 return $budget->amount ?? 0;
             }) ?? 0;
 
-        $budgetType = BudgetType::findByCode("marketer:unexpected:outcome");
-
-        $amount += self::getBetweenDatesAndType($startDate, $endDate, $budgetType)
-                ->sum(function ($budget) {
-                    return $budget->amount ?? 0;
-                }) ?? 0;
 
         return $amount;
     }

@@ -253,7 +253,10 @@
                 $("#filter").hide();
             });
             $("#delete-invoice").on("click", function() {
-                $("#delete-invoice-form").submit();
+                if (confirm('Удалить чек ?')) {
+                    // Save it!
+                    $("#delete-invoice-form").submit();
+                }
             });
 
         });
@@ -274,7 +277,6 @@
             currenUrl = window.location.href;
             mainUrlArray = currenUrl.split("?position=");
             mainUrlStr = mainUrlArray[0]+"?position="+lastKnowScrollPosition;
-            console.log(mainUrlStr);
             history.pushState({},null,mainUrlStr);
         });
         const queryStr = window.location.search;

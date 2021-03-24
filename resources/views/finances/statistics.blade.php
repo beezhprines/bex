@@ -56,11 +56,11 @@
                         </td>
                         <td>
                             <div class="mb-1">Рекл. Instagram</div>
-                            <h4>{{ price($total["instagramOutcomes"] ?? 0) }}</h4>
+                            <h4>{{ price(0 - ($total["instagramOutcomes"] ?? 0)) }}</h4>
                         </td>
                         <td>
                             <div class="mb-1">Рекл. ВК</div>
-                            <h4>{{ price($total["vkOutcomes"] ?? 0) }}</h4>
+                            <h4>{{ price(0 - ($total["vkOutcomes"] ?? 0)) }}</h4>
                         </td>
                         <td>
                             <div class="mb-1">Расход маркетолога</div>
@@ -68,11 +68,11 @@
                         </td>
                         <td>
                             <div class="mb-1">Бонусы менеджеров</div>
-                            <h4>{{ price($total["managerBonuses"] ?? 0) }}</h4>
+                            <h4>{{ price(0 - ($total["managerBonuses"] ?? 0)) }}</h4>
                         </td>
                         <td>
                             <div class="mb-1">Бонусы операторов</div>
-                            <h4>{{ price($total["operatorBonuses"] ?? 0) }}</h4>
+                            <h4>{{ price(0 - ($total["operatorBonuses"] ?? 0)) }}</h4>
                         </td>
                     </tr>
                 </tbody>
@@ -311,7 +311,10 @@
             $("#filter").hide();
         });
             $("#delete-invoice").on("click", function() {
-                $("#delete-invoice-form").submit();
+                if (confirm('Удалить чек ?')) {
+                    // Save it!
+                    $("#delete-invoice-form").submit();
+                }
             });
 
     });
@@ -332,7 +335,6 @@
            currenUrl = window.location.href;
            mainUrlArray = currenUrl.split("?position=");
            mainUrlStr = mainUrlArray[0]+"?position="+lastKnowScrollPosition;
-           console.log(mainUrlStr);
            history.pushState({},null,mainUrlStr);
         });
         const queryStr = window.location.search;
