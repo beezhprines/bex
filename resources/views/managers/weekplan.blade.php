@@ -72,6 +72,7 @@
                                 <td class="text-center">
                                     @php
                                     $masterComission = $master->solveComission(week()->start(), week()->end());
+                                    $masterComission = $masterComission + $master->getUnexpectedComission(week()->start(), week()->end());
                                     @endphp
                                     {{ price($masterComission) }}
                                 </td>
