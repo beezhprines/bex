@@ -107,6 +107,7 @@ class ChartController extends Controller
                         "name" => "Лид (тг)",
                         "data" => array_values($leads),
                         "color" => "#aaaaaa",
+                        "visible" => false,
                     ]
                 ]
             ];
