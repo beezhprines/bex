@@ -28,6 +28,10 @@ class ChartController extends Controller
         $endDate = $data["endDate"];
 
         $chats = collect();
+        $datesCollectionTotal = collect();
+        $commonContact = array();
+        $commonOutCome = array();
+        $commonLead = array();
 
         $teams = Team::all();
         foreach ($teams as $team) {
@@ -36,7 +40,9 @@ class ChartController extends Controller
                 ->get();
 
             $datesCollection = collect(array_keys($contactsCollection->groupBy("date")->toArray()));
-
+            if($datesCollectionTotal->count()<$datesCollection->count()){
+                $datesCollectionTotal = $datesCollection;
+            }
             $totalContactsCollection = $contactsCollection->groupBy("date")->map(function ($date) {
                 return $date->sum(function ($contact) {
                     return $contact->amount;
@@ -63,7 +69,7 @@ class ChartController extends Controller
             $sumLeads = $sumTotalContacts == 0 ? 0 : round($sumOutcomes / $sumTotalContacts);
 
             $masterNames = implode(",", $team->masters->pluck("name")->toArray());
-            $chats->push([
+            $chatArray = [
                 "info" => [
                     "team_id" => $team->id
                 ],
@@ -103,12 +109,123 @@ class ChartController extends Controller
                         "color" => "#aaaaaa",
                     ]
                 ]
-            ]);
+            ];
+            $chats->push($chatArray);
+            $temp = array_values($totalContactsCollection->toArray());;
+            if(sizeof($commonContact)){
+                foreach ($temp as $k => $v){
+                    if(isset($commonContact[$k])){
+                        $commonContact[$k] = $commonContact[$k] + $temp[$k];
+                    }else{
+                        $commonContact[$k] = $temp[$k];
+                    }
+                }
+            }else{
+                $commonContact=array_values($totalContactsCollection->toArray());
+            }
+            //
+            $temp = array_values(collect($outcomes)->map(function ($outcome) {
+                return round($outcome / 1000);
+            })->toArray());
+
+            if(sizeof($commonOutCome)){
+                foreach ($temp as $k => $v){
+                    if(isset($commonOutCome[$k])){
+                        $commonOutCome[$k] = $commonOutCome[$k] + $temp[$k];
+                    }else{
+                        $commonOutCome[$k] = $temp[$k];
+                    }
+                }
+            }else{
+                $commonOutCome=array_values($totalContactsCollection->toArray());
+            }
+            //
+            //leads
+            $temp = array_values($leads);
+
+            if(sizeof($commonLead)){
+                foreach ($temp as $k => $v){
+                    if(isset($commonLead[$k])){
+                        $commonLead[$k] = $commonLead[$k] + $temp[$k];
+                    }else{
+                        $commonLead[$k] = $commonLead[$k];
+                    }
+                }
+            }else{
+                $commonLead=array_values($totalContactsCollection->toArray());
+            }
+
         }
+        $commonContactToChat = [
+            "info" => [
+                "id" => "common_contacts"
+            ],
+            "title" => ["text" => "Контакты и затраты"],
+            "subtitle" => [
+                "text" => "Text",
+                "useHTML" => true
+            ],
+            "xAxis" => [
+                "categories" => $datesCollectionTotal
+                    ->map(function ($date) {
+                        return date("d M", strtotime($date));
+                    })
+                    ->toArray(),
+                "gridLineWidth" => 1
+            ],
+            "yAxis" => [
+                "title" => ["text" => null],
+                "gridLineWidth" => 1
+            ],
+            "series" => [
+                [
+                    "name" => "Контакты",
+                    "data" => array_values($commonContact),
+                    "color" => "#c2de80",
+                ],
+                [
+                    "name" => "Затраты (тыс. тг)",
+                    "data" => array_values($commonOutCome),
+                    "color" => "#db9876",
+                ]
+            ]
+        ];
+        //leads
+        $commonLeadsToCart = [
+            "info" => [
+                "id" => "common_contacts"
+            ],
+            "title" => ["text" => "Лид"],
+            "subtitle" => [
+                "text" => "Text",
+                "useHTML" => true
+            ],
+            "xAxis" => [
+                "categories" => $datesCollectionTotal
+                    ->map(function ($date) {
+                        return date("d M", strtotime($date));
+                    })
+                    ->toArray(),
+                "gridLineWidth" => 1
+            ],
+            "yAxis" => [
+                "title" => ["text" => null],
+                "gridLineWidth" => 1
+            ],
+            "series" => [
+                [
+                    "name" => "Лид (тг)",
+                    "data" => array_values($commonLead),
+                    "color" => "#aaaaaa",
+                ]
+            ]
+        ];
 
         return view("charts.chats", [
             "teams" => $teams,
-            "chats" => $chats
+            "chats" => $chats,
+            "commonContactToChat" => $commonContactToChat,
+            "commonLeadsToCart" => $commonLeadsToCart
         ]);
     }
 
