@@ -185,5 +185,7 @@ Route::middleware(["auth"])->group(function () {
     Route::prefix("charts")->name("charts.")->group(function () {
         Route::get("/chats", [ChartController::class, "chats"])->name("chats");
         Route::get("/conversion", [ChartController::class, "conversion"])->name("conversion");
+        Route::get("/chats-common", [ChartController::class, "chatsCommon"])->name("chats-common");
+
     });
 });

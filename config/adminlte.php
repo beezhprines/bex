@@ -363,6 +363,13 @@ return [
                     "can"  => ["can-manager"]
                 ],
                 [
+                    "text" => "Общие диаграммы",
+                    "route" => "charts.chats-common",
+                    "icon" => "fa fa-chart-pie",
+                    "active" => ["charts/chats-common*"],
+                    "can"  => ["can-manager"]
+                ],
+                [
                     "text" => "Комиссии и чеки",
                     "route" => "managers.monitoring",
                     "icon" => "fa fa-binoculars",
@@ -562,6 +569,13 @@ return [
                     "route" => "charts.conversion",
                     "icon" => "fa fa-chart-pie",
                     "active" => ["charts/conversion*"],
+                    "can"  => ["can-host", "can-owner"]
+                ],
+                [
+                    "text" => "Общие диаграммы",
+                    "route" => "charts.chats-common",
+                    "icon" => "fa fa-chart-pie",
+                    "active" => ["charts/chats-common*"],
                     "can"  => ["can-host", "can-owner"]
                 ],
             ],
