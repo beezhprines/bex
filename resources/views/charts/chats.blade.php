@@ -7,18 +7,6 @@
 @section('content')
 <x-period-control :route="route('charts.chats')"></x-period-control>
 
-<div class="card">
-    <div class="card-body">
-        <div id="chart-team-contacts-and-outcomes"></div>
-    </div>
-</div>
-
-<div class="card">
-    <div class="card-body">
-        <div id="chart-team-leads"></div>
-    </div>
-</div>
-
 @foreach($teams as $team)
 <div class="card">
     <div class="card-body">
@@ -72,45 +60,5 @@
         });
     })(jQuery);
 
-    const commonContactToChat = {!! json_encode($commonContactToChat) !!};
-    Highcharts.chart(`chart-team-contacts-and-outcomes`, {
-        chart: {
-            type: 'area'
-        },
-        title: commonContactToChat.title,
-        subtitle: "",
-        xAxis: commonContactToChat.xAxis,
-        yAxis: commonContactToChat.yAxis,
-        plotOptions: {
-            area: {
-                fillOpacity: 0.5,
-                dataLabels: {
-                    enabled: true,
-                }
-            }
-        },
-        series: commonContactToChat.series
-    });
-
-    //
-    const commonLeadsToCart = {!! json_encode($commonLeadsToCart) !!};
-    Highcharts.chart(`chart-team-leads`, {
-        chart: {
-            type: 'area'
-        },
-        title: commonLeadsToCart.title,
-        subtitle: "",
-        xAxis: commonLeadsToCart.xAxis,
-        yAxis: commonLeadsToCart.yAxis,
-        plotOptions: {
-            area: {
-                fillOpacity: 0.5,
-                dataLabels: {
-                    enabled: true,
-                }
-            }
-        },
-        series: commonLeadsToCart.series
-    });
 </script>
 @stop
