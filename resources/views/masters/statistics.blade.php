@@ -11,12 +11,19 @@
             <div class="card-body p-0">
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item">
-                        <b>Комиссия за неделю:</b>
+                        <b>
+                            Итого сумма к перечислению:
+                        </b>
+                        <span class="float-right">
+                        {{ price($penalty + $comission + $unexpectedComission) }} {{ $currency->code }}
+                        </span>
+                    </li>
+                    <li class="list-group-item">
+                        <b>Комиссия с процедур за неделю:</b>
                         <span class="float-right">
                             {{ price($comission) }} {{ $currency->code }}
                         </span>
                     </li>
-                    @if ($penalty != 0)
                     <li class="list-group-item">
                         <b>
                             Пеня за неделю:
@@ -28,8 +35,6 @@
                         {{ price($penalty) }} {{ $currency->code }}
                         </span>
                     </li>
-                    @endif
-                    @if ($unexpectedComission != 0)
                     <li class="list-group-item">
                         <b>
                             Доп комиссия за неделю:
@@ -38,17 +43,6 @@
                         {{ price($unexpectedComission) }} {{ $currency->code }}
                         </span>
                     </li>
-                    @endif
-                    @if ($penalty != 0 || $unexpectedComission != 0)
-                    <li class="list-group-item">
-                        <b>
-                            Итого:
-                        </b>
-                        <span class="float-right">
-                        {{ price($penalty + $comission + $unexpectedComission) }} {{ $currency->code }}
-                        </span>
-                    </li>
-                    @endif
                     <li class="list-group-item text-center">
                         @if (!empty($budget))
                         <div class="row">
