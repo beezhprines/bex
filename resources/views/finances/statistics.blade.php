@@ -52,27 +52,27 @@
                         </td>
                         <td>
                             <div class="mb-1">Расходы недели</div>
-                            <h4>{{ price($total["customOutcomes"] ?? 0) }}</h4>
+                            <h4>{{ price(0 - abs($total["customOutcomes"] ?? 0)) }}</h4>
                         </td>
                         <td>
                             <div class="mb-1">Рекл. Instagram</div>
-                            <h4>{{ price(0 - ($total["instagramOutcomes"] ?? 0)) }}</h4>
+                            <h4>{{ price(0 - abs($total["instagramOutcomes"] ?? 0)) }}</h4>
                         </td>
                         <td>
                             <div class="mb-1">Рекл. ВК</div>
-                            <h4>{{ price(0 - ($total["vkOutcomes"] ?? 0)) }}</h4>
+                            <h4>{{ price(0 - abs($total["vkOutcomes"] ?? 0)) }}</h4>
                         </td>
                         <td>
                             <div class="mb-1">Расход маркетолога</div>
-                            <h4>{{ price($total["marketerOutcomes"] ?? 0) }}</h4>
+                            <h4>{{ price(0 - abs($total["marketerOutcomes"] ?? 0)) }}</h4>
                         </td>
                         <td>
                             <div class="mb-1">Бонусы менеджеров</div>
-                            <h4>{{ price(0 - ($total["managerBonuses"] ?? 0)) }}</h4>
+                            <h4>{{ price(0 - abs($total["managerBonuses"] ?? 0)) }}</h4>
                         </td>
                         <td>
                             <div class="mb-1">Бонусы операторов</div>
-                            <h4>{{ price(0 - ($total["operatorBonuses"] ?? 0)) }}</h4>
+                            <h4>{{ price(0 - abs($total["operatorBonuses"] ?? 0)) }}</h4>
                         </td>
                     </tr>
                 </tbody>
