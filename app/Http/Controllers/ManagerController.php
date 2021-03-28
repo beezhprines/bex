@@ -146,7 +146,7 @@ class ManagerController extends Controller
         access(["can-manager", "can-owner", "can-host", "can-recruiter"]);
 
         $milestones = collect(json_decode(Configuration::findByCode("manager:milestones")->value, true));
-        $comission = Budget::getComission(week()->start(), week()->end());
+        $comission = Budget::getComission(week()->start(), week()->end()) + Budget::getUnexpectedMasterComission(week()->start(), week()->end());
         $managerBonusRate = floatval(Configuration::findByCode("manager:profit")->value);
         $milestoneBonus = Manager::getMilestoneBonus($comission);
         $masters = Master::all();

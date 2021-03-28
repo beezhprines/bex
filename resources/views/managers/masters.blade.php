@@ -37,10 +37,16 @@
                                         {{ $master->name }}
                                     </td>
                                     <td>
-                                        <input type="text" class="form-control form-control-sm" name="comissions[{{$master->id}}]" placeholder="Комиссия в {{$master->getCurrencyRate()[0]['currency_name']}}" required value="{{ $master->getUnexpectedComission(week()->start(), week()->end())*$master->getCurrencyRate()[0]['currency_rate'] }}" />
+                                        <input type="text" class="form-control form-control-sm" name="comissions[{{$master->id}}]" placeholder="Комиссия в @php if(isset($master->getCurrencyRate()[0]['currency_name'])){ echo $master->getCurrencyRate()[0]['currency_name'];}   @endphp" required value="@php
+                                            if($master->getCurrencyRate()[0]['currency_rate']!=0){
+                                            echo round($master->getUnexpectedComission(week()->start(), week()->end())/$master->getCurrencyRate()[0]['currency_rate']);
+                                        }else{
+                                            echo $master->getUnexpectedComission(week()->start(), week()->end());
+                                        } @endphp"
+                                        />
                                     </td>
                                     <td>
-                                        {{$master->getCurrencyRate()[0]['currency_name']}}
+                                        @php if(isset($master->getCurrencyRate()[0]['currency_name'])){ echo $master->getCurrencyRate()[0]['currency_name'];}   @endphp
                                     </td>
                                 </tr>
                                 @endforeach
