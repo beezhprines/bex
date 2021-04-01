@@ -153,7 +153,13 @@ class ManagerController extends Controller
         $operators = Operator::all();
         $managers = Manager::all();
         $user = User::find(Auth::id());
-
+        $mastersWithOutTeam = array();
+        foreach ($masters as $m){
+            $tempTeam = Team::find($m->team_id);
+            if($tempTeam==null){
+                $mastersWithOutTeam[]=$m;
+            }
+        }
         if ($user->isRecruiter()) {
             return view("recruiter.weekplan", [
                 "milestones" => $milestones,
@@ -171,6 +177,7 @@ class ManagerController extends Controller
                 "managerBonusRate" => $managerBonusRate,
                 "milestoneBonus" => $milestoneBonus,
                 "masters" => $masters,
+                "mastersWithOutTeam" => $mastersWithOutTeam,
                 "managers" => $managers,
                 "operators" => $operators,
             ]);

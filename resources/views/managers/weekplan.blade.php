@@ -152,6 +152,27 @@
                 </ul>
             </div>
         </div>
+        <div class="card card-red card-outline">
+            <div class="card-header">
+                <div class="card-title">
+                    Блок ошибок
+                </div>
+            </div>
+            <div class="card-body py-0 px-1">
+                <ul class="list-group list-group-flush">
+                    @foreach($mastersWithOutTeam as $masterWT)
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <span>
+                            Мастер {{ $masterWT->name }}
+                        </span>
+                            <strong>
+                                Нет команды
+                            </strong>
+                        </li>
+                    @endforeach
+                </ul>
+            </div>
+        </div>
     </div>
 </div>
 @stop
