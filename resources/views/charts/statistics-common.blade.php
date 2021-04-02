@@ -5,19 +5,14 @@
 @stop
 
 @section('content')
-<x-period-control :route="route('charts.chats-common')"></x-period-control>
+<x-period-control :route="route('charts.statistics-common')"></x-period-control>
 
 <div class="card">
     <div class="card-body">
-        <div id="chart-team-contacts-and-outcomes"></div>
+        <div id="chart-statistics-common"></div>
     </div>
 </div>
 
-<div class="card">
-    <div class="card-body">
-        <div id="chart-team-leads"></div>
-    </div>
-</div>
 @stop
 
 @section('js')
@@ -39,7 +34,7 @@
     })(jQuery);
 
     const commonContactToChat = {!! json_encode($commonContactToChat) !!};
-    Highcharts.chart(`chart-team-contacts-and-outcomes`, {
+    Highcharts.chart(`chart-statistics-common`, {
         chart: {
             type: 'area'
         },
@@ -59,24 +54,5 @@
     });
 
     //
-    const commonLeadsToCart = {!! json_encode($commonLeadsToCart) !!};
-    Highcharts.chart(`chart-team-leads`, {
-        chart: {
-            type: 'area'
-        },
-        title: commonLeadsToCart.title,
-        subtitle: "",
-        xAxis: commonLeadsToCart.xAxis,
-        yAxis: commonLeadsToCart.yAxis,
-        plotOptions: {
-            area: {
-                fillOpacity: 0.5,
-                dataLabels: {
-                    enabled: true,
-                }
-            }
-        },
-        series: commonLeadsToCart.series
-    });
 </script>
 @stop

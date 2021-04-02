@@ -522,6 +522,14 @@ return [
 
                 ],
                 [
+                    "text" => "Диаграмма статистики",
+                    "route" => "charts.statistics-common",
+                    'icon' => 'fa fa-money-check-alt',
+                    "active" => ["finances/statistics"],
+                    "can"  => ["can-owner", "can-host"]
+
+                ],
+                [
                     "text" => "Расходы",
                     "route" => "finances.customOutcomes",
                     'icon' => 'fa fa-file-invoice-dollar',

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Budget;
+use App\Models\BudgetType;
 use App\Models\Team;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -458,6 +460,167 @@ class ChartController extends Controller
         ]);
     }
 
+
+    public function statisticsCommon(Request $request)
+    {
+        access(["can-owner", "can-host", "can-manager"]);
+
+        if (!$request->has("startDate") && !$request->has("endDate")) {
+            return redirect()->route("charts.statistics-common", [
+                "startDate" => week()->beforeWeeks(12, week()->sunday(isodate())),
+                "endDate" => week()->end(),
+            ]);
+        }
+
+        $data = $request->validate([
+            "startDate" => "required|date_format:Y-m-d",
+            "endDate" => "required|date_format:Y-m-d",
+        ]);
+
+        $startDate = $data["startDate"];
+        $endDate = $data["endDate"];
+
+
+        //start-statistics
+        foreach (daterange($startDate, $endDate, true) as $date) {
+            $date = date_format($date, config("app.iso_date"));
+            $dates[] = $date;
+        }
+        $datesCollectionTotal = array();
+
+        foreach ($dates as $date) {
+            $startWeek = date(config("app.iso_date"), strtotime("monday this week",strtotime($date)));
+            $endWeek = date(config("app.iso_date"), strtotime("sunday this week",strtotime($date)));
+
+            if(!in_array(strval($startWeek),$datesCollectionTotal,true)){
+                $datesCollectionTotal[] = strval($startWeek);
+            }
+            /* TOTAL STATISTICS */
+
+
+            $budgetType = BudgetType::findByCode("marketer:team:instagram:outcome");
+            $instagramOutcomes[$startWeek] = Budget::getBetweenDatesAndType($startWeek, $endWeek, $budgetType)
+                ->sum(function ($budget) {
+                    return $budget->amount ?? 0;
+                });
+
+            $budgetType = BudgetType::findByCode("marketer:unexpected:outcome");
+            $marketerOutcomes[$startWeek] = Budget::getBetweenDatesAndType($startWeek, $endWeek, $budgetType)
+                ->sum(function ($budget) {
+                    return $budget->amount ?? 0;
+                });
+
+            $budgetType = BudgetType::findByCode("marketer:team:vk:outcome");
+            $vkOutcomes[$startWeek] = Budget::getBetweenDatesAndType($startWeek, $endWeek, $budgetType)
+                ->sum(function ($budget) {
+                    return $budget->amount ?? 0;
+                });
+
+            $budgetType = BudgetType::findByCode("manager:bonus:outcome");
+            $managerBonuses[$startWeek]  = Budget::getBetweenDatesAndType($startWeek, $endWeek, $budgetType)
+                    ->sum(function ($budget) {
+                        return $budget->amount ?? 0;
+                    }) * $budgetType->sign();
+
+            $budgetType = BudgetType::findByCode("operator:profit:outcome");
+            $operatorBonuses[$startWeek]  = Budget::getBetweenDatesAndType($startWeek, $endWeek, $budgetType)
+                    ->sum(function ($budget) {
+                        return $budget->amount ?? 0;
+                    }) * $budgetType->sign();
+
+            $totalComission[$startWeek]  = Budget::getComission($startWeek, $endWeek);
+            $customOutcomes[$startWeek] = Budget::getCustomOutcomes($startWeek, $endWeek);
+            $bonuses[$startWeek] = abs($managerBonuses[$startWeek]) + abs($operatorBonuses[$startWeek]);
+            $addsOutcomes[$startWeek] = abs($instagramOutcomes[$startWeek]) + abs($vkOutcomes[$startWeek])+ abs($marketerOutcomes[$startWeek]);
+
+
+            $masterProfit[$startWeek]  = Budget::getMastersProfit($startWeek, $endWeek);
+            $totalWeek[$startWeek]  = $masterProfit[$startWeek]  + $totalComission[$startWeek] ;
+            $profit[$startWeek]  = abs($totalComission[$startWeek] )
+                - abs($customOutcomes[$startWeek] )
+                - abs($addsOutcomes[$startWeek])
+                - abs($bonuses[$startWeek] );
+            $total = [
+                "totalComission" => $totalComission,
+                "customOutcomes" => $customOutcomes,
+                "addsOutcomes" => $addsOutcomes,
+                "bonuses" => $bonuses,
+                "totalWeek" => $totalWeek,
+                "profit"=>$profit
+            ];
+
+        }
+
+        //end-statistics
+
+        $commonContactToChat = [
+            "info" => [
+                "id" => "statistics-common"
+            ],
+            "title" => ["text" => "Общая статистика"],
+            "subtitle" => [
+                "text" => "Text",
+                "useHTML" => true
+            ],
+            "xAxis" => [
+                "categories" => $datesCollectionTotal,
+                "gridLineWidth" => 1
+            ],
+            "yAxis" => [
+                "title" => ["text" => null],
+                "gridLineWidth" => 1
+            ],
+            "series" => [
+                [
+                    "name" => "Чистая прибыль",
+                    "data" => array_values(collect($total["profit"])->map(function ($outcome) {
+                        return round($outcome / 1000);
+                    })->toArray()),
+                    "color" => "#52be80",
+                ],
+                [
+                    "name" => "Общая сумма",
+                    "data" => array_values(collect($total["totalWeek"])->map(function ($outcome) {
+                        return round($outcome / 1000);
+                    })->toArray()),
+                    "color" => "#5dade2",
+                ],
+                [
+                    "name" => "Доход с комиссий",
+                    "data" => array_values(collect($total["totalComission"])->map(function ($outcome) {
+                        return round($outcome / 1000);
+                    })->toArray()),
+                    "color" => "#58d68d",
+                ],
+                [
+                    "name" => "Расходы недели",
+                    "data" => array_values(collect($total["customOutcomes"])->map(function ($outcome) {
+                        return round($outcome / 1000)*(-1);
+                    })->toArray()),
+                    "color" => "#c2de80",
+                ],
+                [
+                    "name" => "Расходы на рек.",
+                    "data" => array_values(collect($total["addsOutcomes"])->map(function ($outcome) {
+                        return round($outcome / 1000);
+                    })->toArray()),
+                    "color" => "#f4d03f",
+                ],
+                [
+                    "name" => "Бонусы",
+                    "data" => array_values(collect($total["bonuses"])->map(function ($outcome) {
+                        return round($outcome / 1000);
+                    })->toArray()),
+                    "color" => "#f5b041",
+                ],
+            ]
+        ];
+
+
+        return view("charts.statistics-common", [
+            "commonContactToChat" => $commonContactToChat,
+        ]);
+    }
     public function conversion(Request $request)
     {
         access(["can-owner", "can-host", "can-manager"]);
