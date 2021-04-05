@@ -28,7 +28,11 @@
                         <b>
                             Пеня за неделю:
                             <div class="badge badge-warning">
-                                {{ round(($penalty / $comission) * 100) }} %
+                                @if($comission==0)
+                                    {{0}}
+                                @else
+                                {{ round(($penalty / $comission) * 100) }}
+                                @endif
                             </div>
                         </b>
                         <span class="float-right">
