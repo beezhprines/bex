@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Currency;
 use App\Models\CurrencyRate;
 use Illuminate\Http\Request;
 
@@ -70,6 +71,23 @@ class CurrencyRateController extends Controller
     public function update(Request $request, CurrencyRate $currencyRate)
     {
         //
+        access(["can-owner", "can-host"]);
+        $data = $request->validate([
+            'date' => 'required|string|min:3',
+            'currencies' => 'required|array'
+        ]);
+        $date = date(config('app.iso_date'), strtotime($data['date']));
+        foreach ($data['currencies'] as $v){
+
+            $currency = Currency::findByCode($v['code']);
+            $currencyRate = CurrencyRate::findByCurrencyAndDate($currency,$date);
+            $currencyRate->update([
+                "currency_id" =>$currency->id,
+                "rate" => round($v['value'], 2)
+            ]);
+        }
+        return back()->with(['success' => __('common.saved-success')]);
+
     }
 
     /**

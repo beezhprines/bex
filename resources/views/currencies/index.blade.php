@@ -61,7 +61,7 @@
             </div>
         </form>
     </div>
-    <div class="col-md-6">
+    <div class="col-md-12">
         <div class="card card-outline card-secondary">
             <div class="card-header">
                 <div class="card-title">

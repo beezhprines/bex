@@ -7,6 +7,7 @@ use App\Http\Controllers\ContactController;
 use App\Http\Controllers\CosmetologistController;
 use App\Http\Controllers\CountryController;
 use App\Http\Controllers\CurrencyController;
+use App\Http\Controllers\CurrencyRateController;
 use App\Http\Controllers\FinanceController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\InvoiceController;
@@ -150,6 +151,10 @@ Route::middleware(["auth"])->group(function () {
         Route::get("/", [CurrencyController::class, "index"])->name("index");
         Route::post("/update/all", [CurrencyController::class, "updateAll"])->name("update.all");
         Route::post("/store", [CurrencyController::class, "store"])->name("store");
+    });
+    // currenciesRates
+    Route::prefix("currenciesRates")->name("currenciesRates.")->group(function () {
+        Route::post("/update", [CurrencyRateController::class, "update"])->name("update");
     });
 
     // configurations
