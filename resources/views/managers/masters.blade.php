@@ -32,21 +32,25 @@
                             </thead>
                             <tbody>
                                 @foreach($masters as $master)
+                                    @php
+                                        $budget = $master->getBudget(week()->start(), $budgetType->id);
+                                        $enetrunexpectedComission = 0;
+                                        if(!empty($budget) && !empty($budget->json)){
+                                            $json = json_decode($budget->json);
+                                            if(!empty($json)){
+                                                $enetrunexpectedComission = $json->amount;
+                                            }
+                                        }
+                                    @endphp
                                 <tr>
                                     <td class="align-middle">
                                         {{ $master->name }}
                                     </td>
                                     <td>
-                                        <input type="text" class="form-control form-control-sm" name="comissions[{{$master->id}}]" placeholder="Комиссия в @php if(isset($master->getCurrencyRate()[0]['currency_name'])){ echo $master->getCurrencyRate()[0]['currency_name'];}   @endphp" required value="@php
-                                            if($master->getCurrencyRate()[0]['currency_rate']!=0){
-                                            echo round($master->getUnexpectedComission(week()->start(), week()->end())/$master->getCurrencyRate()[0]['currency_rate']);
-                                        }else{
-                                            echo $master->getUnexpectedComission(week()->start(), week()->end());
-                                        } @endphp"
-                                        />
+                                        <input type="text" class="form-control form-control-sm" name="comissions[{{$master->id}}]" placeholder="Комиссия в @php if(isset($master->getCurrencyRate(week()->last())[0]['currency_name'])){ echo $master->getCurrencyRate(week()->last())[0]['currency_name'];}   @endphp" required value="{{$enetrunexpectedComission}}"/>
                                     </td>
                                     <td>
-                                        @php if(isset($master->getCurrencyRate()[0]['currency_name'])){ echo $master->getCurrencyRate()[0]['currency_name'];}   @endphp
+                                        @php if(isset($master->getCurrencyRate(week()->last())[0]['currency_name'])){ echo $master->getCurrencyRate(week()->last())[0]['currency_name'];}   @endphp
                                     </td>
                                 </tr>
                                 @endforeach

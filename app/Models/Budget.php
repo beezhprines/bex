@@ -223,25 +223,32 @@ class Budget extends Model
         return $amount;
     }
 
-    public static function solveUnexpectedMasterComission(string $date, float $amount, Master $master)
+    public static function solveUnexpectedMasterComission(string $date)
     {
         $budgetType = BudgetType::findByCode("master:unexpected:income");
+        $masters = Master::all();
+        foreach ($masters as $master){
+            $budget = $master->getBudget($date,$budgetType->id);
+            $budgetTypeCode = $budgetType->code;
+            $currency_rate = $master->getCurrencyRate($date)[0];
 
-        $budget = $master->getBudget($date, $budgetType->id);
 
-        if (empty($budget)) {
-            $budget = Budget::create([
-                "amount" => $amount,
-                "date" => $date,
-                "budget_type_id" => $budgetType->id
-            ]);
 
-            $budget->masters()->attach($master);
-        } else {
-            $budget->update([
-                "amount" => $amount
-            ]);
+            if (empty($budget)) throw new Exception("Бюджет на дату {$date} и типом {$budgetTypeCode} не найден");
+
+            if (!empty($budget->json)){
+
+                $amount = json_decode($budget->json, true)["amount"] * $budgetType->sign();
+
+
+                $budget->update([
+                    "amount" => $amount * $currency_rate['currency_rate']
+                ]);
+            }
+
         }
+
+        note("info", "budget:solve:{$budgetTypeCode}", "Подсчитаны доп комисси на дату {$date} для {$budgetTypeCode}", self::class, $budget->id);
     }
 
     public static function solveCustomOutcomes(string $date)
@@ -272,7 +279,10 @@ class Budget extends Model
             ]);
 
             note("info", "budget:solve:{$budgetTypeCode}", "Подсчитаны доп затраты на дату {$date} для {$budgetTypeCode}", self::class, $budget->id);
+
+
         }
+        self::solveUnexpectedMasterComission($date);
     }
 
     public static function getCustomOutcomes(string $startDate, string $endDate)

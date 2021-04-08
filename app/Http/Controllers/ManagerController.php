@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Budget;
+use App\Models\BudgetType;
 use App\Models\Configuration;
 use App\Models\Contact;
 use App\Models\ContactType;
@@ -305,11 +306,15 @@ class ManagerController extends Controller
     public function masters()
     {
         access(["can-manager"]);
+        $budgetType = BudgetType::findByCode("master:unexpected:income");
+
 
         $masters = Master::all();
 
+
         return view("managers.masters", [
-            "masters" => $masters
+            "masters" => $masters,
+            "budgetType" => $budgetType
         ]);
     }
 

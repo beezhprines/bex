@@ -287,24 +287,28 @@ class Master extends Model
         );
 
         if ($exchange) {
-            $amount = empty($this->currency()) ? 0 : $amount / CurrencyRate::findByCurrencyAndDate($this->currency(), week()->last())->rate;
+            $currency_rate = self::getCurrencyRate(week()->last())[0];
+            $rateTemp =$currency_rate['currency_rate'];
+            if($rateTemp==0){
+                $rateTemp = 1;
+            }
+            $amount = empty($this->currency()) ? 0 : $amount / $rateTemp;
         }
 
         return $amount == 0 ? 0 : $amount *  $budgetType->sign();
     }
-    public function getCurrencyRate(){
+    public function getCurrencyRate(string $date){
         $result = array([
             'currency_rate' => 0,
             'currency' => 0
         ]);
-        $today = isodate();
-        if(week()->start()<= $today && week()->end()>= $today ){
-            $today = isodate();
-        }else{
-            $today = week()->start();
-        }
         if(! empty($this->currency())){
-            $currencyRate = CurrencyRate::findByCurrencyAndDate($this->currency(),$today);
+            $nextWeekMonday = date(config('app.iso_date'), strtotime("next week Monday", strtotime($date)));
+
+            $currencyRate = CurrencyRate::findByCurrencyAndDate($this->currency(),$nextWeekMonday);
+            if(empty($currencyRate)){
+                $currencyRate = CurrencyRate::findByCurrencyAndDate($this->currency(),isodate());
+            }
             $result = array([
                 'currency_rate' => $currencyRate->rate,
                 'currency_name' => $this->currency()->title
@@ -314,5 +318,30 @@ class Master extends Model
 
 
         return $result;
+    }
+    public function updateUnexpectedComission(string $date, float $amount,float $enterAmmount = 0)
+    {
+        $budgetType = BudgetType::findByCode("master:unexpected:income");
+        $budget = $this->getBudget($date, $budgetType->id);
+
+        if (empty($budget)) {
+            $budget = Budget::create([
+                "amount" => $amount,
+                "date" => $date,
+                "budget_type_id" => $budgetType->id,
+                "json" => json_encode([
+                    "amount" => $enterAmmount
+                ])
+            ]);
+
+            $budget->masters()->attach($this);
+        } else {
+            $budget->update([
+                "amount" => $amount,
+                "json" => json_encode([
+                    "amount" => $enterAmmount
+                ])
+            ]);
+        }
     }
 }

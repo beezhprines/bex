@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Exception;
 use App\Jobs\LoadMastersJob;
 use App\Jobs\LoadServicesJob;
 use App\Models\Budget;
@@ -150,6 +150,7 @@ class MasterController extends Controller
         $master = Auth::user()->master;
 
         $budget = $master->getBudget(week()->end(), BudgetType::findByCode("master:comission:income")->id);
+        $budgetType = BudgetType::findByCode("master:unexpected:income");
 
         $currency = $master->currency();
         $avgRate = 1;
@@ -161,7 +162,15 @@ class MasterController extends Controller
 
         $comission = $master->getComissionWithoutExchange(week()->start(), week()->end());
 
-        $unexpectedComission = $master->getUnexpectedComission(week()->start(), week()->end(), true);
+        $budgetUnExCom = $master->getBudget(week()->start(),$budgetType->id);
+
+        if (!empty($budgetUnExCom) && !empty($budgetUnExCom->json)){
+
+            $unexpectedComission = json_decode($budgetUnExCom->json, true)["amount"] * $budgetType->sign();
+
+        }else{
+            $unexpectedComission = 0;
+        }
 
         return view("masters.statistics", [
             "master" => $master,
@@ -258,16 +267,15 @@ class MasterController extends Controller
             $master = Master::find($masterId);
             if (empty($master)) continue;
 
-            foreach (daterange($data["startDate"], $data["endDate"], true) as $date) {
-                $date = date_format($date, config("app.iso_date"));
-                $currency_rate = $master->getCurrencyRate()[0];
-                $amount = round(($comission * $currency_rate['currency_rate'])/ 7, 2);
+            $master = Master::find($masterId);
+            if (empty($master)) continue;
+            $currency_rate = $master->getCurrencyRate(week()->last())[0];
+            $amount = round(($comission * $currency_rate['currency_rate']), 2);
+            $master->updateUnexpectedComission(week()->start(), $amount,$comission);
 
-                Budget::solveUnexpectedMasterComission($date, $amount, $master);
-            }
         }
 
-        note("info", "budget:solve:master:unexpected", "Подсчитана дополнительная комиссия мастеров на дату {$date}", Budget::class);
+        note("info", "budget:solve:master:unexpected", "Подсчитана дополнительная комиссия мастеров на дату {week()->start()}", Budget::class);
 
         return back()->with(["success" => __("common.loaded-success")]);
     }

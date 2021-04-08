@@ -317,7 +317,7 @@ return [
             "can"  => ["can-manager"]
         ],
         [
-            "text" => "Дополнительные комиссии",
+            "text" => "Комиссии",
             "icon" => "fa fa-coins",
             "submenu" => [
                 [
@@ -328,7 +328,7 @@ return [
                     "can"  => ["can-manager"]
                 ],
                 [
-                    "text" => "Мастера",
+                    "text" => "Доп комиссии",
                     "route" => "managers.masters",
                     "icon" => "fa fa-user-tag",
                     "active" => ["managers/masters"],
