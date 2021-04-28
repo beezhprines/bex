@@ -149,7 +149,7 @@
                                             @endforeach
                                         </div>
 
-                                        @if(!isset($master['invoice']))
+                                        @if(isset($master['invoice']))
                                             <span class="has-invoice"></span>
                                             <div class="form-group">
                                                 <button class="btn btn-sm btn-warning">
@@ -177,7 +177,7 @@
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-body">
-                        <form action="" method="post" id="delete-invoice-form">
+                        <form action="" method="post" id="fdelete-invoice-form">
                             @csrf
                             @method('DELETE')
                             <div class="content text-center"></div>

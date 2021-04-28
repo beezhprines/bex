@@ -362,7 +362,7 @@ inner join budget_master bm on m.id = bm.master_id
 inner join budgets b on bm.budget_id = b.id
 left join invoices i on b.id = i.budget_id
 left join teams t on m.team_id = t.id
-where b.date between '$start' and '$end'"));
+where b.date between '$start' and '$end' and i.deleted_at is null"));
         return $result;
     }
 }
