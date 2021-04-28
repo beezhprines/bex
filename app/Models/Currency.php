@@ -41,4 +41,13 @@ class Currency extends Model
             ->get()
             ->avg("rate");
     }
+
+    public static function currencyAndTeam()
+    {
+        $result = DB::select(DB::raw("select cur.code cur_code,cur.id cur_id,cur.title cur_title,t.id team_id from currencies cur
+inner join countries coun on cur.id = coun.currency_id
+inner join cities c on coun.id = c.country_id
+inner join teams t on c.id = t.city_id;"));
+        return $result;
+    }
 }

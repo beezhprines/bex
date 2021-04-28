@@ -520,6 +520,13 @@ return [
                     "active" => ["finances/statistics"],
                     "can"  => ["can-owner", "can-host","can-recruiter"]
 
+                ],                [
+                    "text" => "Проверка чеков",
+                    "route" => "finances.invoiceCheck",
+                    'icon' => 'fa fa-money-check-alt',
+                    "active" => ["finances/invoiceCheck"],
+                    "can"  => ["can-owner", "can-host","can-recruiter"]
+
                 ],
                 [
                     "text" => "Диаграмма статистики",

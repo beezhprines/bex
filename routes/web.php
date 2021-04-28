@@ -173,6 +173,7 @@ Route::middleware(["auth"])->group(function () {
     // finances
     Route::prefix("finances")->name("finances.")->group(function () {
         Route::get("/statistics", [FinanceController::class, "statistics"])->name("statistics");
+        Route::get("/invoiceCheck", [FinanceController::class, "invoiceCheck"])->name("invoiceCheck");
         Route::get("/customOutcomes", [FinanceController::class, "customOutcomes"])->name("customOutcomes");
         Route::post("/customOutcomes/update", [FinanceController::class, "updateCustomOutcomes"])->name("customOutcomes.update");
         Route::get("/payments", [FinanceController::class, "payments"])->name("payments");

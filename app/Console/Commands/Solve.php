@@ -9,6 +9,7 @@ use App\Jobs\SolveMastersProfitJob;
 use App\Jobs\SolveOperatorsProfitJob;
 use App\Jobs\SolveOutcomesJob;
 use App\Jobs\SolveTotalComissionJob;
+use App\Models\Master;
 use Illuminate\Console\Command;
 
 class Solve extends Command
@@ -26,6 +27,7 @@ class Solve extends Command
     {--custom-outcomes : Solve custom outcomes}
     {--managers-profit : Solve managers profit}
     {--operators-profit : Solve operators profit}
+    {--invoice-check : Invoice check}
     {--all : Solve all budgets}
     {--date= : For date}
     {--startDate= : From date}
@@ -135,6 +137,12 @@ class Solve extends Command
             foreach ($dates as $date) {
                 SolveOperatorsProfitJob::dispatchNow($date);
             }
+            return;
+        }
+        if ($this->option("invoice-check")) {
+            echo "string";
+            echo "\n";
+            Master::getInvoiceCheck();
             return;
         }
     }

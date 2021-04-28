@@ -344,4 +344,25 @@ class Master extends Model
             ]);
         }
     }
+    public static function getInvoiceCheck($start, $end)
+    {
+        $result = DB::select(DB::raw("select m.id
+     ,m.name
+     ,m.user_id
+     ,b.id budget_id
+     ,b.amount budget_amount
+     ,b.budget_type_id
+     ,b.date budget_date
+     ,i.id invoice_id
+     ,i.confirmed_date
+     ,i.file
+     ,t.id team_id
+from masters m
+inner join budget_master bm on m.id = bm.master_id
+inner join budgets b on bm.budget_id = b.id
+left join invoices i on b.id = i.budget_id
+left join teams t on m.team_id = t.id
+where b.date between '$start' and '$end'"));
+        return $result;
+    }
 }

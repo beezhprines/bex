@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\DB;
 
 class CurrencyRate extends Model
 {
@@ -60,5 +61,11 @@ class CurrencyRate extends Model
         }
 
         note("info", "currencyRate:seed", "Загружены валюты на дату {$date}", CurrencyRate::class);
+    }
+    public static function getAll()
+    {
+        $result = DB::select(DB::raw("select id, date, rate, currency_id, created_at, updated_at, deleted_at from currency_rates cr
+where deleted_at is null;"));
+        return $result;
     }
 }
