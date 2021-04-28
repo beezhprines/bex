@@ -360,9 +360,9 @@ class Master extends Model
 from masters m
 inner join budget_master bm on m.id = bm.master_id
 inner join budgets b on bm.budget_id = b.id
-left join invoices i on b.id = i.budget_id
+left join invoices i on b.id = i.budget_id and i.deleted_at is null
 left join teams t on m.team_id = t.id
-where b.date between '$start' and '$end' and i.deleted_at is null"));
+where b.date between '$start' and '$end'"));
         return $result;
     }
 }
