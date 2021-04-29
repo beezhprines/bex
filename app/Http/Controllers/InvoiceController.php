@@ -141,4 +141,31 @@ class InvoiceController extends Controller
 
         return back()->with(["success" => "Чеки подтверждены"]);
     }
+    public function confirmAjax(Request $request)
+    {
+        access(["can-owner", "can-host", "can-recruiter"]);
+
+        $data = $request->validate([
+            'invoices' => 'required|array',
+            'invoices.*' => 'required|exists:invoices,id'
+        ]);
+        $invoices = [];
+        $result = ["error" => "Чек не найден"];
+        $return_array = compact('result');
+        foreach ($data["invoices"] as $invoiceId) {
+            $invoice = Invoice::find($invoiceId);
+
+            if (empty($invoice)) return response()->json($result);
+
+            if($invoice->update([
+                "confirmed_date" => isodate()
+            ])){
+                $invoices[]=$invoice->id;
+                $result = ["success" => "Обнавлен"];
+
+            }
+        }
+        $return_array = compact('result','invoices');
+        return response()->json($return_array);
+    }
 }

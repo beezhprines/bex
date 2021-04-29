@@ -127,16 +127,18 @@
 
                             <li class="list-group-item text-center">
                                 @if (isset($master['invoice']))
-                                    <form action="{{ route('invoices.confirm') }}" method="post">
+                                    {{--<form action="{{ route('invoices.confirm') }}" method="post">
                                         @csrf
-                                        @method('PATCH')
+                                        @method('PATCH')--}}
                                         <div class="row">
                                             @foreach($master['invoice'] as $invoice)
                                                 @if($invoice['file']!="")
                                                 <div class="col-4 mb-1">
-                                                    <input type="hidden" name="invoices[]" value="{{ $invoice['invoice_id'] }}">
+                                                    <input type="hidden" name="invoices[{{ $master['id'] }}][]" value="{{ $invoice['invoice_id'] }}">
                                                     @if($invoice['confirmed_date'])
                                                         <span class="badge badge-success confirmed">Подтвержден</span>
+                                                    @else
+                                                        <span id="unconfirmedInvoice-{{ $invoice['invoice_id'] }}" class=""></span>
                                                     @endif
                                                     <img src="data:image/png;base64, {{ $invoice['file'] }}" class="invoice img-fluid" alt="invoice_{{ $invoice['invoice_id'] }}" data-route="{{ route('invoices.destroy', ['invoice' => $invoice['invoice_id']]) }}" />
                                                 </div>
@@ -148,17 +150,16 @@
                                                 @endif
                                             @endforeach
                                         </div>
-
-                                        @if(isset($master['invoice']))
+                                        @if(reset($master['invoice'])['file']!="")
                                             <span class="has-invoice"></span>
                                             <div class="form-group">
-                                                <button class="btn btn-sm btn-warning">
+                                                <button onclick='invoice_confirm({{$master["id"]}},"{{csrf_token()}}","{{route('invoices.confirmAjax')}}")' class="btn btn-sm btn-warning">
                                                     Подтвердить
                                                 </button>
                                             </div>
                                         @endif
 
-                                    </form>
+                                    {{--</form>--}}
                                     <button id="invoices-btn" onclick="upload_invoice_func({{ $master['id'] }},{{ $invoice['budget_id'] }})" class="btn btn-sm btn-success" >
                                         Загрузить чек
                                     </button>
@@ -177,7 +178,7 @@
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-body">
-                        <form action="" method="post" id="fdelete-invoice-form">
+                        <form action="" method="post" id="delete-invoice-form">
                             @csrf
                             @method('DELETE')
                             <div class="content text-center"></div>
@@ -270,6 +271,39 @@
 
             $("#invoices").click();
         }
+
+        function invoice_confirm(master_id,csrf_token,url){
+           var invoices =  document.getElementsByName("invoices["+master_id+"][]");
+           var invoicesArray  = [];
+           for(var i = 0; i < invoices.length;i++){
+               invoicesArray.push(invoices[i].value)
+           }
+
+           $.ajax(
+               {
+                   url,
+                   method:'PATCH',
+                   data:{
+                       invoices: invoicesArray,
+                       _token:csrf_token,
+                   },
+                   success:function (response){
+                       if(response['invoices'] ){
+                           for(var i = 0; i<response['invoices'].length;i++){
+                               var el = document.getElementById("unconfirmedInvoice-"+response['invoices'][i]);
+                               if(el!=null){
+                                   el.className="badge badge-success confirmed";
+                                   el.innerText="Подтвержден";
+                               }
+
+                           }
+                       }
+                   }
+               },
+           );
+
+        }
+
         $("#invoices").on('change', function() {
             $("#store-invoices-form").submit();
         });
