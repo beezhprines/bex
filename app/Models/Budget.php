@@ -234,7 +234,9 @@ class Budget extends Model
 
 
 
-            if (empty($budget)) throw new Exception("Бюджет на дату {$date} и типом {$budgetTypeCode} не найден");
+            if (empty($budget)){
+                note("info", "budget:solve:{$budgetTypeCode}", "Бюджет на дату {$date} и типом {$budgetTypeCode} не найден", self::class, );
+            }
 
             if (!empty($budget->json)){
 
