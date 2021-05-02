@@ -227,11 +227,12 @@ class Budget extends Model
     {
         $budgetType = BudgetType::findByCode("master:unexpected:income");
         $masters = Master::all();
+        $bid = 0;
+
         foreach ($masters as $master){
             $budget = $master->getBudget($date,$budgetType->id);
             $budgetTypeCode = $budgetType->code;
             $currency_rate = $master->getCurrencyRate($date)[0];
-
 
 
             if (empty($budget)){
@@ -241,16 +242,17 @@ class Budget extends Model
             if (!empty($budget->json)){
 
                 $amount = json_decode($budget->json, true)["amount"] * $budgetType->sign();
+                $bid = $budget->id;
 
 
-                $budget->update([
+                    $budget->update([
                     "amount" => $amount * $currency_rate['currency_rate']
                 ]);
             }
 
         }
 
-        note("info", "budget:solve:{$budgetTypeCode}", "Подсчитаны доп комисси на дату {$date} для {$budgetTypeCode}", self::class, $budget->id);
+        note("info", "budget:solve:{$budgetTypeCode}", "Подсчитаны доп комисси на дату {$date} для {$budgetTypeCode}", self::class, $bid);
     }
 
     public static function solveCustomOutcomes(string $date)
