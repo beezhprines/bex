@@ -594,7 +594,7 @@ return [
                     "can"  => ["can-host", "can-owner"]
                 ],
             ],
-            "can"  => ["can-owner", "can-host"]
+            "can"  => ["can-owner", "can-host","can-marketer"]
         ],
     ],
 

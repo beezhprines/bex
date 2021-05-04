@@ -163,7 +163,7 @@ class ChartController extends Controller
             "info" => [
                 "id" => "common_contacts"
             ],
-            "title" => ["text" => "Контакты и затраты"],
+            "title" => ["text" => "Контакты и затраты на рекламу"],
             "subtitle" => [
                 "text" => "Text",
                 "useHTML" => true
@@ -391,7 +391,7 @@ class ChartController extends Controller
             "info" => [
                 "id" => "common_contacts"
             ],
-            "title" => ["text" => "Контакты и затраты"],
+            "title" => ["text" => "Контакты и затраты на рекламу"],
             "subtitle" => [
                 "text" => "Text",
                 "useHTML" => true
@@ -415,7 +415,7 @@ class ChartController extends Controller
                     "color" => "#c2de80",
                 ],
                 [
-                    "name" => "Затраты (тыс. тг)",
+                    "name" => "Затраты на рекламу (тыс. тг)",
                     "data" => array_values($commonOutCome),
                     "color" => "#db9876",
                 ]

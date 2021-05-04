@@ -235,17 +235,10 @@ if(isset($currencyAndTeamsArray[$m->team_id]['cur_code'])){
 
     $user = User::find(Auth::id());
 
-    if ($user->isRecruiter() ) {
-        return view("recruiter.invoice-check", [
-            "masters" => $tempMaster,
-            "masterComissionBudgetType" => $masterComissionBudgetType,
-        ]);
-    }else{
-        return view("finances.invoice-check", [
-            "masters" => $tempMaster,
-            "masterComissionBudgetType" => $masterComissionBudgetType,
-        ]);
-    }
+    return view("finances.invoice-check", [
+        "masters" => $tempMaster,
+        "masterComissionBudgetType" => $masterComissionBudgetType,
+    ]);
 
 }
 

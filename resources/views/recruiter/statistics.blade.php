@@ -58,6 +58,11 @@
                                 @endphp
                                         {{ price($comission) }} KZT
                             </span>
+                                    @php
+                                        if(isset ($comission) && $comission===0){
+                                            echo '<span class = "zero-budget" ></span>';
+                                        }
+                                    @endphp
                                 </div>
                                 @if (! empty($master->currency()) && $master->currency()->code != "KZT")
                                     <div class="mt-1">
@@ -156,6 +161,7 @@
                                                 <div class="col-12 mb-1">
                                                     Чеки не загружены
                                                 </div>
+                                                <span class="has-not-invoice"></span>
                                             @endforelse
                                         </div>
                                         @if(!$budget->invoices->isEmpty())
@@ -233,6 +239,9 @@
                 $('.master')
                     .filter(':has(span.has-invoice)')
                     .hide();
+                $('.master')
+                    .filter(':has(span.zero-budget)')
+                    .hide();
                 $("#filter").show();
                 $(".unloaded-invoice-badge").show();
             });
@@ -241,6 +250,12 @@
                 e.preventDefault();
                 $('.master')
                     .filter(':has(span.confirmed)')
+                    .hide();
+                $('.master')
+                    .filter(':has(span.zero-budget)')
+                    .hide();
+                $('.master')
+                    .filter(':has(span.has-not-invoice)')
                     .hide();
                 $("#filter").show();
                 $(".unconfirmed-invoice-badge").show();
