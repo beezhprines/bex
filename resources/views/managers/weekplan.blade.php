@@ -172,6 +172,34 @@
                     @endforeach
                 </ul>
             </div>
+            <div class="card-body py-0 px-1">
+                <ul class="list-group list-group-flush">
+                    @foreach($teamWithOutTown as $t)
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <span>
+                            {{ $t->title }}
+                        </span>
+                            <strong>
+                                Нет города
+                            </strong>
+                        </li>
+                    @endforeach
+                </ul>
+            </div>
+            <div class="card-body py-0 px-1">
+                <ul class="list-group list-group-flush">
+                    @foreach($teamWithOutOper as $t)
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <span>
+                            {{ $t->title }}
+                        </span>
+                            <strong>
+                                Нет оператора
+                            </strong>
+                        </li>
+                    @endforeach
+                </ul>
+            </div>
         </div>
     </div>
 </div>

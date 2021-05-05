@@ -154,12 +154,30 @@ class ManagerController extends Controller
         $operators = Operator::all();
         $managers = Manager::all();
         $user = User::find(Auth::id());
+        $teamWithOutOper = array();
+        $teamWithOutTown = array();
         $mastersWithOutTeam = array();
+
+        $teams = Team::all();
         foreach ($masters as $m){
             $tempTeam = Team::find($m->team_id);
             if($tempTeam==null){
                 $mastersWithOutTeam[]=$m;
             }
+        }
+
+        foreach ($teams as $t){
+            if($t->id==1){
+                var_dump($t->city_id);
+            }
+            if(!$t->operator_id){
+                $teamWithOutOper[]=$t;
+            }
+            if(!$t->city_id){
+                $teamWithOutTown[]=$t;
+
+            }
+
         }
         if ($user->isRecruiter()) {
             return view("recruiter.weekplan", [
@@ -179,6 +197,8 @@ class ManagerController extends Controller
                 "milestoneBonus" => $milestoneBonus,
                 "masters" => $masters,
                 "mastersWithOutTeam" => $mastersWithOutTeam,
+                "teamWithOutOper" => $teamWithOutOper,
+                "teamWithOutTown" => $teamWithOutTown,
                 "managers" => $managers,
                 "operators" => $operators,
             ]);
