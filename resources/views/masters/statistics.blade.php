@@ -29,9 +29,9 @@
                             Пеня за неделю:
                             <div class="badge badge-warning">
                                 @if($comission==0)
-                                    {{0}}
+                                    {{0}}{{" %"}}
                                 @else
-                                {{ round(($penalty / $comission) * 100) }}
+                                {{ round(($penalty / $comission) * 100) }}{{" %"}}
                                 @endif
                             </div>
                         </b>

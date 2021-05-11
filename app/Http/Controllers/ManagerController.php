@@ -31,7 +31,49 @@ class ManagerController extends Controller
     {
         access(["can-owner", "can-host"]);
 
-        $managers = Manager::all();
+        $managersTemp = Manager::all();
+        $managers = [];
+        foreach ($managersTemp as $m){
+            $u = User::find($m->user_id);
+            if($u->role->code == "manager"){
+                $managers[]=$m;
+            }
+        }
+
+
+        return view("managers.index", [
+            "managers" => $managers
+        ]);
+    }
+    public function recruiter()
+    {
+        access(["can-owner", "can-host"]);
+
+        $managersTemp = Manager::all();
+        $managers = [];
+        foreach ($managersTemp as $m){
+            $u = User::find($m->user_id);
+            if($u->role->code == "recruiter"){
+                $managers[]=$m;
+            }
+        }
+
+        return view("managers.index", [
+            "managers" => $managers
+        ]);
+    }
+    public function chief_operator()
+    {
+        access(["can-owner", "can-host"]);
+
+        $managersTemp = Manager::all();
+        $managers = [];
+        foreach ($managersTemp as $m){
+            $u = User::find($m->user_id);
+            if($u->role->code == "chief-operator"){
+                $managers[]=$m;
+            }
+        }
 
         return view("managers.index", [
             "managers" => $managers

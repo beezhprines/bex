@@ -112,6 +112,8 @@
                             </b>
                             <span class="float-right">
                                 @php
+                                $avgRate = 1;
+
                                 $comission = $master->getComission(week()->start(), week()->end());
                                 @endphp
                                 {{ price($comission) }} KZT
@@ -142,13 +144,21 @@
 
                     @php
                     $unexpectedComission = $master->getUnexpectedComission(week()->start(), week()->end(), true);
+                                        $budget = $master->getBudget(week()->start(), $masterUnExComissionBudgetType->id);
+                                        $unexpectedComissionRate = 0;
+                                        if(!empty($budget) && !empty($budget->json)){
+                                            $json = json_decode($budget->json);
+                                            if(!empty($json)){
+                                                $unexpectedComissionRate = $json->amount;
+                                            }
+                                        }
                     @endphp
                     <li class="list-group-item">
                         <b>
                             Доп комиссия за неделю:
                         </b>
                         <span class="float-right">
-                            {{ price($unexpectedComission) }} {{ $master->currency()->code ?? 'Нет' }}
+                            {{ price($unexpectedComissionRate) }} {{ $master->currency()->code ?? 'Нет' }}
                         </span>
                     </li>
 
@@ -157,6 +167,8 @@
                             Пеня за неделю:
                             @php
                             $penalty = $master->getPenalty(week()->start(), week()->end());
+                            $penaltyRate = $master->getPenalty(week()->start(), week()->end())/$avgRate;
+
                             @endphp
                             <div class="badge badge-warning">
                                 @if ($comission == 0)
@@ -167,7 +179,7 @@
                             </div>
                         </b>
                         <span class="float-right">
-                            {{ price($penalty) }} KZT
+                            {{ price($penaltyRate) }} {{ $master->currency()->code ?? 'Нет' }}
                         </span>
                     </li>
 
@@ -180,7 +192,7 @@
                             $unexpectedComission = $master->getUnexpectedComission(week()->start(), week()->end());
                             $masterTotalComission = $comission + $penalty + $unexpectedComission;
                             @endphp
-                            {{ $masterTotalComission }} KZT
+                            {{ price($masterTotalComission /$avgRate)}} {{ $master->currency()->code ?? 'Нет' }}
                         </span>
                     </li>
                     <li class="list-group-item">
@@ -189,13 +201,13 @@
                             @php
                             $profit = $master->getProfit(week()->start(), week()->end());
                             @endphp
-                            {{ price($profit) }} KZT
+                            {{ price($profit/$avgRate) }} {{ $master->currency()->code ?? 'Нет' }}
                         </span>
                     </li>
                     <li class="list-group-item">
                         <b>Сумма за неделю:</b>
                         <span class="float-right">
-                            {{ price($comission + $profit) }} KZT
+                            {{ price(($comission + $profit)/$avgRate) }} {{ $master->currency()->code ?? 'Нет' }}
                         </span>
                     </li>
                     <li class="list-group-item text-center">

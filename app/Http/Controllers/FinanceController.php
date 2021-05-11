@@ -77,6 +77,7 @@ class FinanceController extends Controller
         $masters = Master::all();
 
         $masterComissionBudgetType =  BudgetType::findByCode("master:comission:income");
+        $masterUnExComissionBudgetType =  BudgetType::findByCode("master:unexpected:income");
 
         /* TOTAL STATISTICS */
         $startWeek = week()->start();
@@ -142,6 +143,7 @@ class FinanceController extends Controller
             return view("finances.statistics", [
                 "masters" => $masters,
                 "masterComissionBudgetType" => $masterComissionBudgetType,
+                "masterUnExComissionBudgetType" => $masterUnExComissionBudgetType,
                 "total" => $total
             ]);
         }

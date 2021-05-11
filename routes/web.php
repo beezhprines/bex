@@ -107,6 +107,8 @@ Route::middleware(["auth"])->group(function () {
         Route::get("/masters", [ManagerController::class, "masters"])->name("masters");
         Route::get("/currencyRates", [ManagerController::class, "currencyRates"])->name("currencyRates");
         Route::get("/", [ManagerController::class, "index"])->name("index");
+        Route::get("/chief-operator", [ManagerController::class, "chief_operator"])->name("chief-operator");
+        Route::get("/recruiter", [ManagerController::class, "recruiter"])->name("recruiter");
         Route::post("/store", [ManagerController::class, "store"])->name("store");
         Route::put("/update/{manager}", [ManagerController::class, "update"])->name("update");
         Route::delete("/{manager}", [ManagerController::class, "destroy"])->name("destroy");

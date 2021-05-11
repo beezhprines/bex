@@ -460,6 +460,16 @@ return [
                     "route" => "managers.index",
                     'icon' => 'fa fa-user-tie',
                     "active" => ["managers"]
+                ],                [
+                    "text" => "Оператор вых. дня",
+                    "route" => "managers.chief-operator",
+                    'icon' => 'fa fa-user-tie',
+                    "active" => ["chief-operator"]
+                ],                [
+                    "text" => "HR менеджер",
+                    "route" => "managers.recruiter",
+                    'icon' => 'fa fa-user-tie',
+                    "active" => ["recruiter"]
                 ],
             ],
             "can"  => ["can-owner", "can-host"]
