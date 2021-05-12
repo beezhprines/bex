@@ -709,7 +709,7 @@ class ChartController extends Controller
         access(["can-owner", "can-host", "can-manager"]);
 
         if (!$request->has("startDate") && !$request->has("endDate")) {
-            return redirect()->route("charts.chats", [
+            return redirect()->route("charts.teams", [
                 "startDate" => week()->beforeWeeks(12, week()->sunday(isodate())),
                 "endDate" => week()->end(),
             ]);
