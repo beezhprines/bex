@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\DB;
 
 class Team extends Model
 {
@@ -173,5 +174,24 @@ class Team extends Model
         $amount += $vk->firstWhere("team_id", $this->id)["amount"] ?? 0;
 
         return $amount;
+    }
+
+
+    public function getIncomes(string $date)
+    {
+        $amount = 0;
+        $budgetUnexpectedIn= BudgetType::findByCode("master:unexpected:income");
+        $budgetTypeComission = BudgetType::findByCode("total:comission:income");
+        $monday = date(config('app.iso_date'), strtotime("this week Monday", strtotime($date)));
+        $sunday = date(config('app.iso_date'), strtotime("this week Sunday", strtotime($date)));
+
+        $sql = "select sum(b.amount) amount  from budgets b
+inner join budget_master bm on b.id = bm.budget_id
+inner join masters m on bm.master_id = m.id
+where m.team_id = {$this->id}
+and b.date between '{$monday}' and '{$sunday}'
+and b.budget_type_id in (5,12)";
+        $result = DB::select(DB::raw($sql));
+        return $result[0];
     }
 }

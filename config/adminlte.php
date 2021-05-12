@@ -603,8 +603,15 @@ return [
                     "active" => ["charts/chats-common*"],
                     "can"  => ["can-host", "can-owner"]
                 ],
+                [
+                    "text" => "Рентабельность команд",
+                    "route" => "charts.teams",
+                    "icon" => "fa fa-chart-pie",
+                    "active" => ["charts/teams"],
+                    "can"  => ["can-host", "can-owner","man-manager"]
+                ],
             ],
-            "can"  => ["can-owner", "can-host","can-marketer"]
+            "can"  => ["can-owner", "can-host","can-marketer","man-manager"]
         ],
     ],
 

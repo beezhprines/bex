@@ -703,4 +703,108 @@ class ChartController extends Controller
             "chats" => $chats
         ]);
     }
+
+    public function teams(Request $request)
+    {
+        access(["can-owner", "can-host", "can-manager"]);
+
+        if (!$request->has("startDate") && !$request->has("endDate")) {
+            return redirect()->route("charts.chats", [
+                "startDate" => week()->beforeWeeks(12, week()->sunday(isodate())),
+                "endDate" => week()->end(),
+            ]);
+        }
+
+        $data = $request->validate([
+            "startDate" => "required|date_format:Y-m-d",
+            "endDate" => "required|date_format:Y-m-d",
+        ]);
+
+        $startDate = $data["startDate"];
+        $endDate = $data["endDate"];
+
+        $chats = collect();
+        $datesCollectionTotal = collect();
+
+        $teams = Team::all();
+        foreach ($teams as $team) {
+            $contactsCollection = $team->contacts()
+                ->whereBetween(DB::raw("DATE(date)"), [$startDate, $endDate])
+                ->get();
+
+            $datesCollection = collect(array_keys($contactsCollection->groupBy("date")->toArray()));
+            if($datesCollectionTotal->count()<$datesCollection->count()){
+                $datesCollectionTotal = $datesCollection;
+            }
+            $totalContactsCollection = $contactsCollection->groupBy("date")->map(function ($date) {
+                return $date->sum(function ($contact) {
+                    return $contact->amount;
+                });
+            });
+            $sumTotalContacts = $totalContactsCollection->sum(function ($totalContact) {
+                return round($totalContact);
+            });
+
+            $outcomes = [];
+            foreach ($datesCollection as $date) {
+                $temp =  $team->getIncomes($date);
+                $outcomes[$date] = $temp->amount;
+            }
+            $sumOutcomes = collect($outcomes)->sum(function ($outcome) {
+                return round($outcome);
+            });
+
+            $leads = [];
+
+            foreach ($datesCollection as $date) {
+                $leads[$date] = $totalContactsCollection->toArray()[$date] == 0 ? 0 : round($outcomes[$date] / $totalContactsCollection->toArray()[$date]);
+            };
+
+            $sumLeads = $sumTotalContacts == 0 ? 0 : round($sumOutcomes / $sumTotalContacts);
+
+            $masterNames = implode(",", $team->masters->pluck("name")->toArray());
+            $chatArray = [
+                "info" => [
+                    "team_id" => $team->id
+                ],
+                "title" => ["text" => $team->title],
+                "subtitle" => [
+                    "text" => "$masterNames<br>За период: $sumTotalContacts, расходы: $sumOutcomes, цена за лид: $sumLeads",
+                    "useHTML" => true
+                ],
+                "xAxis" => [
+                    "categories" => $datesCollection
+                        ->map(function ($date) {
+                            return date("d M", strtotime($date));
+                        })
+                        ->toArray(),
+                    "gridLineWidth" => 1
+                ],
+                "yAxis" => [
+                    "title" => ["text" => null],
+                    "gridLineWidth" => 1
+                ],
+                "series" => [
+                    [
+                        "name" => "Комиссия (тыс. тг)",
+                        "data" => array_values(collect($outcomes)->map(function ($outcome) {
+                            return round($outcome / 1000);
+                        })->toArray()),
+                        "color" => "#db9876",
+                    ],
+                ]
+            ];
+            $chats->push($chatArray);
+
+
+
+        }
+
+
+
+        return view("charts.teams", [
+            "teams" => $teams,
+            "chats" => $chats
+        ]);
+    }
 }
