@@ -49,7 +49,7 @@ class HomeController extends Controller
         } elseif ($user->isChiefOperator()) {
             return redirect()->route("operators.salesplan");
         } elseif ($user->isOwner() || $user->isHost()) {
-            return redirect()->route("managers.weekplan");
+            return redirect()->route("finances.payments");
         }
 
         return view("dashboard");
