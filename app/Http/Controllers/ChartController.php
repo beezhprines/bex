@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\TeamRecordsExport;
 use App\Models\Budget;
 use App\Models\BudgetType;
 use App\Models\Team;
@@ -702,5 +703,68 @@ class ChartController extends Controller
             "teams" => $teams,
             "chats" => $chats
         ]);
+    }
+
+    public function recordNumber(Request $request)
+    {
+        access(["can-owner", "can-host", "can-manager"]);
+
+        if (!$request->has("startDate") && !$request->has("endDate")) {
+            return redirect()->route("charts.record-number", [
+                "startDate" => week()->start(),
+                "endDate" => week()->end(),
+            ]);
+        }
+
+        $data = $request->validate([
+            "startDate" => "required|date_format:Y-m-d",
+            "endDate" => "required|date_format:Y-m-d",
+        ]);
+
+        $startDate = $data["startDate"];
+        $endDate = $data["endDate"];
+
+        return view("charts.record-number", [
+            
+        ]);
+    }
+
+    public function recordNumberPost(Request $request)
+    {
+        access(["can-owner", "can-host", "can-manager"]);
+
+        if (!$request->has("startDate") && !$request->has("endDate")) {
+            return redirect()->route("charts.record-number", [
+                "startDate" => week()->start(),
+                "endDate" => week()->end(),
+            ]);
+        }
+
+        $data = $request->validate([
+            "startDate" => "required|date_format:Y-m-d",
+            "endDate" => "required|date_format:Y-m-d",
+        ]);
+        $startDate = $data["startDate"];
+        $endDate = $data["endDate"];
+
+        $teams = Team::get();
+        $data = [];
+        foreach ($teams as $team) {
+            $recordsByConversion = $team->masters->sum(function ($master) use ($startDate, $endDate) {
+                return $master->getRecordsCount($startDate, $endDate, null, true, false) ?? 0;
+            }) ?? 0;
+            $recordsByPromotion = $team->masters->sum(function ($master) use ($startDate, $endDate) {
+                return $master->getRecordsCount($startDate, $endDate, null, false, true) ?? 0;
+            }) ?? 0;
+            $data[] = [
+                'team_name' => $team->title,
+                'records_by_conversion' => $recordsByConversion ?? 0,
+                'records_by_promotion' => $recordsByPromotion ?? 0,
+            ];
+        }
+        
+        $export = new TeamRecordsExport($data);
+
+        return \Excel::download($export, 'team-records-report-' . $startDate . '-'. $endDate .'.xlsx');
     }
 }

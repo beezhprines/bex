@@ -593,6 +593,13 @@ return [
                     "active" => ["charts/chats-common*"],
                     "can"  => ["can-host", "can-owner"]
                 ],
+                [
+                    "text" => "Количество записей",
+                    "route" => "charts.record-number",
+                    "icon" => "fa fa-chart-pie",
+                    "active" => ["charts/record-number*"],
+                    "can"  => ["can-host", "can-owner"]
+                ],
             ],
             "can"  => ["can-owner", "can-host"]
         ],

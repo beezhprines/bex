@@ -7,15 +7,19 @@ use Illuminate\View\Component;
 class PeriodControl extends Component
 {
     protected $route;
+    protected $button;
+    protected $method;
 
     /**
      * Create a new component instance.
      *
      * @return void
      */
-    public function __construct(string $route)
+    public function __construct(string $route, ?string $button = 'Обновить', ?string $method = 'GET')
     {
         $this->route = $route;
+        $this->button = $button;
+        $this->method = $method;
     }
 
     /**
@@ -26,7 +30,9 @@ class PeriodControl extends Component
     public function render()
     {
         return view('components.period-control', [
-            "route" => $this->route
+            "route" => $this->route,
+            "button" => $this->button,
+            "method" => $this->method,
         ]);
     }
 }

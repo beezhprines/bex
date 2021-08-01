@@ -16,6 +16,7 @@
         "laravel/framework": "^8.0",
         "laravel/tinker": "^2.0",
         "laravel/ui": "^3.0",
+        "maatwebsite/excel": "^3.1",
         "rap2hpoutre/laravel-log-viewer": "^1.7",
         "spatie/laravel-responsecache": "^6.6",
         "symfony/process": "^5.1",

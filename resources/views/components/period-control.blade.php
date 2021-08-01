@@ -1,4 +1,7 @@
-<form action="{{ $route }}" class="form-inline mb-2" method="GET">
+<form action="{{ $route }}" class="form-inline mb-2" method="{{ $method }}">
+    @if($method == 'POST')
+    @csrf
+    @endif
     <label class="m-2">Период</label>
     <label class="sr-only" for="startDate">Начало</label>
     <div class="input-group date m-2">
@@ -20,6 +23,6 @@
         <input type="text" class="form-control date-input" id="endDate" name="endDate" placeholder="Окончание" value="{{ request()->query('endDate') }}">
     </div>
     <div class="m-2">
-        <button type="submit" class="btn btn-default btn-sm">Обновить</button>
+        <button type="submit" class="btn btn-default btn-sm">{{ $button ?? 'Обновить' }}</button>
     </div>
 </form>

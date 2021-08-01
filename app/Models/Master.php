@@ -70,6 +70,38 @@ class Master extends Model
         return $records;
     }
 
+    public function getRecordsCount(
+        string $startDate,
+        string $endDate,
+        ?bool $attendance = true,
+        bool $onlyConversionServices = false,
+        bool $onlyNotConversionServices = false
+    )
+    {
+        $records = $this->records()
+            ->whereBetween(DB::raw("DATE(started_at)"), array($startDate, $endDate));
+            
+        if ($attendance !== null && $attendance === true) {
+            $records->where("attendance", $attendance);
+        }
+
+        if ($onlyConversionServices) {
+            $records = $records->whereHas('services', function ($query) {
+                $query->where('conversion', true);
+            });
+        }
+
+        if ($onlyNotConversionServices) {
+            $records = $records->whereHas('services', function ($query) {
+                $query->where('conversion', false);
+            });
+        }
+        
+        $records = $records->count();
+
+        return $records;
+    }
+
     public function getRecordByService(string $startDate, string $endDate)
     {
         $records = collect();
